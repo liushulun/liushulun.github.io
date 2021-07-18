@@ -76,7 +76,7 @@
       <h1 class="site-title">Luis's Blogs</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2021/07/18 - 12:52:21</p>
+      <p class="site-subtitle" itemprop="description">2021/07/18 - 18:27:02</p>
   </div>
 
   <div class="site-nav-right">
@@ -157,7 +157,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%BB%98%E5%88%B6%E6%B5%81%E7%A8%8B"><span class="nav-text">Android渲染及绘制流程</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android%E6%B8%B2%E6%9F%93%E5%8F%8A%E7%BB%98%E5%88%B6%E6%B5%81%E7%A8%8B"><span class="nav-text">Android渲染及绘制流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -345,14 +345,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Post Symbols:</span>
-      <span>706</span>
+      <span>5.2k</span>
     </span>
     <span class="post-meta-item" title="Read Time">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">Read Time &asymp;</span>
-      <span>1 Min</span>
+      <span>6 Min</span>
     </span>
 </div>
 
@@ -366,7 +366,32 @@
     <div class="post-body" itemprop="articleBody">
         <span id="more"></span>
 
-<h1 id="Android渲染及绘制流程"><a href="#Android渲染及绘制流程" class="headerlink" title="Android渲染及绘制流程"></a>Android渲染及绘制流程</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_27154507/article/details/79748010">https://blog.csdn.net/sinat_27154507/article/details/79748010</a></p>
+<h1 id="Android渲染及绘制流程"><a href="#Android渲染及绘制流程" class="headerlink" title="Android渲染及绘制流程"></a>Android渲染及绘制流程</h1><p>当调用 View 中需要刷新 UI 的方法时，内部通常会调用 requestLayout() 或 invalidate()，其中：</p>
+<ul>
+<li>invalidate() 会调用 parent.invalidateChild(this, damegeRect)，然后 ViewGroup 会递归调用 parent.invalidateChildInParent(location, dirtyRect)，最终调用到 ViewRootImpl#invalidateChildInParent，然后调用 ViewRootImpl 内部的 invalidate()，然后调用了 scheduleTraversals();</li>
+<li>requestLayout() 会一直递归调用 parent.requestLayout()，直到 ViewRootImpl 的 requestLayout()，然后检查了线程 checkThread()，以及 scheduleTraversals();</li>
+</ul>
+<p>最终都会调用到 scheduleTraversals(); 所以都会刷新 ViewTree，但是：</p>
+<ul>
+<li>invalidate() 会将需要刷新的 View 的 Rect 标记 PFLAG_DIRTY，然后在下一帧刷新 ViewTree 时，draw(Canvas) 只会在具有 PFLAG_DIRTY 时回调 onDraw(Canvas)</li>
+<li>requestLayout() 会将当前 View 标记 PFLAG_FORCE_LAYOUT，然后在下一帧刷新 ViewTree 时，measure() 和 layout() 只会在具有 PFLAG_FORCE_LAYOUT 时回调 onMeasure() 和 onLayout()。</li>
+</ul>
+<p>View#postInvalidate() 和 View#postInvalidateDelayed(delayTime) 会向 ViewRootImpl 构造方法中的初始线程的 Handler 发送一个事件，传了当前 View 本身，然后 ViewRootImpl 会在事件中直接调用 View#invalidate()，所以相当于是可以把 View#invalidate() 抛到 ViewRootImpl 初始线程中执行，多用于跨线程请求刷新 UI。</p>
+<p>scheduleTraversals() 内部调用 mTraversalBarrier = mHandler.getLooper().getQueue().postSyncBarrier(); 向 ViewRootImpl 初始线程发送一条屏障消息，阻塞后续同步消息执行，然后调用 mChoreographer.postCallback(Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null) 向 Choreographer 注册一个 CALLBACK_TRAVERSAL 回调，Choreographer 一共有五种回调，按回调时机先后顺序为：</p>
+<ul>
+<li>CALLBACK_INPUT == 0：输入事件</li>
+<li>CALLBACK_ANIMATION == 1：动画</li>
+<li>CALLBACK_INSETS_ANIMATION == 2：动画</li>
+<li>CALLBACK_TRAVERSAL == 3：布局和绘制</li>
+<li>CALLBACK_COMMIT == 4：提交</li>
+</ul>
+<p>Choreographer 内维护了一个 CallbackQueue 数组，数组长度为 5，下标与上面 5 个类型的取值对应。Choreographer 在 ViewRootImpl 的构造方法内初始化，并且 Choreographer 在自己的构造方法内保存了当前线程的 Looper，所以 Choreographer 和 ViewRootImpl 是同一线程的。</p>
+<p>Choreographer#postCallback(…) 内部再调用 postCallbackDelayedInternal()，然后调用 mCallbackQueues[callbackType].addCallbackLocked(dueTime, action, token) 用 ViewRootImpl 注册的 mTraversalRunnable 回调 构造一个 CallbackRecord，然后注册到 mCallbackQueues 数组中对应的 CallbackQueue 中（CallbackQueue 不是原生 Queue 或 List，而是内部维护了一个 CallbackRecord mHead，用链表的形式连接所有 CallbackRecord），然后调用 scheduleFrameLocked(now)，在 scheduleFrameLocked() 内，如果是 Android 4.1 之前，则不用 VSync 信号，直接发送一条 MSG_DO_FRAME 的消息，然后执行 doFrame()，在 Android 4.1 之后默认使用 VSync 信号，会判断当前是否处于初始线程，实际上也就是 ViewRootImpl 的初始线程，如果是则直接调用 scheduleVsyncLocked()，否则会向 Choreographer 的初始线程发送一个异步的 MSG_DO_SCHEDULE_VSYNC 消息（因为在 ViewRootImpl#scheduleTraversals() 中已经阻塞了 ViewRootImpl 线程的 Looper，而 Choreographer 与 ViewRootImpl 处于同一线程），由 Choreographer 初始线程调用 doScheduleVsync()，然后进一步再调用 scheduleVsyncLocked()。</p>
+<p>在 scheduleVsyncLocked() 内部调用了 mDisplayEventReceiver.scheduleVsync()，mDisplayEventReceiver 是内部类 FrameDisplayEventReceiver 对象，FrameDisplayEventReceiver 继承自 DisplayEventReceiver，Choreographer 在构造方法中创建了 mDisplayEventReceiver，当发生屏幕刷新事件时就会回调 DisplayEventReceiver#onVsync()，然后发送一个异步消息（理由同上）传入自己 this，因为 FrameDisplayEventReceiver 实现了 Runnable 接口，所以 Choreographer 的 FrameHandler 就会调用 FrameDisplayEventReceiver#run()，FrameDisplayEventReceiver 在 run() 这里面又调用了 doFrame()，与 Android 4.1 之前的逻辑重合。</p>
+<p>doFrame() 内就依次按照顺序通过 doCallbacks(Choreographer.CALLBACK_XXX) 回调 Choreographer 种的 5 种 Callback，doCallbacks() 就是遍历当前类型的所有 CallbackRecord#run() 方法，CallbackRecord#run() 方法内判断 token == null （对应 ViewRootImpl 调用mChoreographer.postCallback() 时传入第三个参数为 null）就会执行 ViewRootImpl 调用 mChoreographer.postCallback(Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null) 时第二个参数 Runnable 传入的 mTraversalRunnable 的 run() 方法，回到 ViewRootImpl 中：</p>
+<p>ViewRootImpl#mTraversalRunnable#run() 方法就是调用 doTraversal()，doTraversal() 内通过 mHandler.getLooper().getQueue().removeSyncBarrier(mTraversalBarrier); 移除了屏障消息，然后调用 performTraversals()，</p>
+<p>此外还有 Choreographer#postFrameCallback(FrameCallback)，传入的是一个 FrameCallback 回调，然后调用 postFrameCallbackDelayed()，然后同样调用 postCallbackDelayedInternal()，只不过这次传入的参数是 postCallbackDelayedInternal(CALLBACK_ANIMATION, frameCallback, FRAME_CALLBACK_TOKEN, delayMillis)，同样走到 mCallbackQueues[callbackType].addCallbackLocked(dueTime, action, token)，但是此时 callbackType 是 CALLBACK_ANIMATION，action 是 FrameCallback，并且用这个 FrameCallback 构造了一个 CallbackRecord 添加到 mCallbackQueues[CALLBACK_ANIMATION]，后面的逻辑一样，同样在收到 VSync 信号后，回调 FrameDisplayEventReceiver#onVsync()，然后向 FrameHandler 发送一个 FrameDisplayEventReceiver 自己，并回调 FrameDisplayEventReceiver#run()，以及 doFrame()，然后在 doCallbacks(Choreographer.CALLBACK_ANIMATION, frameTimeNanos) 时遍历到这条 FrameCallback 构造的 CallbackRecord，执行 CallbackRecord#run()，这一次判断 token == FRAME_CALLBACK_TOKEN，因此把 CallbackRecord#action 强转为 FrameCallback，然后调用 FrameCallback#doFrame(frameTimeNanos)，frameTimeNanos 表示的是这一帧开始渲染的时间，准确说是 FrameDisplayEventReceiver#onVsync() 回调时设置的，然后做了一些预处理，比如去掉上一帧的偏移等等。也就是说，Choreographer#postFrameCallback(FrameCallback) 传入的 FrameCallback，会在 Choreographer 收到每一次 VSync 信号后回调，并携带了收到这一次 VSync 信号时的时间戳，因此可以用来做帧率统计、绘制耗时统计等。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_27154507/article/details/79748010">https://blog.csdn.net/sinat_27154507/article/details/79748010</a></p>
 <p>View 绘制中主要流程分为measure，layout， draw 三个阶段。</p>
 <ul>
 <li>measure ：根据父 view 传递的 MeasureSpec 进行计算大小。</li>
@@ -376,6 +401,11 @@
 <p>Window，ViewRootImpl，DecorView之间的联系：</p>
 <p>一个 Activity 包含一个Window，Window是一个抽象基类，是 Activity 和整个 View 系统交互的接口，只有一个子类实现类PhoneWindow，提供了一系列窗口的方法，比如设置背景，标题等。一个PhoneWindow 对应一个 DecorView 跟 一个 ViewRootImpl，DecorView 是ViewTree 里面的顶层布局，是继承于FrameLayout，包含两个子View，一个id=statusBarBackground 的 View 和 LineaLayout，LineaLayout 里面包含 title 跟 content，title就是平时用的TitleBar或者ActionBar，contenty也是 FrameLayout，activity通过 setContent（）加载布局的时候加载到这个View上。ViewRootImpl 就是建立 DecorView 和 Window 之间的联系。</p>
 <p>View绘制的三个阶段的核心入口是在 ViewRootImpl 类的 performTraversals() 方法中。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/59b35102ce81" title="@LINK">Android中老生常谈的ViewRootImpl的scheduleTraversals()到底做了什么？（作者：probably_）</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/352843740" title="@LINK">谈谈 Android 渲染机制：如何绘制并显示一帧图像？（作者：程序写到秃）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/a785722173/article/details/112705044" title="@LINK">浅析丢帧检测机制上篇浅析丢帧检测机制上篇（作者：地球边）</a></li>
+</ul>
 
     </div>
 
@@ -562,14 +592,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Site Symbols:</span>
-    <span title="Site Symbols">384k</span>
+    <span title="Site Symbols">389k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">7:07</span>
+    <span title="Site Read Time">7:12</span>
   </span>
 </div>
 
