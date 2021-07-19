@@ -3445,6 +3445,20 @@ body {
 .post-body h3 {
   margin-top: 50px;
 }
+div.post-body a {
+  color: var(--custom-color-font-main);
+  border-bottom: 2px var(--custom-color-theme) solid;
+/* >>>>> 以下方案需要引入 FontAwesome 字体库 >>>>>
+  &::before {
+    content: "\f0c1";
+    font-family: FontAwesome !important;
+  }
+  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+}
+div.post-body a:hover {
+  color: var(--custom-color-theme);
+  background: var(--custom-color-background-light);
+}
 div.post-body strong {
   color: #eb6d39;
   font-weight: bold;
