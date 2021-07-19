@@ -16,69 +16,6 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/algorithm/algorithm-find_from_series/</loc>
-    
-    <lastmod>2020-08-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/algorithm/algorithm-find_pictures/</loc>
-    
-    <lastmod>2020-03-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/algorithm/algorithm-sort/</loc>
-    
-    <lastmod>2020-08-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/algorithm/algorithm-substring/</loc>
-    
-    <lastmod>2020-09-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/algorithm/algorithm-sum_of_numbers/</loc>
-    
-    <lastmod>2020-08-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/algorithm/algorithm-transport_and_consume/</loc>
-    
-    <lastmod>2020-02-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/hexodiy/hexodiy-init/</loc>
-    
-    <lastmod>2018-07-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/hexodiy/hexodiy-style/</loc>
-    
-    <lastmod>2018-07-25</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/android/android-aidl/</loc>
-    
-    <lastmod>2020-05-03</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.luis.ltd/post/android/android-anr/</loc>
     
     <lastmod>2019-10-07</lastmod>
@@ -226,23 +163,51 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/network/network-http_https/</loc>
+    <loc>https://blog.luis.ltd/post/algorithm/algorithm-binary_tree/</loc>
     
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/network/network-socket/</loc>
-    
-    <lastmod>2020-05-23</lastmod>
+    <lastmod>2020-09-06</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/network/network-tcp_udp/</loc>
+    <loc>https://blog.luis.ltd/post/algorithm/algorithm-find_from_series/</loc>
     
-    <lastmod>2019-08-22</lastmod>
+    <lastmod>2020-08-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/algorithm/algorithm-find_pictures/</loc>
+    
+    <lastmod>2020-03-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/algorithm/algorithm-sort/</loc>
+    
+    <lastmod>2020-08-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/algorithm/algorithm-substring/</loc>
+    
+    <lastmod>2020-09-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/algorithm/algorithm-sum_of_numbers/</loc>
+    
+    <lastmod>2020-08-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/algorithm/algorithm-transport_and_consume/</loc>
+    
+    <lastmod>2020-02-28</lastmod>
     
   </url>
   
@@ -250,6 +215,20 @@
     <loc>https://blog.luis.ltd/post/machinelearning/ml-introduction/</loc>
     
     <lastmod>2019-05-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/hexodiy/hexodiy-init/</loc>
+    
+    <lastmod>2018-07-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/hexodiy/hexodiy-style/</loc>
+    
+    <lastmod>2018-07-25</lastmod>
     
   </url>
   
@@ -275,9 +254,9 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/algorithm/algorithm-binary_tree/</loc>
+    <loc>https://blog.luis.ltd/post/java/java-hashmap/</loc>
     
-    <lastmod>2020-09-06</lastmod>
+    <lastmod>2020-06-21</lastmod>
     
   </url>
   
@@ -296,9 +275,9 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/java/java-reference/</loc>
+    <loc>https://blog.luis.ltd/post/android/android-aidl/</loc>
     
-    <lastmod>2020-07-26</lastmod>
+    <lastmod>2020-05-03</lastmod>
     
   </url>
   
@@ -320,6 +299,27 @@
     <loc>https://blog.luis.ltd/post/java/java-threadlocal/</loc>
     
     <lastmod>2020-03-31</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/network/network-http_https/</loc>
+    
+    <lastmod>2019-08-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/network/network-socket/</loc>
+    
+    <lastmod>2020-05-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/network/network-tcp_udp/</loc>
+    
+    <lastmod>2019-08-22</lastmod>
     
   </url>
   
@@ -366,13 +366,6 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/hexodiy/hexodiy-solutions/</loc>
-    
-    <lastmod>2018-07-30</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.luis.ltd/post/android/android-handler/</loc>
     
     <lastmod>2020-04-19</lastmod>
@@ -408,16 +401,9 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/python/python-hashingencoder-optimization/</loc>
+    <loc>https://blog.luis.ltd/post/hexodiy/hexodiy-solutions/</loc>
     
-    <lastmod>2019-06-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/post/python/python-underline/</loc>
-    
-    <lastmod>2019-06-24</lastmod>
+    <lastmod>2018-07-30</lastmod>
     
   </url>
   
@@ -436,6 +422,13 @@
   </url>
   
   <url>
+    <loc>https://blog.luis.ltd/post/linux/linux-io_block/</loc>
+    
+    <lastmod>2020-09-13</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.luis.ltd/post/note/note-cloud-server/</loc>
     
     <lastmod>2019-06-30</lastmod>
@@ -443,9 +436,16 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/linux/linux-io_block/</loc>
+    <loc>https://blog.luis.ltd/post/python/python-hashingencoder-optimization/</loc>
     
-    <lastmod>2020-09-13</lastmod>
+    <lastmod>2019-06-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/post/python/python-underline/</loc>
+    
+    <lastmod>2019-06-24</lastmod>
     
   </url>
   
@@ -499,6 +499,13 @@
   </url>
   
   <url>
+    <loc>https://blog.luis.ltd/about/index.html</loc>
+    
+    <lastmod>2017-12-31</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.luis.ltd/404.html</loc>
     
     <lastmod>2017-12-31</lastmod>
@@ -506,7 +513,7 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/about/index.html</loc>
+    <loc>https://blog.luis.ltd/categories/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
     
@@ -527,13 +534,6 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/categories/index.html</loc>
-    
-    <lastmod>2017-12-31</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.luis.ltd/about/plans/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
@@ -548,9 +548,9 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/post/java/java-hashmap/</loc>
+    <loc>https://blog.luis.ltd/post/java/java-reference/</loc>
     
-    <lastmod>2020-06-21</lastmod>
+    <lastmod>2020-07-26</lastmod>
     
   </url>
   
@@ -562,48 +562,6 @@
     <priority>1.0</priority>
   </url>
 
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Algorithm/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E6%8E%92%E5%BA%8F/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Hexo/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
   
   <url>
     <loc>https://blog.luis.ltd/tags/Android/</loc>
@@ -879,49 +837,28 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/Network/</loc>
+    <loc>https://blog.luis.ltd/tags/Algorithm/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/HTTP/</loc>
+    <loc>https://blog.luis.ltd/tags/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/SSL/</loc>
+    <loc>https://blog.luis.ltd/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/HTTPS/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Socket/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/TCP/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/UDP/</loc>
+    <loc>https://blog.luis.ltd/tags/%E6%8E%92%E5%BA%8F/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -950,6 +887,20 @@
   
   <url>
     <loc>https://blog.luis.ltd/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/Hexo/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1075,6 +1026,55 @@
   </url>
   
   <url>
+    <loc>https://blog.luis.ltd/tags/Network/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/HTTP/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/SSL/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/HTTPS/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/Socket/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/TCP/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/UDP/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.luis.ltd/tags/FFMPEG/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
@@ -1139,27 +1139,6 @@
   
   <url>
     <loc>https://blog.luis.ltd/tags/Logistic%E5%9B%9E%E5%BD%92/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Low-Severity-Vulnerability/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/FontAwesome/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Valine/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1257,56 +1236,21 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/SKLearn/</loc>
+    <loc>https://blog.luis.ltd/tags/Low-Severity-Vulnerability/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/HashingEncoder/</loc>
+    <loc>https://blog.luis.ltd/tags/FontAwesome/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/%E5%93%88%E5%B8%8C%E7%BC%96%E7%A0%81/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Python/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Underline/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E4%B8%8B%E5%88%92%E7%BA%BF/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E5%90%8C%E5%90%8D%E5%87%BD%E6%95%B0/</loc>
+    <loc>https://blog.luis.ltd/tags/Valine/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1369,35 +1313,7 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/tags/Server/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.luis.ltd/tags/Linux/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/Cloud/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/tags/%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1433,6 +1349,90 @@
   
   <url>
     <loc>https://blog.luis.ltd/tags/%E9%9D%9E%E9%98%BB%E5%A1%9E/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/Server/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/Cloud/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/SKLearn/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/HashingEncoder/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/%E5%93%88%E5%B8%8C%E7%BC%96%E7%A0%81/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/Python/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/Underline/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/%E4%B8%8B%E5%88%92%E7%BA%BF/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/tags/%E5%90%8C%E5%90%8D%E5%87%BD%E6%95%B0/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1483,20 +1483,6 @@
 
   
   <url>
-    <loc>https://blog.luis.ltd/categories/Algorithm/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.luis.ltd/categories/HexoDIY/</loc>
-    <lastmod>2021-07-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.luis.ltd/categories/Android/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
@@ -1511,7 +1497,7 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/categories/Network/</loc>
+    <loc>https://blog.luis.ltd/categories/Algorithm/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1519,6 +1505,20 @@
   
   <url>
     <loc>https://blog.luis.ltd/categories/MachineLearning/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/categories/HexoDIY/</loc>
+    <lastmod>2021-07-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.luis.ltd/categories/Network/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1553,14 +1553,14 @@
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/categories/Python/</loc>
+    <loc>https://blog.luis.ltd/categories/Linux/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.luis.ltd/categories/Linux/</loc>
+    <loc>https://blog.luis.ltd/categories/Python/</loc>
     <lastmod>2021-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
