@@ -135,16 +135,16 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-jar/</loc>
+    <loc>https://luis.ltd/post/android/android-looper/</loc>
     
-    <lastmod>2020-02-10</lastmod>
+    <lastmod>2020-04-26</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-looper/</loc>
+    <loc>https://luis.ltd/post/android/android-jar/</loc>
     
-    <lastmod>2020-04-26</lastmod>
+    <lastmod>2020-02-10</lastmod>
     
   </url>
   
@@ -443,6 +443,13 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/post/note/note-cloud-server/</loc>
+    
+    <lastmod>2019-06-30</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/post/python/python-hashingencoder-optimization/</loc>
     
     <lastmod>2019-06-20</lastmod>
@@ -453,13 +460,6 @@
     <loc>https://luis.ltd/post/python/python-underline/</loc>
     
     <lastmod>2019-06-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/note/note-cloud-server/</loc>
-    
-    <lastmod>2019-06-30</lastmod>
     
   </url>
   
@@ -534,13 +534,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/about/index.html</loc>
-    
-    <lastmod>2017-12-31</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/categories/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
@@ -549,6 +542,13 @@
   
   <url>
     <loc>https://luis.ltd/tags/index.html</loc>
+    
+    <lastmod>2017-12-31</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/about/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
     
@@ -753,13 +753,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/Jar/</loc>
-    <lastmod>2021-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/tags/Looper/</loc>
     <lastmod>2021-07-25</lastmod>
     <changefreq>daily</changefreq>
@@ -768,6 +761,13 @@
   
   <url>
     <loc>https://luis.ltd/tags/%E6%BA%90%E7%A0%81/</loc>
+    <lastmod>2021-07-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/Jar/</loc>
     <lastmod>2021-07-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1404,6 +1404,34 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/tags/Server/</loc>
+    <lastmod>2021-07-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/Cloud/</loc>
+    <lastmod>2021-07-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <lastmod>2021-07-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/</loc>
+    <lastmod>2021-07-25</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/tags/SKLearn/</loc>
     <lastmod>2021-07-25</lastmod>
     <changefreq>daily</changefreq>
@@ -1454,34 +1482,6 @@
   
   <url>
     <loc>https://luis.ltd/tags/%E5%90%8C%E5%90%8D%E5%87%BD%E6%95%B0/</loc>
-    <lastmod>2021-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/Server/</loc>
-    <lastmod>2021-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/Cloud/</loc>
-    <lastmod>2021-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
-    <lastmod>2021-07-25</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/</loc>
     <lastmod>2021-07-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
