@@ -2,9 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://luis.ltd/post/billboard/</loc>
+    <loc>https://luis.ltd/post/algorithm/algorithm-find_from_series/</loc>
     
-    <lastmod>2018-07-15</lastmod>
+    <lastmod>2020-08-29</lastmod>
     
   </url>
   
@@ -16,37 +16,16 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/algorithm/algorithm-find_from_series/</loc>
-    
-    <lastmod>2020-08-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/algorithm/algorithm-find_pictures/</loc>
-    
-    <lastmod>2020-03-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/algorithm/algorithm-sort/</loc>
-    
-    <lastmod>2020-08-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/algorithm/algorithm-substring/</loc>
+    <loc>https://luis.ltd/post/algorithm/algorithm-binary_tree/</loc>
     
     <lastmod>2020-09-06</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/algorithm/algorithm-sum_of_numbers/</loc>
+    <loc>https://luis.ltd/post/billboard/</loc>
     
-    <lastmod>2020-08-22</lastmod>
+    <lastmod>2018-07-15</lastmod>
     
   </url>
   
@@ -58,16 +37,16 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/hexodiy/hexodiy-init/</loc>
+    <loc>https://luis.ltd/post/algorithm/algorithm-sort/</loc>
     
-    <lastmod>2018-07-19</lastmod>
+    <lastmod>2020-08-29</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/hexodiy/hexodiy-style/</loc>
+    <loc>https://luis.ltd/post/algorithm/algorithm-sum_of_numbers/</loc>
     
-    <lastmod>2018-07-25</lastmod>
+    <lastmod>2020-08-22</lastmod>
     
   </url>
   
@@ -79,9 +58,9 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-anr/</loc>
+    <loc>https://luis.ltd/post/algorithm/algorithm-substring/</loc>
     
-    <lastmod>2019-10-07</lastmod>
+    <lastmod>2020-09-06</lastmod>
     
   </url>
   
@@ -93,9 +72,23 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/post/android/android-anr/</loc>
+    
+    <lastmod>2019-10-07</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/post/android/android-architecture/</loc>
     
     <lastmod>2019-08-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/post/android/android-build_install/</loc>
+    
+    <lastmod>2020-10-06</lastmod>
     
   </url>
   
@@ -114,23 +107,9 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-build_install/</loc>
-    
-    <lastmod>2020-10-06</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/post/android/android-contentprovider/</loc>
     
     <lastmod>2020-01-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/android/android-design_pattern/</loc>
-    
-    <lastmod>2020-06-09</lastmod>
     
   </url>
   
@@ -142,6 +121,13 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/post/android/android-design_pattern/</loc>
+    
+    <lastmod>2020-06-09</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/post/android/android-itc/</loc>
     
     <lastmod>2019-09-22</lastmod>
@@ -149,16 +135,16 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-jar/</loc>
+    <loc>https://luis.ltd/post/android/android-looper/</loc>
     
-    <lastmod>2020-02-10</lastmod>
+    <lastmod>2020-04-26</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-looper/</loc>
+    <loc>https://luis.ltd/post/android/android-jar/</loc>
     
-    <lastmod>2020-04-26</lastmod>
+    <lastmod>2020-02-10</lastmod>
     
   </url>
   
@@ -177,16 +163,16 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-messenger/</loc>
+    <loc>https://luis.ltd/post/android/android-multidex/</loc>
     
-    <lastmod>2020-05-05</lastmod>
+    <lastmod>2019-07-27</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/android/android-multidex/</loc>
+    <loc>https://luis.ltd/post/android/android-messenger/</loc>
     
-    <lastmod>2019-07-27</lastmod>
+    <lastmod>2020-05-05</lastmod>
     
   </url>
   
@@ -233,6 +219,20 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/post/hexodiy/hexodiy-init/</loc>
+    
+    <lastmod>2018-07-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/post/hexodiy/hexodiy-style/</loc>
+    
+    <lastmod>2018-07-25</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/post/java/java-finally/</loc>
     
     <lastmod>2020-03-25</lastmod>
@@ -268,20 +268,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/java/java-lru/</loc>
-    
-    <lastmod>2019-09-14</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/java/java-reference/</loc>
-    
-    <lastmod>2020-07-26</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/post/java/java-reflect/</loc>
     
     <lastmod>2020-08-04</lastmod>
@@ -289,9 +275,23 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/algorithm/algorithm-binary_tree/</loc>
+    <loc>https://luis.ltd/post/java/java-lru/</loc>
     
-    <lastmod>2020-09-06</lastmod>
+    <lastmod>2019-09-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/post/java/java-string/</loc>
+    
+    <lastmod>2020-08-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/post/algorithm/algorithm-find_pictures/</loc>
+    
+    <lastmod>2020-03-08</lastmod>
     
   </url>
   
@@ -306,6 +306,20 @@
     <loc>https://luis.ltd/post/machinelearning/ml-introduction/</loc>
     
     <lastmod>2019-05-01</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/post/note/note-build-ffmpeg/</loc>
+    
+    <lastmod>2019-08-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/post/note/note-git/</loc>
+    
+    <lastmod>2020-03-19</lastmod>
     
   </url>
   
@@ -327,20 +341,6 @@
     <loc>https://luis.ltd/post/network/network-tcp_udp/</loc>
     
     <lastmod>2019-08-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/note/note-build-ffmpeg/</loc>
-    
-    <lastmod>2019-08-05</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/note/note-git/</loc>
-    
-    <lastmod>2020-03-19</lastmod>
     
   </url>
   
@@ -369,13 +369,6 @@
     <loc>https://luis.ltd/post/machinelearning/ml-model/ml-model-performance/</loc>
     
     <lastmod>2019-06-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/post/hexodiy/hexodiy-solutions/</loc>
-    
-    <lastmod>2018-07-30</lastmod>
     
   </url>
   
@@ -425,6 +418,13 @@
     <loc>https://luis.ltd/post/android/android-window/</loc>
     
     <lastmod>2020-09-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/post/hexodiy/hexodiy-solutions/</loc>
+    
+    <lastmod>2018-07-30</lastmod>
     
   </url>
   
@@ -527,6 +527,13 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/about/index.html</loc>
+    
+    <lastmod>2017-12-31</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/404/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
@@ -534,7 +541,7 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/about/index.html</loc>
+    <loc>https://luis.ltd/categories/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
     
@@ -555,13 +562,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/categories/index.html</loc>
-    
-    <lastmod>2017-12-31</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/about/plans/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
@@ -569,9 +569,9 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/post/java/java-string/</loc>
+    <loc>https://luis.ltd/post/java/java-reference/</loc>
     
-    <lastmod>2020-08-15</lastmod>
+    <lastmod>2020-07-26</lastmod>
     
   </url>
   
@@ -613,20 +613,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/Hexo/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/tags/Android/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -635,13 +621,6 @@
   
   <url>
     <loc>https://luis.ltd/tags/AIDL/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/ANR/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -663,6 +642,13 @@
   
   <url>
     <loc>https://luis.ltd/tags/%E5%8A%A0%E5%9B%BA/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/ANR/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -697,6 +683,27 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/tags/%E7%BC%96%E8%AF%91/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/%E6%89%93%E5%8C%85/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/tags/Binder/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -725,35 +732,7 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/%E7%BC%96%E8%AF%91/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E6%89%93%E5%8C%85/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E5%AE%89%E8%A3%85/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/tags/ContentProvider/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -767,7 +746,7 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/Jar/</loc>
+    <loc>https://luis.ltd/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -782,6 +761,13 @@
   
   <url>
     <loc>https://luis.ltd/tags/%E6%BA%90%E7%A0%81/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/Jar/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -809,14 +795,14 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/Messenger/</loc>
+    <loc>https://luis.ltd/tags/MultiDex/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/MultiDex/</loc>
+    <loc>https://luis.ltd/tags/Messenger/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -907,6 +893,20 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/tags/Hexo/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/tags/Java/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -963,7 +963,21 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/tags/%E5%8F%8D%E5%B0%84/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/tags/LRU/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/String/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1005,20 +1019,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/%E5%8F%8D%E5%B0%84/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/String/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/tags/ThreadLocal/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -1048,6 +1048,48 @@
   
   <url>
     <loc>https://luis.ltd/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/FFMPEG/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/SO%E5%BA%93/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/Git/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/Cherry-Pick/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/%E4%BB%93%E5%BA%93/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/%E5%88%86%E6%94%AF/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1103,48 +1145,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/tags/FFMPEG/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/SO%E5%BA%93/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/Git/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/Cherry-Pick/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E4%BB%93%E5%BA%93/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/%E5%88%86%E6%94%AF/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -1160,27 +1160,6 @@
   
   <url>
     <loc>https://luis.ltd/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/Low-Severity-Vulnerability/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/FontAwesome/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luis.ltd/tags/Valine/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1321,6 +1300,27 @@
   
   <url>
     <loc>https://luis.ltd/tags/ViewRootImpl/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/Low-Severity-Vulnerability/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/FontAwesome/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luis.ltd/tags/Valine/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1560,13 +1560,6 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/categories/HexoDIY/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luis.ltd/categories/Android/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -1581,6 +1574,13 @@
   </url>
   
   <url>
+    <loc>https://luis.ltd/categories/HexoDIY/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luis.ltd/categories/MachineLearning/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -1588,14 +1588,14 @@
   </url>
   
   <url>
-    <loc>https://luis.ltd/categories/Network/</loc>
+    <loc>https://luis.ltd/categories/Note/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luis.ltd/categories/Note/</loc>
+    <loc>https://luis.ltd/categories/Network/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
