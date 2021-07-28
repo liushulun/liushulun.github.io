@@ -82,7 +82,7 @@
       <h1 class="site-title">Luis's Blogs</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2021/07/26 - 02:01:08</p>
+      <p class="site-subtitle" itemprop="description">2021/07/29 - 01:14:11</p>
   </div>
 
   <div class="site-nav-right">
@@ -163,7 +163,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HashingEncoder-%E5%A4%9A%E8%BF%9B%E7%A8%8B%E6%94%AF%E6%8C%81"><span class="nav-text">HashingEncoder-多进程支持</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%BA%90%E7%A0%81"><span class="nav-text">1. 源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%94%B9%E8%BF%9B%E6%80%9D%E8%B7%AF"><span class="nav-text">2. 改进思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%90%86%E8%AE%BA%E6%94%AF%E6%8C%81"><span class="nav-text">2.1 理论支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%BB%A3%E7%A0%81%E6%80%9D%E6%83%B3"><span class="nav-text">2.2 代码思想</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%9D%91"><span class="nav-text">3. 过程中的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%97%AE%E9%A2%98"><span class="nav-text">3.1 多线程和多进程问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%B9%B6%E8%A1%8C%E9%A1%BA%E5%BA%8F%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E9%97%AE%E9%A2%98"><span class="nav-text">3.2 并行顺序读取数据问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%BC%96%E7%A0%81%E5%90%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E4%BF%9D%E5%AD%98%E9%97%AE%E9%A2%98"><span class="nav-text">3.3 编码后数据的保存问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="nav-text">3.4 结果数据顺序问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%B0%83%E7%94%A8%E9%97%AE%E9%A2%98"><span class="nav-text">3.5 子进程调用问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E9%97%AE%E9%A2%98"><span class="nav-text">3.6 深拷贝问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%99%84%E5%BD%95-%E5%8F%82%E8%80%83%E6%8C%87%E5%AF%BC"><span class="nav-text">4. 附录[参考指导]</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HashingEncoder-%E5%A4%9A%E8%BF%9B%E7%A8%8B%E6%94%AF%E6%8C%81"><span class="nav-text">HashingEncoder-多进程支持</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%BA%90%E7%A0%81"><span class="nav-text">1. 源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%94%B9%E8%BF%9B%E6%80%9D%E8%B7%AF"><span class="nav-text">2. 改进思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%90%86%E8%AE%BA%E6%94%AF%E6%8C%81"><span class="nav-text">2.1 理论支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%BB%A3%E7%A0%81%E6%80%9D%E6%83%B3"><span class="nav-text">2.2 代码思想</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E5%9D%91"><span class="nav-text">3. 过程中的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%97%AE%E9%A2%98"><span class="nav-text">3.1 多线程和多进程问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%B9%B6%E8%A1%8C%E9%A1%BA%E5%BA%8F%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E9%97%AE%E9%A2%98"><span class="nav-text">3.2 并行顺序读取数据问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%BC%96%E7%A0%81%E5%90%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E4%BF%9D%E5%AD%98%E9%97%AE%E9%A2%98"><span class="nav-text">3.3 编码后数据的保存问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="nav-text">3.4 结果数据顺序问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%B0%83%E7%94%A8%E9%97%AE%E9%A2%98"><span class="nav-text">3.5 子进程调用问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E9%97%AE%E9%A2%98"><span class="nav-text">3.6 深拷贝问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -475,27 +475,25 @@
 </blockquote>
 <p>以及在本地进行单元测试时通常使用 nose 模块测试，但在提交 PR 时测试是部署在 CI 上进行的，这里面也遇到了一些问题，例如代码文件内的 example 的输入和输出必须是真实运行结果，CI 检测时会真实运行 example 的输入，并且所写的输出也要和 CI 运行结果一致。又或者由于最终提交的工具包需要面向各种环境的使用者，所以 CI 上还部署了 Python2 环境下的测试，这就使得代码必须要做兼容，例如 <code>print(Str, flush=boolean)</code> 这个简单常见的方法是基于 Python3 的，在提交的 CI 检测中就会报错，因此在本地也需要添加对应的环境自行检测，等等。对于单元测试这一部分，通过<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8978aceac3b6" title="@LINK">基于travis-ci的单元自测（作者：lewzylu）</a>这篇文章亦获得了不少帮助，记录在附录【11】中供参考。</p>
 <hr>
-<h2 id="4-附录-参考指导"><a href="#4-附录-参考指导" class="headerlink" title="4. 附录[参考指导]"></a>4. 附录[参考指导]</h2><blockquote>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chenyulancn/article/details/77836593" title="@LINK">【1】python多进程共享变量Value使用tips（作者：chenyulancn）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27292549/article/details/78929296" title="@LINK">【2】python中的multiprocessing在map函数中的加锁lock处理方式（作者：qq_27292549）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41935140/article/details/81153611" title="@LINK">【3】使用进程池时遇到的坑…（作者：Kepner）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38765321/article/details/88376031" title="@LINK">【4】TypeError: can’t pickle _thread.lock objects（作者：voyagerlll）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/SuKiWX/p/8804974.html" title="@LINK">【5】python中的GIL详解（作者：背着吉他的王小可）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kaituorensheng/p/4445418.html" title="@LINK">【6】Python多进程编程（作者：jihite）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gengyi/p/8647950.html" title="@LINK">【7】python学习笔记——multiprocessing 多进程组件-队列Queue（作者：耕毅）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013066730/article/details/82763115" title="@LINK">【8】python多进程（multiprocessing）中的Queue，Pipe（作者：mjiansun）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sch01ar/p/8215042.html" title="@LINK">【9】Python多进程-进程间数据的传递（作者：Sch01aR#）</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000005919174" title="@LINK">【10】使用multiprocessing.Process调用start方法后，有较小的几率子进程中run方法未执行（作者：从星空仰望地球）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8978aceac3b6" title="@LINK">【11】基于travis-ci的单元自测（作者：lewzylu）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33762321/article/details/88275111" title="@LINK">【12】数据特征处理之特征哈希（Feature Hashing）（作者：weixin_33762321）</a></li>
-<li><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1593454269874725931&wfr=spider&for=pc&isFailFlag=1" title="@LINK">【13】人工智能之机器学习篇——哈希学习learning to hash（作者：人工智能产业研究院）</a></li>
-<li><a target="_blank" rel="noopener" href="http://breezedeus.github.io/2014/11/20/breezedeus-feature-hashing.html" title="@LINK">【14】特征哈希（Feature Hashing）（作者：Breezedeus）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.datalearner.com/blog/1051537932880901" title="@LINK">【15】数据特征处理之特征哈希（Feature Hashing）（作者：小木）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/laolu1573/article/details/79410187" title="@LINK">【16】Feature hashing(特征哈希)（作者：大师鲁）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/vim_wj/article/details/78300239" title="@LINK">【17】github—-向开源框架提交pr的过程（作者：vim_wj）</a></li>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chenyulancn/article/details/77836593" title="@LINK">python多进程共享变量Value使用tips（作者：chenyulancn）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27292549/article/details/78929296" title="@LINK">python中的multiprocessing在map函数中的加锁lock处理方式（作者：qq_27292549）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41935140/article/details/81153611" title="@LINK">使用进程池时遇到的坑…（作者：Kepner）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38765321/article/details/88376031" title="@LINK">TypeError: can’t pickle _thread.lock objects（作者：voyagerlll）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/SuKiWX/p/8804974.html" title="@LINK">python中的GIL详解（作者：背着吉他的王小可）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kaituorensheng/p/4445418.html" title="@LINK">Python多进程编程（作者：jihite）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gengyi/p/8647950.html" title="@LINK">python学习笔记——multiprocessing 多进程组件-队列Queue（作者：耕毅）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013066730/article/details/82763115" title="@LINK">python多进程（multiprocessing）中的Queue，Pipe（作者：mjiansun）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sch01ar/p/8215042.html" title="@LINK">Python多进程-进程间数据的传递（作者：Sch01aR#）</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000005919174" title="@LINK">使用multiprocessing.Process调用start方法后，有较小的几率子进程中run方法未执行（作者：从星空仰望地球）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8978aceac3b6" title="@LINK">基于travis-ci的单元自测（作者：lewzylu）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33762321/article/details/88275111" title="@LINK">数据特征处理之特征哈希（Feature Hashing）（作者：weixin_33762321）</a></li>
+<li><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1593454269874725931&wfr=spider&for=pc&isFailFlag=1" title="@LINK">人工智能之机器学习篇——哈希学习learning to hash（作者：人工智能产业研究院）</a></li>
+<li><a target="_blank" rel="noopener" href="http://breezedeus.github.io/2014/11/20/breezedeus-feature-hashing.html" title="@LINK">特征哈希（Feature Hashing）（作者：Breezedeus）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.datalearner.com/blog/1051537932880901" title="@LINK">数据特征处理之特征哈希（Feature Hashing）（作者：小木）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/laolu1573/article/details/79410187" title="@LINK">Feature hashing(特征哈希)（作者：大师鲁）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/vim_wj/article/details/78300239" title="@LINK">github—-向开源框架提交pr的过程（作者：vim_wj）</a></li>
 </ul>
-</blockquote>
 
     </div>
 
@@ -688,14 +686,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Site Symbols:</span>
-    <span title="Site Symbols">415k</span>
+    <span title="Site Symbols">416k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">7:42</span>
+    <span title="Site Read Time">7:43</span>
   </span>
 </div>
 
@@ -743,7 +741,7 @@
         border-bottom: none;
     }
 </style>
-<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 30px;" onClick="window.open('#postBottom','_self')">
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
     <span class="fa fa-arrow-down"> Down</span>
 </div>
 

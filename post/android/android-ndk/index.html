@@ -86,7 +86,7 @@
       <h1 class="site-title">Luis's Blogs</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2021/07/26 - 02:01:08</p>
+      <p class="site-subtitle" itemprop="description">2021/07/29 - 01:14:11</p>
   </div>
 
   <div class="site-nav-right">
@@ -379,14 +379,6 @@
         <span id="more"></span>
 
 <h1 id="Android-NDK开发"><a href="#Android-NDK开发" class="headerlink" title="Android-NDK开发"></a>Android-NDK开发</h1><p>粗略的说：JNI 就是在 Java 中调用 C/C++ 代码。早期 Android 版本通常使用 NDK-Build 方式构建，但由于不便于管理等原因，Android Studio 在 3.2 版本后弃用了 <code>NDK-Build</code> 方式，改为推荐使用 <code>CMake</code>。</p>
-<blockquote>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://developer.android.google.cn/ndk/guides" title="@LINK">什么是NDK</a></li>
-<li><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/JNI/9412164?fr=aladdin" title="@LINK">什么是JNI</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Ithink213/article/details/88580558" title="@LINK">为什么Java可以调用C/C++</a>（编译的时候，会把JNI层的代码编译为SO库，然后在运行到JNI层的方法时，其实是链接到了编译出来的SO库中运行。）</li>
-<li><a target="_blank" rel="noopener" href="https://www.oschina.net/question/2241352_213433" title="@LINK">定位Native Crash</a>（利用 NDK/ndk-stack 工具。发生 NativeCrash 时，可在 Log 信息中心，看到报错的地方显示的是某个 SO 文件，并且会标出 JNI 方法名，然后根据发生 Crash 时运行的手机平台，比如 <code>x86</code> 或者 <code>armeabi</code>，执行 <code>adb shell logcat | ndk-stack -sym 项目/obj/local/armeabi（平台）</code>，然后就能看到日志中标注了具体哪个 JNI 方法中的第几行发生 Crash。）</li>
-</ul>
-</blockquote>
 <hr>
 <h2 id="1-官方Demo"><a href="#1-官方Demo" class="headerlink" title="1. 官方Demo"></a>1. 官方Demo</h2><p>先新建一个原生支持NDK的Android项目，即在新建项目的时候勾选 <code>Include C++ support</code> ，观察一下谷歌建议我们使用的CMake方式的样子。在官方的Demo中，调用和以前的方式并无区别：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Used to load the &#x27;native-lib&#x27; library on application startup.</span></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.loadLibrary(<span class="string">&quot;native-lib&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Example of a call to a native method</span></span><br><span class="line">        TextView tv = (TextView) findViewById(R.id.sample_text);</span><br><span class="line">        tv.setText(stringFromJNI());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * A native method that is implemented by the &#x27;native-lib&#x27; native library,</span></span><br><span class="line"><span class="comment">     * which is packaged with this application.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">native</span> String <span class="title">stringFromJNI</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -492,17 +484,25 @@
 </ol>
 <p>以上。</p>
 <hr>
-<h2 id="5-附录-参考指导"><a href="#5-附录-参考指导" class="headerlink" title="5. 附录[参考指导]"></a>5. 附录[参考指导]</h2><blockquote>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/aidesudi/article/details/68946918" title="@LINK">【1】Android Studio 2.3使用CMake方式NDK入门（作者：狮村小孩）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lei_notes/article/details/78548433" title="@LINK">【2】小白初用Android studio的cMake编译生成.so库并调用（作者：lei_notes）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/xufei5789651/article/details/73694634" title="@LINK">【3】NDK开发笔记—CMake构建JNI（作者：xufei5789651）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pkandroid/article/details/67074346" title="@LINK">【4】AndroidStudio2.3 NDk Cmake配置（作者：Android小屋）</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cb3064450688" title="@LINK">【5】AS2.2使用CMake方式进行JNI/NDK开发（作者：于连林520wcf）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34329508/article/details/52330437" title="@LINK">【6】android ndk 调用C/C++函数（作者：至信）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shenhuxi_yu/article/details/79788760" title="@LINK">【7】makefile中的CPPFLAGS LDFLAGS CFLAGS选项详解（作者：shenhuxi_yu）</a></li>
+<h2 id="5-附录-参考指导"><a href="#5-附录-参考指导" class="headerlink" title="5. 附录[参考指导]"></a>5. 附录[参考指导]</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.android.google.cn/ndk/guides" title="@LINK">什么是NDK</a></li>
+<li><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/JNI/9412164?fr=aladdin" title="@LINK">什么是JNI</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Ithink213/article/details/88580558" title="@LINK">为什么Java可以调用C/C++</a><ul>
+<li>编译的时候，会把JNI层的代码编译为SO库，然后在运行到JNI层的方法时，其实是链接到了编译出来的SO库中运行。</li>
 </ul>
-</blockquote>
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.oschina.net/question/2241352_213433" title="@LINK">定位Native Crash</a><ul>
+<li>利用 NDK/ndk-stack 工具。发生 NativeCrash 时，可在 Log 信息中心，看到报错的地方显示的是某个 SO 文件，并且会标出 JNI 方法名，然后根据发生 Crash 时运行的手机平台，比如 <code>x86</code> 或者 <code>armeabi</code>，执行 <code>adb shell logcat | ndk-stack -sym 项目/obj/local/armeabi（平台）</code>，然后就能看到日志中标注了具体哪个 JNI 方法中的第几行发生 Crash。</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/aidesudi/article/details/68946918" title="@LINK">Android Studio 2.3使用CMake方式NDK入门（作者：狮村小孩）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lei_notes/article/details/78548433" title="@LINK">小白初用Android studio的cMake编译生成.so库并调用（作者：lei_notes）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/xufei5789651/article/details/73694634" title="@LINK">NDK开发笔记—CMake构建JNI（作者：xufei5789651）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pkandroid/article/details/67074346" title="@LINK">AndroidStudio2.3 NDk Cmake配置（作者：Android小屋）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cb3064450688" title="@LINK">AS2.2使用CMake方式进行JNI/NDK开发（作者：于连林520wcf）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34329508/article/details/52330437" title="@LINK">android ndk 调用C/C++函数（作者：至信）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shenhuxi_yu/article/details/79788760" title="@LINK">makefile中的CPPFLAGS LDFLAGS CFLAGS选项详解（作者：shenhuxi_yu）</a></li>
+</ul>
 
     </div>
 
@@ -695,14 +695,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Site Symbols:</span>
-    <span title="Site Symbols">415k</span>
+    <span title="Site Symbols">416k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">7:42</span>
+    <span title="Site Read Time">7:43</span>
   </span>
 </div>
 
@@ -750,7 +750,7 @@
         border-bottom: none;
     }
 </style>
-<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 30px;" onClick="window.open('#postBottom','_self')">
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
     <span class="fa fa-arrow-down"> Down</span>
 </div>
 

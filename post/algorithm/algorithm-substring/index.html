@@ -77,7 +77,7 @@
       <h1 class="site-title">Luis's Blogs</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2021/07/26 - 02:01:08</p>
+      <p class="site-subtitle" itemprop="description">2021/07/29 - 01:14:11</p>
   </div>
 
   <div class="site-nav-right">
@@ -593,6 +593,7 @@
 </li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution_DynamicProgramming</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 最长回文子串在原字符串的起始下标</span></span><br><span class="line">        <span class="keyword">int</span> maxSubLeft = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 最长回文子串的长度</span></span><br><span class="line">        <span class="keyword">int</span> maxSubLength = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 用一个二维数组 dp[left][right] 表示从 s[left]...s[right] 是否为回文子串，</span></span><br><span class="line">        <span class="comment">// dp[left][right] 初始化时默认值全为 false。</span></span><br><span class="line">        <span class="keyword">boolean</span> [][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[s.length()][s.length()];</span><br><span class="line">        <span class="comment">// 因为 dp[left][right] 数组的定义，right 一定大于等于 left</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> right = <span class="number">0</span>; right &lt; s.length(); right++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> left = <span class="number">0</span>; left &lt;= right; left++) &#123;</span><br><span class="line">                <span class="comment">// 如果 s[left] == s[right]，分为三种情况</span></span><br><span class="line">                <span class="comment">// （1）left == right</span></span><br><span class="line">                <span class="comment">//     表示当前 1 个字符，则肯定是回文子串，dp[left][right] = true</span></span><br><span class="line">                <span class="comment">// （2）right - left = 1</span></span><br><span class="line">                <span class="comment">//     表示 2 个相邻重复字符，既然相等则肯定也是回文子串，dp[left][right] = true</span></span><br><span class="line">                <span class="comment">// （3）right - left &gt; 1</span></span><br><span class="line">                <span class="comment">//     表示子串至少包含 3 个字符，例如 aba 或 abba，则这个子串是否为回文子串，</span></span><br><span class="line">                <span class="comment">//     依赖于 s[left + 1]...s[right - 1] 是否为回文子串，</span></span><br><span class="line">                <span class="comment">//     即依赖于 dp[left + 1][right - 1] 是否为 true。</span></span><br><span class="line">                <span class="comment">// 以上情况（1）和情况（2），都能直接确定 dp[left][right] = true</span></span><br><span class="line">                <span class="keyword">if</span> (s.charAt(left) == s.charAt(right)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (right - left &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                        <span class="comment">// 对应情况（1）和情况（2）</span></span><br><span class="line">                        dp[left][right] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dp[left + <span class="number">1</span>][right - <span class="number">1</span>]) &#123;</span><br><span class="line">                        <span class="comment">// 对应情况（3）</span></span><br><span class="line">                        dp[left][right] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// dp[left][right] 数组初始化时默认所有元素都是 false，</span></span><br><span class="line">                <span class="comment">// 所以如果 dp[left][right] == true，</span></span><br><span class="line">                <span class="comment">// 就表示上面的条件种判断了 s[left]...s[right] 为回文子串，</span></span><br><span class="line">                <span class="comment">// 则如果这个回文子串的长度大于记录的最大长度，就可以更新记录。</span></span><br><span class="line">                <span class="keyword">if</span> (dp[left][right] &amp;&amp; right - left + <span class="number">1</span> &gt; maxSubLength) &#123;</span><br><span class="line">                    maxSubLeft = left;</span><br><span class="line">                    maxSubLength = right - left + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// String#substring(startIndex, endIndex) 返回的是一个 [左闭, 右开) 区间</span></span><br><span class="line">        <span class="keyword">return</span> s.substring(maxSubLeft, maxSubLeft + maxSubLength);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
     </div>
 
     
@@ -781,14 +782,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Site Symbols:</span>
-    <span title="Site Symbols">415k</span>
+    <span title="Site Symbols">416k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">7:42</span>
+    <span title="Site Read Time">7:43</span>
   </span>
 </div>
 
@@ -836,7 +837,7 @@
         border-bottom: none;
     }
 </style>
-<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 30px;" onClick="window.open('#postBottom','_self')">
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
     <span class="fa fa-arrow-down"> Down</span>
 </div>
 
