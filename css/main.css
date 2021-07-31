@@ -3277,6 +3277,9 @@ mjx-container[display="true"] + br {
  * 页面布局
  * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
  */
+.main-inner .sub-menu {
+  padding: 0;
+}
 .main-inner .pagination .prev,
 .main-inner .pagination .next,
 .main-inner .pagination .page-number {
@@ -3512,6 +3515,7 @@ th {
   border-width: 2px;
   color: var(--custom-color-font-dark);
   background: var(--custom-color-background-mid);
+  text-align: center !important;
 }
 td {
   border-bottom-width: 1px;

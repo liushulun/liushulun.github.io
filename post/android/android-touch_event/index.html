@@ -30,7 +30,7 @@
 <meta property="og:site_name" content="Luis&#39;s Blogs">
 <meta property="og:description" content="未完待续">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-09-30T13:30:17.000Z">
+<meta property="article:published_time" content="2021-07-25T13:30:17.000Z">
 <meta property="article:author" content="Luis">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="触摸事件">
@@ -77,7 +77,7 @@
       <h1 class="site-title">Luis's Blogs</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2021/07/29 - 07:48:01</p>
+      <p class="site-subtitle" itemprop="description">2021/08/01 - 06:39:17</p>
   </div>
 
   <div class="site-nav-right">
@@ -92,9 +92,9 @@
 <nav class="site-nav">
   <ul class="main-menu menu">
         <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">74</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">71</span></a></li>
         <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">12</span></a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">138</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">130</span></a></li>
         
             
   <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>About</a></li>
@@ -174,7 +174,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-count">71</span>
           <span class="site-state-item-name">Posts</span>
         </a>
       </div>
@@ -187,7 +187,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">138</span>
+        <span class="site-state-item-count">130</span>
         <span class="site-state-item-name">Tags</span></a>
       </div>
   </nav>
@@ -281,7 +281,7 @@
       </span>
       <span class="post-meta-item-text">Posted:</span>
 
-      <time title="Created::2020-09-30 21:30:17" itemprop="dateCreated datePublished" datetime="2020-09-30T21:30:17+08:00">2020-09-30</time>
+      <time title="Created::2021-07-25 21:30:17" itemprop="dateCreated datePublished" datetime="2021-07-25T21:30:17+08:00">2021-07-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -345,14 +345,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Post Symbols:</span>
-      <span>547</span>
+      <span>2.1k</span>
     </span>
     <span class="post-meta-item" title="Read Time">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">Read Time &asymp;</span>
-      <span>1 Min</span>
+      <span>2 Min</span>
     </span>
 </div>
 
@@ -366,7 +366,14 @@
     <div class="post-body" itemprop="articleBody">
         <span id="more"></span>
 
-<h1 id="Android-触摸事件"><a href="#Android-触摸事件" class="headerlink" title="Android-触摸事件"></a>Android-触摸事件</h1><p>Android 的触摸事件有两个方向，一个是向下分发（子控件），一个是向上传递（父控件），onInterceptTouchEvent 表示是否拦截向下分发，返回 true 则子控件不会响应触摸事件，返回 false 则子控件的 onInterceptTouchEvent 被调用。onTouchEvent 表示是否处理事件，返回 true 则表示触摸事件在该 View 处理，不再向上传递。通常，ViewGroup 的 onInterceptTouchEvent 返回 false，onTouchEvent 返回 false，子 View 如果不是 ViewGroup，则没有 onInterceptTouchEvent 方法，onTouchEvent 返回 true，需要处理事件的子 View 如果在 ACTION_DOWN 时 onTouchEvent 不返回 true，表示没有消费 ACTION_DOWN，则将无法响应 ACTION_MOVE 和 ACTION_UP。</p>
+<h1 id="Android-触摸事件"><a href="#Android-触摸事件" class="headerlink" title="Android-触摸事件"></a>Android-触摸事件</h1><p>SystemService 进程启动后，在 <code>startOtherServices()</code> 中几乎同时启动了 InputManagerService 和 WindowManagerService，并且在创建 WMS 时把 IMS 传了进去，WMS 持有 IMS。</p>
+<p>IMS 在启动后会创建两个线程，一个负责不断读取、一个负责不断分发：</p>
+<ul>
+<li>读取线程 InputReaderThread 通过基于 Linux 内核 inotify 和 epoll 机制的 EventHub 监听设备的插拔、触摸、按钮等事件，主要面向的是 <code>dev/input/</code> 下的设备节点，例如 <code>dev/input/event0</code> 对应的就是输入事件，EventHub 调用 <code>getEvents()</code> 获取各种输入事件，然后调用 <code>processEventLocked()</code> 将输入事件封装成 RawEvent，然后向分发线程发送一条 Message。</li>
+<li>分发线程 InputDispatcher 是典型的 Looper 线程，基于 Native 的 Handler 机制阻塞等待事件，当 InputReaderThread 调用 InputDispatcher 对象的 <code>mQueuedListener.flush()</code> 后，InputDispatcher 就调用 <code>dispatchOnceInnerLocked()</code> 进行事件分发。</li>
+</ul>
+<p>每当添加一个 Window 时都会调用 <code>WindowManagerImpl#addView(...)</code>，会计算窗口的大小以及 Z-Order (type) 属性，最终通过 WMS 记录到 SurfaceFlinger 中，SF 中 WindowList 记录了所有 Window 的信息，包括 Window 的显示范围、颜色格式、对应的实例等，因此当 InputDispatcher 分发事件时，首先调用 <code>findTouchedWindowTargetsLocked()</code> 请求 SF 查找对应的 Window，SF 遍历 WindowList 判断 Window 的范围、Z-Order 等找到目标 Window，然后通过 Socket 把对应的输入事件发送到应用进程的目标 Window 的 ViewRootImpl，ViewRootImpl 在 <code>setView(...)</code> 中调用 <code>mWindowSession.addToDisplay(...)</code> 创建了一个 Socket 连接并开启了 Input 通道 <code>mInputChannel</code>，然后把这个 Socket 添加到 Native 层 Looper 的 epoll 数组中，这样只要收到 IMS 发来的事件就会唤醒 Native Looper，然后在封装成 Java 层对象 InputEvent，然后回调到 Java 层 ViewRootImpl 内部类 <code>ViewPostImeInputStage#processPointerEvent(QueuedInputEvent)</code>，ViewRootImpl 调用 DecorView 重写的 <code>dispatchTouchEvent(...)</code> 方法，DecorView 优先将 TouchEvent 回调给注册的 WindowCallback，PhoneWindow 和 Activity 都注册了 WindowCallback，因此 TouchEvent 会优先派发给 PhoneWindow 和 Activity，如果它们不处理，则会调用 <code>mDecor.superDispatchTouchEvent(event);</code> 把触摸事件再回调到 DecorView，然后 DecorView 继续调用 <code>super.dispatchTouchEvent(event);</code> 回到 <code>ViewGroup#dispatchTouchEvent(MotionEvent)</code>，ViewRootImpl 没有重写这个方法，所以就会按照 ViewTree 的层级，再从 DecorView 的 <code>onDispatchEvent()</code> 开始逐层向下分发。</p>
+<p>Android 的触摸事件有两个方向，一个是向下分发（子控件），一个是向上传递（父控件），onInterceptTouchEvent 表示是否拦截向下分发，返回 true 则子控件不会响应触摸事件，返回 false 则子控件的 onInterceptTouchEvent 被调用。onTouchEvent 表示是否处理事件，返回 true 则表示触摸事件在该 View 处理，不再向上传递。通常，ViewGroup 的 onInterceptTouchEvent 返回 false，onTouchEvent 返回 false，子 View 如果不是 ViewGroup，则没有 onInterceptTouchEvent 方法，onTouchEvent 返回 true，需要处理事件的子 View 如果在 ACTION_DOWN 时 onTouchEvent 不返回 true，表示没有消费 ACTION_DOWN，则将无法响应 ACTION_MOVE 和 ACTION_UP。</p>
 <ul>
 <li>ViewRootImpl接受事件吗</li>
 </ul>
@@ -524,13 +531,10 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/post/android/android-render/" rel="prev" title="Android渲染机制">
-                  <i class="fa fa-chevron-left"></i> Android渲染机制
-                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/post/android/android-window/" rel="next" title="Android-Window机制">
-                  Android-Window机制 <i class="fa fa-chevron-right"></i>
+                <a href="/post/android/android-render/" rel="next" title="Android-渲染机制">
+                  Android-渲染机制 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -564,14 +568,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Site Symbols:</span>
-    <span title="Site Symbols">421k</span>
+    <span title="Site Symbols">418k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">7:47</span>
+    <span title="Site Read Time">7:44</span>
   </span>
 </div>
 
