@@ -77,7 +77,7 @@
       <h1 class="site-title">Luis's Blogs</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2021/08/01 - 08:22:54</p>
+      <p class="site-subtitle" itemprop="description">2021/08/01 - 08:28:13</p>
   </div>
 
   <div class="site-nav-right">
@@ -345,14 +345,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Post Symbols:</span>
-      <span>9.5k</span>
+      <span>9.4k</span>
     </span>
     <span class="post-meta-item" title="Read Time">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">Read Time &asymp;</span>
-      <span>11 Min</span>
+      <span>10 Min</span>
     </span>
 </div>
 
@@ -483,9 +483,9 @@
 <p>（2）本地执行 Hexo 命令部署：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[luis@WebLocal]#</span><span class="bash"> hexo clean &amp;&amp; hexo g -d</span></span><br><span class="line"></span><br><span class="line">error: remote unpack failed: unable to create temporary object directory</span><br><span class="line">error: failed to push some refs to &#x27;ubuntu@43.129.198.91:/home/ubuntu/Projects/LuisBlogWeb.git&#x27;</span><br></pre></td></tr></table></figure>
 
-<p>向云服务器 Push 时报错，是因为 Git-Hook 是通过 root 用户配置的，但是云服务器为了安全禁用了远端登录 root 用户，所以 ubuntu 用户在 Push 时，没有权限执行 Hook.</p>
-<p>（2）将云服务器中 <code>post-receive</code> 这个 Hook 改为 ubuntu 用户权限：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 先切换到 ubuntu 用户：</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> su ubuntu</span></span><br><span class="line"></span><br><span class="line">// 然后将 post-receive 转为 ubuntu 用户的权限</span><br><span class="line"><span class="meta">ubuntu@~/Projects$</span><span class="bash"> sudo chown -R <span class="variable">$USER</span>:<span class="variable">$USER</span> ./Web.git/hooks/post-receive</span></span><br><span class="line"></span><br><span class="line">// 查看文件权限，post-receive 执行用户已经变成 ubuntu：</span><br><span class="line"><span class="meta">ubuntu@~/Projects$</span><span class="bash"> <span class="built_in">cd</span> Web.git/hooks</span></span><br><span class="line"><span class="meta">ubuntu@~/Projects$</span><span class="bash"> ll</span></span><br><span class="line"></span><br><span class="line">-rwxr-xr-x 1 ubuntu ubuntu  113 Aug  1 hh:mm post-receive*</span><br></pre></td></tr></table></figure>
+<p>向云服务器 Push 时报错，是因为 <code>Web.git</code> 是 root 用户创建的，但是云服务器为了安全禁用了远端登录 root 用户，所以 ubuntu 用户在 Push 时，没有权限获取临时空间缓存文件.</p>
+<p>（2）将云服务器中 <code>Web.git</code> 目录改为 ubuntu 用户权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 先切换到 ubuntu 用户：</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> su ubuntu</span></span><br><span class="line"></span><br><span class="line">// 然后将 post-receive 转为 ubuntu 用户的权限</span><br><span class="line"><span class="meta">ubuntu@~/Projects$</span><span class="bash"> sudo chown -R <span class="variable">$USER</span>:<span class="variable">$USER</span> ./Web.git</span></span><br><span class="line"></span><br><span class="line">// 查看文件权限，post-receive 执行用户已经变成 ubuntu：</span><br><span class="line"><span class="meta">ubuntu@~/Projects$</span><span class="bash"> ll</span></span><br><span class="line"></span><br><span class="line">drwxr-xr-x 7 ubuntu ubuntu 4096 Aug  1 hh:mm Web.git/</span><br></pre></td></tr></table></figure>
 
 <p>再次从本地执行 Hexo 命令，即可成功部署。</p>
 <h3 id="2-4-配置HTTPS证书"><a href="#2-4-配置HTTPS证书" class="headerlink" title="2.4 配置HTTPS证书"></a>2.4 配置HTTPS证书</h3><p>为了访问安全性以及提升访问质量，可以给域名套上 SSL 证书。</p>
