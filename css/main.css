@@ -3317,6 +3317,10 @@ mjx-container[display="true"] + br {
     border-radius: 0px 0px 0px 0px;
   }
 }
+.site-title {
+  color: var(--custom-color-theme);
+  font-weight: bold;
+}
 .site-subtitle {
   font-size: 0.75em;
 }
