@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）Linux 如何实现跨进程通信；（2）Binder 驱动；（3）ServiceManager 注册和查找服务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Binder">
+<meta property="og:url" content="https://luisliu.cn/post/android/android-binder/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）Linux 如何实现跨进程通信；（2）Binder 驱动；（3）ServiceManager 注册和查找服务。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://luisliu.cn/post/android/android-binder/linux_android_startup.png">
+<meta property="og:image" content="https://luisliu.cn/post/android/android-binder/service_manager_startup.jpeg">
+<meta property="og:image" content="https://luisliu.cn/post/android/android-binder/service_manager_work.jpeg">
+<meta property="og:image" content="https://luisliu.cn/post/android/android-binder/binder_process_thread.jpeg">
+<meta property="article:published_time" content="2021-03-14T13:38:16.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Binder">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luisliu.cn/post/android/android-binder/linux_android_startup.png">
+
+
+<link rel="canonical" href="https://luisliu.cn/post/android/android-binder/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/android/android-binder/","path":"post/android/android-binder/","title":"Android-Binder"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android-Binder | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle Navigation" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/08/28 - 08:13:42</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>About</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">80</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">149</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Catalogue
+        </li>
+        <li class="sidebar-nav-overview">
+          SiteInfo
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Binder"><span class="nav-text">Android-Binder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Linux%E8%B7%A8%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1"><span class="nav-text">1. Linux跨进程通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%81"><span class="nav-text">1.1 内核态与用户态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Linux%E4%B8%AD%E7%9A%84%E9%A9%B1%E5%8A%A8"><span class="nav-text">1.2 Linux中的驱动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Binder%E9%A9%B1%E5%8A%A8"><span class="nav-text">1.3 Binder驱动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-ServiceManager"><span class="nav-text">2. ServiceManager</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-ServiceManager%E5%90%AF%E5%8A%A8"><span class="nav-text">2.1 ServiceManager启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-ServiceManager%E6%B3%A8%E5%86%8C%E5%92%8C%E6%9F%A5%E6%89%BE%E6%9C%8D%E5%8A%A1"><span class="nav-text">2.2 ServiceManager注册和查找服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Binder%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-text">3. Binder机制的安全性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Linux%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF%E9%AA%8C%E8%AF%81"><span class="nav-text">3.1 Linux进程信息验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-SEAndroid%E6%9D%83%E9%99%90%E6%9C%BA%E5%88%B6"><span class="nav-text">3.2 SEAndroid权限机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-ServiceManager%E5%AE%88%E6%8A%A4"><span class="nav-text">3.3 ServiceManager守护</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%80%89%E6%8B%A9Binder%E7%9A%84%E7%90%86%E7%94%B1"><span class="nav-text">4. 选择Binder的理由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E7%AE%A1%E9%81%93"><span class="nav-text">4.1 管道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-text">4.2 消息队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Socket"><span class="nav-text">4.3 Socket</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E5%86%85%E5%AD%98%E5%85%B1%E4%BA%AB"><span class="nav-text">4.4 内存共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-Binder"><span class="nav-text">4.5 Binder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">Posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">149</span>
+        <span class="site-state-item-name">Tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/android/android-binder/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-Binder
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted:</span>
+
+      <time title="Created::2021-03-14 21:38:16" itemprop="dateCreated datePublished" datetime="2021-03-14T21:38:16+08:00">2021-03-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">Categories:</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          <a href="/tags/Binder/" rel="tag"><i class="fa fa-tag"></i> Binder</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="Post Symbols">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Post Symbols:</span>
+      <span>8.7k</span>
+    </span>
+    <span class="post-meta-item" title="Read Time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Read Time &asymp;</span>
+      <span>10 Min</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）Linux 如何实现跨进程通信；（2）Binder 驱动；（3）ServiceManager 注册和查找服务。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Android-Binder"><a href="#Android-Binder" class="headerlink" title="Android-Binder"></a>Android-Binder</h1><h2 id="1-Linux跨进程通信"><a href="#1-Linux跨进程通信" class="headerlink" title="1. Linux跨进程通信"></a>1. Linux跨进程通信</h2><h3 id="1-1-内核态与用户态"><a href="#1-1-内核态与用户态" class="headerlink" title="1.1 内核态与用户态"></a>1.1 内核态与用户态</h3><p>为了保障操作系统最基本的运行不受其他应用的影响，Linux 将内存分为内核空间和用户空间：</p>
+<ul>
+<li>内核空间可以调用所有系统资源、执行任何指令，执行内核代码时，CPU 特权等级处于最高的 0，此时 CPU 处于内核态。</li>
+<li>用户空间只支持简单运算，不能直接调用系统资源，执行用户代码时，CPU 特权等级处于最低的 3，此时 CPU 处于用户态。</li>
+</ul>
+<p>用户空间想要调用部分系统资源则必须通过 <code>SysCall</code> 向内核空间发送指令由内核空间完成。<code>SysCall</code> 可以理解为，内核空间向外暴露的接口，<code>SysCall</code> 预先定义了一套允许用户空间发送的指令，并根据这些指令执行具体的系统命令。</p>
+<p>用户空间可以借助 <code>SysCall</code> 向内核空间发送命令，如果多个用户空间之间需要通信，则需要借助内核空间完成交互。传统的 Linux 通信机制，例如 Socket 和管道，都是内核原生支持的，而 Binder 并不是 Linux 内核的一部分，而是通过 Linux 的动态可加载内核模块（Loadable Kernel Module, LKM）链接到 Linux 的内核中。LKM 允许独立编译但不允许独立运行，其运行时会被链接到内核作为内核的一部分运行于内核空间，因此用户空间不同进程之间就可以通过 Binder 通信。</p>
+<blockquote>
+<p>在与 ServiceManager 和 Binder 通信的过程中，Client 和 Service 会发送多条命令，其中 Client 发起的请求命令称为 BC（Binder Client）命令；Service 响应的命令称为 BR（Binder Reply）命令。</p>
+</blockquote>
+<h3 id="1-2-Linux中的驱动"><a href="#1-2-Linux中的驱动" class="headerlink" title="1.2 Linux中的驱动"></a>1.2 Linux中的驱动</h3><p>Linux 把硬件的读写抽象为文件 IO，而驱动就是对这个抽象的封装和实现。Linux 中有三种类型的驱动设备：字符设备、块设备、网络设备。</p>
+<ul>
+<li>字符设备是指能像字节流文件一样被访问的设备，对字符设备 IO 时，硬件也同时进行 IO。例如显示屏、键盘、串口、LCD、LED 等。<ul>
+<li>字符设备中有一个比较特殊的 misc 杂项设备，设备号为 10，可以自动生成设备节点。Binder 就属于 misc 杂项设备。</li>
+</ul>
+</li>
+<li>块设备是指通过传输数据块（一般为 512b 或 1k）来访问的设备，例如硬盘、SD 卡、U 盘、光盘等。</li>
+<li>网络设备是指能和其他主机交换数据的设备，例如网卡、蓝牙等。</li>
+</ul>
+<h3 id="1-3-Binder驱动"><a href="#1-3-Binder驱动" class="headerlink" title="1.3 Binder驱动"></a>1.3 Binder驱动</h3><p>Binder 驱动并没有真正建立硬件 IO，而是借助驱动的方式，通过内存映射 <code>mmap()</code> 实现进程间通信。</p>
+<p>跨进程无法直接通信的原因是，不同进程之间的内存不可见，因此两个进程无法直接操作另一个进程的内存。通常 Client 进程向 Service 进程请求通信时，需要先将 Client 的请求数据拷贝到内核区，然后再从内核区拷贝到 Service，造成两次数据拷贝，效率较低，因此 Binder 采用了内存映射 MemoryMap 的方式，仅用一次拷贝实现进程间通信：</p>
+<ul>
+<li>使用 Binder 进行进程间通信时，Binder 驱动在内核创建一个数据接收缓冲区，然后在内核开辟一块内核缓冲区，并建立两个缓冲区之间的映射关系、以及 Service 用户空间中一块内存地址与数据接收缓冲区的映射关系；相当于此时 Service 的一块用户内存直接映射到了内核中的数据接收缓冲区。</li>
+<li>将 Client 的数据拷贝到内核中的内核缓冲区，由于内核缓冲区与数据接收缓冲区存在映射关系，而数据接收缓冲区又与 Service 的一块用户内存存在映射关系，所以 Service 就能通过映射，直接操作内核缓冲区中来自 Client 拷贝的数据。</li>
+<li>当 Service 处理完毕，对 Client 响应时，就会重复上述过程，只不过这时反过来，请求时的 Client 变为了响应时的 Service，请求时的 Service 变为了响应时的 Client。</li>
+</ul>
+<hr>
+<h2 id="2-ServiceManager"><a href="#2-ServiceManager" class="headerlink" title="2. ServiceManager"></a>2. ServiceManager</h2><p>Android 基于 Linux 的系统，因此 Android 的系统运行也需要遵循 Linux 运行的基本原则。Linux 系统在启动时，第一启动的进程就是 <code>init.c</code>：</p>
+<p><img data-src="./linux_android_startup.png" alt="Android 系统启动加载流程" title="@ASSET"></p>
+<ul>
+<li>启动 <code>init</code> 进程，进入 Linux 系统的第一步。</li>
+<li>启动各类基础服务，包括 Zygote 和 ServiceManager 等。<ul>
+<li>Zygote 启动 SystemService，SystemService 又会分裂出不同的系统服务，包括 ActviityManageService、PackageManageService 等，这些 SystemService 处于同一进程内，所以不同 SystemService 之间是可以互相访问甚至互相持有的。</li>
+</ul>
+</li>
+<li>ServiceManager 启动 Binder 进程，并初始化 Binder 驱动。</li>
+<li>ServiceManager 将自己存入 Binder 驱动中的第 1 个 ServiceNode，并将自己设为 Binder 的守护进程。</li>
+<li>Binder 开始处理 C/S 进程通信。</li>
+</ul>
+<h3 id="2-1-ServiceManager启动"><a href="#2-1-ServiceManager启动" class="headerlink" title="2.1 ServiceManager启动"></a>2.1 ServiceManager启动</h3><p><img data-src="./service_manager_startup.jpeg" alt="ServiceManager 启动流程" title="@ASSET"></p>
+<p>ServiceManager 启动后，在 main 函数中对 Binder 和 Binder 驱动做了初始化：</p>
+<ul>
+<li>调用 <code>binder_open()</code> 打开 Binder 驱动；<ul>
+<li>这一步还会在 Binder 内创建一个全局链表 <code>binder_procs</code>，并且将 ServiceManager 自己存入到第一个 <code>binder_proc</code> 节点，也即序号为 0。</li>
+<li>由于 ServiceManager 也是一个独立进程，所以其他 Service 和 ServiceManager 通信本身又涉及到进程间通信；</li>
+<li>因此 ServiceManager 存放在 <code>binder_procs</code> 的 0 号节点，Binder 自动为其创建一个 Binder 实体，这样任何 Service 都可以通过 0 号引用从 Binder 中获取到 ServiceManager。</li>
+</ul>
+</li>
+<li>调用 <code>binder_become_context_manager()</code> 设为 Binder 进程的守护进程；</li>
+<li>调用 <code>binder_loop</code> 开启 Binder 循环，Binder 循环会不断执行 <code>binder_parse()</code> 轮询 BR_XXX 命令。</li>
+</ul>
+<h3 id="2-2-ServiceManager注册和查找服务"><a href="#2-2-ServiceManager注册和查找服务" class="headerlink" title="2.2 ServiceManager注册和查找服务"></a>2.2 ServiceManager注册和查找服务</h3><p>ServiceManager 有两大主要功能：注册服务和查找服务。</p>
+<p><img data-src="./service_manager_work.jpeg" alt="ServiceManager 工作流程" title="@ASSET"></p>
+<p>（1）Service 启动后通过 ServiceManager 注册服务 <code>do_add_service()</code>：</p>
+<ul>
+<li><p>ServiceManager 向 Binder 发送 BC_TRANSACTION 命令，携带 ADD_SERVICE_TRANSACTION 命令，同时注册服务的线程进入阻塞等待状态。</p>
+</li>
+<li><p>Binder 驱动收到命令后，向 ServiceManager 的 todo 队列中添加一条事务，事务的内容就是创建服务端进程 binder_node，并插入到 binder_procs 链表中。</p>
+</li>
+<li><p>Binder 处理完后，向 ServiceManager 发送 BR_TRANSACTION 命令，ServiceManager 收到后向已注册服务列表 svclist 中写入对应的信息 ServiceInfo，并发送 BR_REPLY 命令唤醒阻塞等待的线程。</p>
+</li>
+<li><p>每个 Service 启动时会创建一个 Binder 线程池，并向其中注册一个线程。Binder 线程池默认上线为 16 个，当 Client 调用 BinderService 处理事务时，都是通过添加到 Service 的线程池处理的：</p>
+<p><img data-src="./binder_process_thread.jpeg" alt="Binder 进程中的线程池" title="@ASSET"></p>
+</li>
+</ul>
+<p>（2）其他进程通过 ServiceManager 查找服务 <code>do_find_service()</code>：</p>
+<ul>
+<li>ServiceManager 在 Java 层有一个 HashMap 的缓存，缓存了所有被获取过的 Service，如果命中了缓存就会直接返回。</li>
+<li>否则 ServiceManager 向 Binder 发送 BC_TRANSACTION 命令，携带 CHECK_SERVICE_TRANSACTION 命令，同时获取服务的线程进入阻塞等待状态。</li>
+<li>Binder 驱动收到命令后，向 ServiceManager 发送 BC_TRANSACTION 命令，优先从已注册服务列表 svclist 中查找；<ul>
+<li>如果 serviceInfo 中存在则直接响应 BR_REPLY 并唤醒阻塞等待的线程。</li>
+<li>如果不存在，则向 binder_procs 链表中插入一条事务进行通信，事务执行后再返回响应。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="3-Binder机制的安全性"><a href="#3-Binder机制的安全性" class="headerlink" title="3. Binder机制的安全性"></a>3. Binder机制的安全性</h2><p>Binder 作为 Android 中大量使用的 IPC 机制，不仅提供了 App 之间的通信能力，还提供了 App 与系统服务之间的通信能力，因此 Binder 需要一套安全机制来确保两个进程在通信时的行为是可控的、数据是合法的，否则一个恶意进程可以通过伪造信息来模仿正常进程的行为，导致系统异常。在 Binder 机制中，从底向上一共有 3 层防护机制来确保通信双方进程以及涉及数据的安全性：</p>
+<ul>
+<li>Linux 进程信息验证</li>
+<li>SEAndroid 权限机制</li>
+<li>ServiceManager 守护</li>
+</ul>
+<h3 id="3-1-Linux进程信息验证"><a href="#3-1-Linux进程信息验证" class="headerlink" title="3.1 Linux进程信息验证"></a>3.1 Linux进程信息验证</h3><p>Linux 原生的 IPC 记录了进程的基本信息，可以通过 <code>UID</code> 或 <code>PID</code> 获取调用方和被调用方的进程，但也仅仅只有记录的功能，Linux 原生 IPC 并没有对这些信息做安全校验。</p>
+<h3 id="3-2-SEAndroid权限机制"><a href="#3-2-SEAndroid权限机制" class="headerlink" title="3.2 SEAndroid权限机制"></a>3.2 SEAndroid权限机制</h3><p>由于原生的 IPC 机制对于数据安全性没有校验，因此 Android 提供了 SELinux 模块，用于控制系统运行时敏感操作的权限。SELinux 中定义了 4 个敏感操作：</p>
+<ul>
+<li><code>call</code>: 是否允许 Client 请求 Service 通信。</li>
+<li><code>transfer</code>: 是否允许 Client 向 Service 传输 Binder 对象或文件描述符 FD。</li>
+<li><code>set_context_mgr</code>: 是否允许进程注册为 ContextManager。</li>
+<li><code>impersonate</code>: 是否允许进程代理另一个进程的通信请求（例如进程 A 请求进程 B，然后 B 携带 A 的数据向进程 C 请求通信，实际上 Android 没有出现这种情况，所以该权限实际上没有被用到）。</li>
+</ul>
+<p>SEAndroid 中定义了多个具有不同权限的安全策略 Domain，其中有一个 <code>unconfineddomain</code> 具有上述的 <code>call</code>、<code>transfer</code>、<code>set_context_mgr</code> 权限。在原生 Linux 中，进程是通过 SysCall <code>exec</code> 将可执行文件加载生成的，但在 Android 中，系统首先加载 <code>/system/bin/app_process</code> 生成 Zygote 进程，之后所有的 SystemService 和 App 进程都是由 Zygote Fork 出来的，由于 Zygote 具有 <code>unconfineddomain</code> 策略，因此 App 进程和 SystemService 都具有同样的 SELinux 权限。</p>
+<p>Client 进程对 Service 的请求都需要经过 Binder 驱动的 <code>binder_transaction</code> 处理，其中参数 <code>reply</code> 表示当前处理的事务类型：</p>
+<ul>
+<li>当 <code>reply == false</code> 时表示 Binder 正在处理的是 Client 向 Service 的请求，此时 <code>binder_transaction</code> 就需要检查 Client 是否有权限请求 Service。</li>
+<li>当 <code>reply == true</code> 时表示 Binder 正在处理的是 Service 返回 Client 的数据，此时 <code>binder_transaction</code> 就不需要检查权限。</li>
+</ul>
+<p>上文提到，ServiceManager 初始化 Binder 驱动后，会将自己注册为第 1 个 ServiceNode，因此 ServiceManager 本身也是一个 BinderService，从而 App 可以通过 ServiceManager 获取其他的 SystemService。因此当一个 Client 尝试请求 Service 时，先从 Binder 驱动中找到 ServiceManager，然后向 ServiceManager 获取目标 Service 的描述 <code>binder_transaction_data</code> 结构体，该结构体的整型成员变量 <code>target.handle</code> 就是指向目标 Service 对应 Binder 的句柄。</p>
+<blockquote>
+<p>对于 ServiceManager，其 <code>target.handle == 0</code>，对于其他 Service，<code>target.handle != 0</code>。</p>
+</blockquote>
+<p>因此 Client 通过 Binder 请求 Service 的流程大致如下：</p>
+<ul>
+<li>Client 通过 Binder 驱动中找到下标为 0 的 BinderNode，对应的即为 ServiceManager</li>
+<li>Client 请求 ServiceManager 根据 Service 名获取 TargetService 对应的 Binder 对象的句柄 <code>target.handle</code></li>
+<li>ServiceManager 找到后将 <code>target.handle</code> 存入结构体 <code>binder_transaction_data</code></li>
+<li>ServiceManager 调用 Binder 驱动的 <code>binder_transaction</code> 函数，传入 Client 的进程信息、描述 Service 对应 Binder 的句柄的结构体 <code>binder_transaction_data</code>等信息</li>
+<li>Binder 驱动调用 <code>binder_get_ref</code> 函数获取 TargetService 进程的 Binder 对象的引用 <code>ref</code></li>
+<li>Binder 驱动通过 <code>ref.node</code> 获取 TargetService 进程的 Binder 实例对象 BinderNode</li>
+<li>Binder 驱动通过 <code>BinderNode.proc</code> 获取用于描述 TargetService 进程的结构体 <code>proc</code></li>
+<li>Binder 驱动通过 <code>proc.tsk</code> 获取 TargetService 进程的结构体 <code>task_struct</code>，其中包含了 TargetService 的进程信息，以及安全上下文信息</li>
+<li>Binder 驱动调用 <code>security_binder_transaction</code> 函数，根据通信双方进程的安全上下文信息（当前进程的安全上下文 mysid、发起调用的进程的安全上下文 fromsid、目标进程的安全上下文 tosid）校验权限：<ul>
+<li>如果 <code>mysid != fromsid</code>，则需要首先校验 fromsid 是否具有 <code>impersonate</code> 权限。上文提到，由于 Android 不存在代理进程通信，因此实际上 mysid 总是等于 fromsid。</li>
+<li>校验 Client 进程是否具有请求 Service 的权限 <code>call</code>，由于所有 Zygote Fork 出来的进程都具有 <code>unconfineddomain</code> 安全策略，因此 Client 也具有 <code>call</code> 权限。</li>
+<li>校验 Client 是否具有传输 Binder 的权限 <code>transfer</code>，因为 Client 有可能会传输一个 Binder 对象给 Service 调用。同样由于具有 <code>unconfineddomain</code> 安全策略，因此 Client 也具有 <code>transfer</code> 权限。</li>
+<li>校验 <strong>目标进程 TargetService</strong> 是否具有 FD 权限，这一步与上面有区别。文件描述符 FD 用于描述一个文件，FD 包含了该文件的信息、指针等，可以理解为持有一个文件的 FD 即可操作该文件。由于 IPC 时可能会传递文件描述符 FD，因此为了避免一个拥有权限的进程获取到 FD 后就无限制传递给其他进程，就需要校验 <strong>目标进程</strong> 是否具有使用该 FD 的权限。</li>
+<li>上述校验过程中如果出现任何越权情况，都会抛出异常。</li>
+</ul>
+</li>
+</ul>
+<p>Binder 驱动通过上述流程，严格控制了通信双方进程对数据的访问是在操作系统的监控下进行的，保障了通信的安全性。</p>
+<h3 id="3-3-ServiceManager守护"><a href="#3-3-ServiceManager守护" class="headerlink" title="3.3 ServiceManager守护"></a>3.3 ServiceManager守护</h3><p>上文提到，Binder 驱动严格控制了通信双方进程的权限，因此保障了通信的安全性，但是 Binder 进程的启动以及 Binder 驱动的初始化都是由 ServiceManager 处理的，而如果 ServiceManager 被篡改，仍然有可能导致数据安全性问题。</p>
+<p>在 SELinux 模块中，Android 对注册 ServiceManager 也校验了 <code>set_context_mgr</code> 权限，但是由于 Zygote Fork 出来的进程与 ServiceManager 一样都具有 <code>unconfineddomain</code> 安全策略，因此也都会具有 <code>set_context_mgr</code> 权限，所以 Android 还采用了单例互斥的方式保障 ServiceManager 的安全：</p>
+<ul>
+<li>ServiceManager 启动时，会启动 Binder 进程以及调用 <code>binder_ioctl</code> 函数初始化 Binder 驱动，并且将 ServiceManager 自己的进程信息 <code>proc</code> 传入</li>
+<li><code>binder_ioctl</code> 函数初始化 BinderNode 链表，创建第一个 BinderNode 并存入 ServiceManager，然后用一个全局静态指针 <code>binder_context_mgr_node</code> 指向这个 BinderNode<blockquote>
+<p>当其他用户进程获取 ServiceManager 时，实际上 Binder 驱动也是直接返回该指针。</p>
+</blockquote>
+</li>
+<li>每当有进程尝试注册 ContextManager 时都会判断，如果 <code>binder_context_mgr_node != null</code> 则禁止注册</li>
+<li>由于 ServiceManager 与 Zygote 都是在 <code>init</code> 进程中创建的，因此用户进程将无法篡改 ServiceManager，保护的逻辑类似于 ClassLoader 的双亲加载模型。</li>
+</ul>
+<hr>
+<h2 id="4-选择Binder的理由"><a href="#4-选择Binder的理由" class="headerlink" title="4. 选择Binder的理由"></a>4. 选择Binder的理由</h2><p>Android 的 IPC 方式按照系统支持分为两大类：</p>
+<ul>
+<li>内核原生支持的：管道、消息队列、Socket、共享内存</li>
+<li>Android 扩展的：Binder</li>
+</ul>
+<h3 id="4-1-管道"><a href="#4-1-管道" class="headerlink" title="4.1 管道"></a>4.1 管道</h3><p>管道的通信原理是文件 IO，读与写都可以看作对管道文件的读写，分为匿名管道和命名管道两种：</p>
+<ul>
+<li>匿名管道（Pipe）：匿名管道的管道文件是存在内存中的一种特殊文件，因此只能在父子进程或兄弟进程间通信，仅支持半双工通信，而且是非永久性通信机制，通信双方进程均销毁后，则 Pipe 也会自动销毁。典型的使用方式是：A 进程调用 pipe 创建一个管道并持有描述符 <code>fd0， fd1</code> 分别指向管道文件的读端和写端，然后 Fork 出 B 进程同样持有描述符 <code>fd0, fd1</code>，根据希望的数据流向决定 Pipe 的操作：<ul>
+<li>如果希望从 A 写入、从 B 读出，则 A 关闭读端 <code>fd0</code>、B 关闭写端 <code>fd1</code>，使得 <code>fd0</code> 和 <code>fd1</code> 的引用计数都为 1，然后开始通信。</li>
+<li>如果希望从 B 写入、从 A 读出，则 A 关闭写端 <code>fd1</code>、B 关闭读端 <code>fd0</code>，使得 <code>fd0</code> 和 <code>fd1</code> 的引用计数都为 1，然后开始通信。</li>
+</ul>
+</li>
+<li>命名管道（FIFO）：命名管道的管道文件是真实存在文件系统中的文件，因此可以在任意两个能访问该文件的进程间通信，支持半双工或全双工，而且是永久性通信机制。FIFO 的读取总是从头部开始，写入总是追加到尾部。</li>
+</ul>
+<p>管道通信中每一次数据传输都需要内核两次拷贝。</p>
+<h3 id="4-2-消息队列"><a href="#4-2-消息队列" class="headerlink" title="4.2 消息队列"></a>4.2 消息队列</h3><p>消息队列的原理是缓冲区，在内核中创建一块内存（由唯一的 qid 标识）用于存放通信的消息，但消息可以是不同类型，写入时将消息写入尾部，读取时可以按照消息类型读取而不一定遵循 FIFO。消息队列位于内核中的一块内存区域，独立于通信双方进程，因此相比于 Pipe 或 FIFO，可以避免通信双方进程在同步和阻塞上的问题。</p>
+<p>消息队列在消息的传输效率上优于管道，但仍然没有避免每一次数据传输都需要内核两次数据拷贝。</p>
+<h3 id="4-3-Socket"><a href="#4-3-Socket" class="headerlink" title="4.3 Socket"></a>4.3 Socket</h3><p>Socket 本质上只是对具体协议的封装，并不参与实际的数据传输和编解码，因此 Socket 跨进程通信的原理需要根据其实现协议而定。由于 Socket 通常用于网络通信，因此可以抽象的理解为，Socket 借助了网络层的 IP 协议，由 IP 地址、端口号等唯一标识两个进程，然后通过 TCP 或 UDP 等传输层协议实现具体的通信过程。</p>
+<h3 id="4-4-内存共享"><a href="#4-4-内存共享" class="headerlink" title="4.4 内存共享"></a>4.4 内存共享</h3><p>内存共享的原理是在内核空间中开辟一块内存，并将这块地址映射到通信双方进程的虚拟地址空间，则双方进程就能通过操作这块共享内存直接将数据同步给对方，而不需要内核两次数据拷贝，内存共享极大提高了数据传输的效率，但是内存共享使得通信双方进程不再具有 C/S 模型，双方进程以类似互相持有的方式进行通信，使得通信的过程难以在操作系统的控制下进行，因此需要单独管理一套安全机制以保障通信安全性。</p>
+<h3 id="4-5-Binder"><a href="#4-5-Binder" class="headerlink" title="4.5 Binder"></a>4.5 Binder</h3><p>通过上文可以看出，Linux 原生的 IPC 方式安全则效率低，效率高则不安全，因此 Android 选择了折中的方案：Binder。</p>
+<p>Binder 基于 C/S 模型，因此对于 Server 端可以很好的保障其稳定性，并且通过 Binder 驱动的权限机制、ServiceManager 的单例模式等保障了 Binder 机制的安全性。从效率上，由于 ServiceManager 和 SystemService 都经过了安全机制的校验，因此是可信任的，所以在通信时 Binder 在内核中开辟一块内存空间，并其映射到 Service 的虚拟内存空间中，而仅拷贝一次 Client 的数据，很好地结合了安全与高效的有点。</p>
+<p>但是，Binder 作为非 Linux 原生支持的 IPC 方式，其启动过程在 ServiceManager 和 Zygote 之后，这就导致在其之前的 IPC 将无法使用 Binder 通信，典型的例子就是 InputManagerService，因为设备输入信号的监听可能发生在 ServiceManager 启动之前，因此 InputManagerService 仍然使用 Socket 与 WindowManagerService 通信。</p>
+<hr>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/freekiteyu/article/details/70082302" title="@LINK">一篇文章了解相见恨晚的 Android Binder 进程间通讯机制</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/AndroidStudyDay/article/details/93749470" title="@LINK">腾讯面试题——谈一谈Binder的原理和实现一次拷贝的流程</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27672101/article/details/108186072" title="@LINK">Binder死磕到底（一）：Linux进程通信和service manager进程</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/152237289" title="@LINK">说说你对 binder 驱动的了解？</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/116440847" title="@LINK">为什么 Android 要采用 Binder 来实现 IPC 呢？</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/39440766/answer/89210950" title="@LINK">为什么 Android 要采用 Binder 作为 IPC 机制？</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/luoshengyang/article/details/38326729" title="@LINK">SEAndroid安全机制对Binder IPC的保护分析</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/luoshengyang/article/details/38054645" title="@LINK">SEAndroid安全机制中的进程安全上下文关联分析</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/41003297/answer/89328987" title="@LINK">Android源码的Binder权限是如何控制？</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chzphoenix/article/details/78854540" title="@LINK">Android中Intent/Bundle的通信原理及大小限制（Parcelable原理及与Serializable的区别）</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub" ></i>&ensp;&ensp;支 持 一 下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信支付">
+        <span>微信支付</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者: </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接:</strong>
+      <a href="https://luisliu.cn/post/android/android-binder/" title="Android-Binder">https://luisliu.cn/post/android/android-binder/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明: </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/Binder/" rel="tag"><i class="fa fa-tag"></i> Binder</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/linux/linux-io_block/" rel="prev" title="Linux-IO阻塞模型">
+                  <i class="fa fa-chevron-left"></i> Linux-IO阻塞模型
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/android/android-window/" rel="next" title="Android-Window机制">
+                  Android-Window机制 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Site Symbols:</span>
+    <span title="Site Symbols">498k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Site Read Time &asymp;</span>
+    <span title="Site Read Time">9:13</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>

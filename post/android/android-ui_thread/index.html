@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）为什么子线程更新 UI 会抛出异常、及其设计思想；（2）从 Activity 的加载流程看更新 UI 时如何判断线程；（3）ViewRootImpl 判断线程的依据；（4）子线程更新 UI 的方法；（5）总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android子线程到底能否更新UI——可能是最全面的解析">
+<meta property="og:url" content="https://luisliu.cn/post/android/android-ui_thread/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）为什么子线程更新 UI 会抛出异常、及其设计思想；（2）从 Activity 的加载流程看更新 UI 时如何判断线程；（3）ViewRootImpl 判断线程的依据；（4）子线程更新 UI 的方法；（5）总结。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-09T17:10:32.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="子线程">
+<meta property="article:tag" content="UI线程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/post/android/android-ui_thread/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/android/android-ui_thread/","path":"post/android/android-ui_thread/","title":"Android子线程到底能否更新UI——可能是最全面的解析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android子线程到底能否更新UI——可能是最全面的解析 | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle Navigation" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/08/28 - 08:13:42</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>About</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">80</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">149</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Catalogue
+        </li>
+        <li class="sidebar-nav-overview">
+          SiteInfo
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android%E5%AD%90%E7%BA%BF%E7%A8%8B%E5%88%B0%E5%BA%95%E8%83%BD%E5%90%A6%E6%9B%B4%E6%96%B0UI%E2%80%94%E2%80%94%E5%8F%AF%E8%83%BD%E6%98%AF%E6%9C%80%E5%85%A8%E9%9D%A2%E7%9A%84%E8%A7%A3%E6%9E%90"><span class="nav-text">Android子线程到底能否更新UI——可能是最全面的解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AD%90%E7%BA%BF%E7%A8%8B%E6%9B%B4%E6%96%B0UI%E5%BC%82%E5%B8%B8"><span class="nav-text">1. 子线程更新UI异常</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="nav-text">1.1 设计思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%BC%82%E5%B8%B8%E5%8E%9F%E5%9B%A0"><span class="nav-text">1.2 异常原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Activity%E8%A7%86%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B"><span class="nav-text">2. Activity视图加载流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ViewRootImpl%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">3. ViewRootImpl线程的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AD%90%E7%BA%BF%E7%A8%8B%E7%BB%9D%E5%AF%B9%E4%B8%8D%E8%83%BD%E6%9B%B4%E6%96%B0UI%E5%90%97%EF%BC%9F"><span class="nav-text">4. 子线程绝对不能更新UI吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91ViewRootImpl%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">4.1 手动触发ViewRootImpl的初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E9%81%BF%E5%BC%80ViewRootImpl%E7%9A%84%E6%A3%80%E6%9F%A5"><span class="nav-text">4.2 避开ViewRootImpl的检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E9%92%88%E5%AF%B9TextView%E9%81%BF%E5%BC%80%E9%87%8D%E7%BB%98"><span class="nav-text">4.3 针对TextView避开重绘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E4%BD%BF%E7%94%A8SurfaceView-TextureView"><span class="nav-text">4.4 使用SurfaceView&#x2F;TextureView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-%E7%89%B9%E4%BE%8BToast"><span class="nav-text">4.5 特例Toast</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-1-Toast%E5%8F%AF%E4%BB%A5%E8%B7%A8%E7%BA%BF%E7%A8%8B%E6%98%BE%E7%A4%BA"><span class="nav-text">4.5.1 Toast可以跨线程显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-2-Toast%E4%B8%8D%E8%83%BD%E8%B7%A8%E7%BA%BF%E7%A8%8B%E6%9B%B4%E6%96%B0"><span class="nav-text">4.5.2 Toast不能跨线程更新</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-%E6%8D%95%E8%8E%B7%E5%BC%82%E5%B8%B8"><span class="nav-text">4.6 捕获异常</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-text">5. 总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">Posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">149</span>
+        <span class="site-state-item-name">Tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/android/android-ui_thread/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android子线程到底能否更新UI——可能是最全面的解析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted:</span>
+
+      <time title="Created::2021-01-10 01:10:32" itemprop="dateCreated datePublished" datetime="2021-01-10T01:10:32+08:00">2021-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">Categories:</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          <a href="/tags/%E5%AD%90%E7%BA%BF%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 子线程</a>
+          <a href="/tags/UI%E7%BA%BF%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> UI线程</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="Post Symbols">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Post Symbols:</span>
+      <span>19k</span>
+    </span>
+    <span class="post-meta-item" title="Read Time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Read Time &asymp;</span>
+      <span>21 Min</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）为什么子线程更新 UI 会抛出异常、及其设计思想；（2）从 Activity 的加载流程看更新 UI 时如何判断线程；（3）ViewRootImpl 判断线程的依据；（4）子线程更新 UI 的方法；（5）总结。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Android子线程到底能否更新UI——可能是最全面的解析"><a href="#Android子线程到底能否更新UI——可能是最全面的解析" class="headerlink" title="Android子线程到底能否更新UI——可能是最全面的解析"></a>Android子线程到底能否更新UI——可能是最全面的解析</h1><p>前言：Android 开发中有这么一条“潜规则”：「一个 App 的主线程就是 UI 线程，子线程不能更新 UI」。绝大部分情况下，我们在需要处理 UI 逻辑时，都会自觉地放在主线程操作，但是为什么会有这么一条“铁律”，其原因是什么，以及这条“铁律”就一定正确吗？带着这些疑问我在度娘和 StackOverFlow 上搜了一遍，绝大部分分析都止于「子线程更新 UI 会抛出异常的逻辑在哪」，所以我决定自己探索一遍，并写下这篇截止到目前，【可能】是最全面的一篇分析。</p>
+<p>当然，这篇文章不会深入到屏幕渲染、线程调度等等这样的层面，其重点在于从源码的角度论证：「子线程到底能不能更新 UI」，本文默认读者已有初级 Android 基础。</p>
+<hr>
+<h2 id="1-子线程更新UI异常"><a href="#1-子线程更新UI异常" class="headerlink" title="1. 子线程更新UI异常"></a>1. 子线程更新UI异常</h2><p>下面这段代码，是很典型的子线程更新 UI 的操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HandlerThread newThread = <span class="keyword">new</span> HandlerThread(<span class="string">&quot;NewThread&quot;</span>);</span><br><span class="line">newThread.start();</span><br><span class="line">Handler newThreadHandler = <span class="keyword">new</span> Handler(newThread.getLooper()) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">        tvNewThreadText.setText(<span class="string">&quot;子线程内更新 UI&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">newThreadHandler.sendEmptyMessage(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码运行会抛出异常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.</span><br></pre></td></tr></table></figure>
+
+<p>为什么子线程不能更新 UI 呢？这就需要从 3 个方面解释。</p>
+<h3 id="1-1-设计思想"><a href="#1-1-设计思想" class="headerlink" title="1.1 设计思想"></a>1.1 设计思想</h3><p>首先不得不提到，子线程更新 UI 会抛出异常肯定是 Android 有意为之，但 Android 为什么要这么设计呢？</p>
+<p>这是因为，人眼感到【流畅】需要满足帧率大于等于 60 Fps，对应的也就是约等于 16 毫秒一帧，Android 为了让交互和显示足够流畅，就需要尽可能保证这个帧率，尤其在现在高刷屏普及的时代，就需要尽可能缩短每一帧的渲染时间。因为频繁的加锁和锁释放会带来很大的内存开销，很可能会延长每一帧的渲染时间，因此对于 UI 更新的操作，是没有加锁的。但如果不加锁，在出现并发问题时，系统如何确保下一帧画面到底应该渲染成什么样呢？</p>
+<p>所以，Android 系统为了避免这个问题，就从源码层限制了其他线程更新 UI，以兼顾 UI 更新的效率和并发安全性。</p>
+<h3 id="1-2-异常原因"><a href="#1-2-异常原因" class="headerlink" title="1.2 异常原因"></a>1.2 异常原因</h3><p>解释完设计思想，就要老生常谈分析一下抛出异常的直接原因了。</p>
+<p>首先有一个基础：View 在更新时，是将自己测量并绘制，但这个绘制并不是一旦 View 完成初始化、或者调用更新时就马上绘制，而是发起一个屏幕同步 Sync 请求，等待下一次屏幕刷新时，再绘制到屏幕上。</p>
+<p>而这个 View 发起绘制请求的命令，就是 UI 更新都离不开的：<code>requestLayout()</code>。</p>
+<p>就以 <code>TextView.setText(...)</code> 为例，顺着 <code>setText(...)</code> 的源码一路点进去，直到下面这个方法（省略其他代码）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TextView</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setText</span><span class="params">(CharSequence text, BufferType type, <span class="keyword">boolean</span> notifyBefore, <span class="keyword">int</span> oldlen)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">if</span> (mLayout != <span class="keyword">null</span>) &#123;</span><br><span class="line">            checkForRelayout();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkForRelayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">// 关键就是这个 requestLayout()：</span></span><br><span class="line">        requestLayout();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再点进 requestLayout() 源码：</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">// 每个 View 都逐级调用上层父 View 的 requestLayout，最上层的父 View 就是 ViewRootImpl</span></span><br><span class="line">        <span class="keyword">if</span> (mParent != <span class="keyword">null</span> &amp;&amp; !mParent.isLayoutRequested()) &#123;</span><br><span class="line">            mParent.requestLayout();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，每个 View 都会一层层请求自己的父布局调用 <code>requestLayout()</code>，而最最上层的父布局，就是一个 ViewRootImpl，它也实现了 <code>ViewParent</code> 接口。而在 ViewRootImpl 内，<code>requestLayout()</code> 的实现是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewRootImpl</span> <span class="keyword">implements</span> <span class="title">ViewParent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mHandlingLayoutInLayoutRequest) &#123;</span><br><span class="line">            ......</span><br><span class="line">            <span class="comment">// 注意这个方法是关键</span></span><br><span class="line">            checkThread();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 看看源码</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">checkThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mThread != Thread.currentThread()) &#123;</span><br><span class="line">            <span class="comment">// 就是在这里判断了线程</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> CalledFromWrongThreadException(</span><br><span class="line">                    <span class="string">&quot;Only the original thread that created a view hierarchy can touch its views.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这一步就清晰明了了，因为 <code>Thread.currentThread()</code> 是子线程，而 <code>mThread</code> 是主线程，所以在这里抛出了异常。</p>
+<p>【但是！】这个判断有个很大的问题，因为它的判断是 <code>mThread != Thread.currentThread()</code>，而 <code>mThread</code> 是在这个 ViewRootImpl 的构造方法里面存入的，因此这个判断本质上比较的是：当前线程与「ViewRootImpl 初始化时的线程」是否相同，而不是当前线程与「主线程」是否相同，并且这里抛出的异常说明也是「the original thread」而不是「the main thread」，所以我们常说的「子线程不能更新 UI」，实际上是：</p>
+<p>一个线程初始化了 ViewRootImpl 后，其 UI 不能被其他线程更新！而这两个线程，和是不是主线程并没有关系！</p>
+<hr>
+<h2 id="2-Activity视图加载流程"><a href="#2-Activity视图加载流程" class="headerlink" title="2. Activity视图加载流程"></a>2. Activity视图加载流程</h2><p>现在知道了线程能否更新 UI 主要看这个 UI 所处的最上层 ViewRootImpl 是否由同一个线程初始化，那么 ViewRootImpl 是怎么初始化的呢？又是在什么时候初始化的呢？</p>
+<p>既然 ViewRootImpl 是最上层布局，那不妨从 Activity 启动加载开始：<a href="/post/android/android-activity" title="@LINK">Android-Activity深入理解</a>。</p>
+<hr>
+<h2 id="3-ViewRootImpl线程的定义"><a href="#3-ViewRootImpl线程的定义" class="headerlink" title="3. ViewRootImpl线程的定义"></a>3. ViewRootImpl线程的定义</h2><p>通过 <a href="/post/android/android-activity" title="@LINK">Android-Activity深入理解</a>，可以知道：</p>
+<ul>
+<li>ViewRootImpl 判断线程时依据的 <code>mThread</code> 就是创建并初始化 ViewRootImpl 时的所在线程。</li>
+<li><code>setContentView(...)</code> 之后 Activity 视图的加载流程，主要包括对 DecorView、subDecor、以及 mContentParent 的加载和持有逻辑。</li>
+</ul>
+<p>但是！结合上面这两条来看，就会发现两个结论：</p>
+<ul>
+<li>在 <code>setContentView(...)</code> 中，虽然也有判断 Window、DecorView、subDecor 等是否创建以及立即创建的逻辑，但并没有对 ViewRootImpl 的操作逻辑！！！也就是说，调用 <code>setContentView(...)</code> 时所处的线程并不能决定 ViewRootImpl 的初始线程，也就无法决定哪个线程可以更新 UI！</li>
+<li>从 Activity 的加载流程 2.2.1 部分来看，决定 ViewRootImpl 初始线程的，似乎只有 <code>handleResumeActivity(...)</code>，而不论 startActivity 是否在子线程中调用，一个 Activity 都是通过 AMS 管理的，<code>handleResumeActivity(...)</code> 的调用都会发生在 ActivityThread 中，ActivityThread 又处在主线程中。</li>
+</ul>
+<p><strong>这两个结论说明：不论 startActivity 是否在子线程中调用，也不论一个 Activity 的 <code>setContentView(...)</code> 是否在子线程中调用，都无法影响到 Activity 是在 ActivityThread 这个主线程中加载的，所以尽管 ViewRootImpl 比较的线程是【初始线程】与当前线程，但在 Activity 常规加载流程中，ViewRootImpl 总是在主线程初始化的，所以在大部分情况下，子线程的确无法更新 UI。</strong></p>
+<hr>
+<h2 id="4-子线程绝对不能更新UI吗？"><a href="#4-子线程绝对不能更新UI吗？" class="headerlink" title="4. 子线程绝对不能更新UI吗？"></a>4. 子线程绝对不能更新UI吗？</h2><p>在上面第 3 部分，我做了一个结论，表明「大部分情况下，子线程的确无法更新 UI」，但请注意原画中的「常规加载流程」，以及「大部分情况下」这两个关键词。</p>
+<p>先写结论：<strong>实际上，子线程可以更新 UI。</strong></p>
+<p>在这里我又再一次推倒了前面的结论，因为我们已经知道，只要能让 ViewRootImpl 在子线程中初始化，就能在该子线程中更新 UI。虽然通常初始化 ViewRootImpl 的动作会被 ActivityThread 自动完成，但实际上仍有方法手动创建。</p>
+<h3 id="4-1-手动触发ViewRootImpl的初始化"><a href="#4-1-手动触发ViewRootImpl的初始化" class="headerlink" title="4.1 手动触发ViewRootImpl的初始化"></a>4.1 手动触发ViewRootImpl的初始化</h3><p>从前文可以知道，ViewRootImpl 的初始化发生在 <code>ActivityThread.handleResumeActivity(...)</code> 中，并且发生在初始化 Window 和 DecorView 之后调用 <code>mWindow.addView(DecorView, LayoutParams)</code> 时。那就可以想个办法，在 onCreate 阶段就手动初始化 PhoneWindow，手动触发 <code>mWindow.addView(...)</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(<span class="meta">@Nullable</span> Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">    HandlerThread newThread = <span class="keyword">new</span> HandlerThread(<span class="string">&quot;NewThread&quot;</span>);</span><br><span class="line">    newThread.start();</span><br><span class="line">    Handler newThreadHandler = <span class="keyword">new</span> Handler(newThread.getLooper()) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">            tvNewThreadText = <span class="keyword">new</span> TextView(DemoActivity.<span class="keyword">this</span>);</span><br><span class="line">            WindowManager.LayoutParams windowLP = <span class="keyword">new</span> WindowManager.LayoutParams(</span><br><span class="line">                    <span class="number">200</span>,  <span class="comment">// width</span></span><br><span class="line">                    <span class="number">50</span>,   <span class="comment">// height</span></span><br><span class="line">                    <span class="number">100</span>,  <span class="comment">// x position</span></span><br><span class="line">                    <span class="number">100</span>,  <span class="comment">// y position</span></span><br><span class="line">                    WindowManager.LayoutParams.FIRST_SUB_WINDOW,  <span class="comment">// type</span></span><br><span class="line">                    WindowManager.LayoutParams.TYPE_TOAST,        <span class="comment">// flag</span></span><br><span class="line">                    PixelFormat.OPAQUE                            <span class="comment">// format</span></span><br><span class="line">            );</span><br><span class="line">            WindowManager windowManager = MainActivity.<span class="keyword">this</span>.getWindowManager();</span><br><span class="line">            <span class="comment">// 实际上就是把这个 TextView 作为 DecorView 传递给 WindowManager 加载</span></span><br><span class="line">            windowManager.addView(tvNewThreadText, windowLP);</span><br><span class="line">            tvNewThreadText.setText(<span class="string">&quot;子线程内更新 UI&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    newThreadHandler.sendEmptyMessage(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实践证明：通过手动初始化 Window 并添加 View，的确可以在子线程中更新 UI，且该方法适用于所有 View。</p>
+<h3 id="4-2-避开ViewRootImpl的检查"><a href="#4-2-避开ViewRootImpl的检查" class="headerlink" title="4.2 避开ViewRootImpl的检查"></a>4.2 避开ViewRootImpl的检查</h3><p>从文章最开始对 <code>TextView#setText(...)</code> 的源码分析可知，子线程中更新 UI 会抛出异常在于更新 UI 时，View 会逐级向上层父 View 调用 <code>requestLayout()</code>，直到最上层的 <code>ViewRootImpl#requestLayout()</code> 判断了线程。但在后面 Activity 加载流程的分析中又发现，ViewRootImpl 是在 <code>handleResumeActivity()</code> 时初始化的，也就是说，在 Activity 处于 onCreate 生命周期时，ViewRootImpl 根本都还没有初始化，此时如果 TextView 更新 UI，则在逐级向上层调用父 View 的 <code>requestLayout()</code> 时，到了 ViewRootImpl 就会因为 <code>mParent == null</code> 而跳过了。</p>
+<p>Show me the code:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(<span class="meta">@Nullable</span> Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_demo);</span><br><span class="line"></span><br><span class="line">    tvNewThreadTitle = findViewById(R.id.tvNewThreadTitle);</span><br><span class="line">    <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            tvNewThreadTitle.setText(<span class="string">&quot;子线程修改后的 Text&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实践证明：通过避开 ViewRootImpl 的检查，的确也可以在子线程中更新 UI，且该方法适用于所有 View。</p>
+<h3 id="4-3-针对TextView避开重绘"><a href="#4-3-针对TextView避开重绘" class="headerlink" title="4.3 针对TextView避开重绘"></a>4.3 针对TextView避开重绘</h3><p>4.1 和 4.2 中的两个方法，是对所有 View 更新 UI 都适用的，但对于 TextView，还有一种方式，就是避开重绘。</p>
+<p>首先看下这样一个布局（省略部分）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;TextView</span><br><span class="line">    <span class="attr">android</span>:id=<span class="string">&quot;@+id/tvNewThreadTitle&quot;</span></span><br><span class="line">    <span class="attr">android</span>:layout_width=<span class="string">&quot;wrap_content&quot;</span></span><br><span class="line">    <span class="attr">android</span>:layout_height=<span class="string">&quot;wrap_content&quot;</span></span><br><span class="line">    <span class="attr">android</span>:text=<span class="string">&quot;初始 TextView&quot;</span></span><br><span class="line">    /&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">Button</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/btUpdate&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:layout_height</span>=<span class="string">&quot;100dp&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:text</span>=<span class="string">&quot;在子线程更新 UI&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    /&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>通过 Activity 加载（省略部分）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onResume();</span><br><span class="line"></span><br><span class="line">    btUpdate.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    tvNewThreadTitle.setText(<span class="string">&quot;修改后的 Text&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>点击 Button 时，会开启一个子线程并在子线程中更新 TextView。</p>
+<p>毫无疑问这段代码 Crash 了，原因和文首说明的一样，因为 ViewRootImpl 在主线程中初始化，因此子线程无法更新 UI。</p>
+<p>但！如果把布局中 TextView 的宽度改为精确值或 <code>match_parent</code>，Activity 中的代码不变：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--布局中把 TextView 的宽度改为精确值或 match_parent--&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">TextView</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/tvNewThreadTitle&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:layout_width</span>=<span class="string">&quot;200dp&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:text</span>=<span class="string">&quot;初始 TextView&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    /&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">Button</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">......</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    /&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Activity 中的代码逻辑不变，仍然是在点击时开启子线程并在子线程中更新 TextView</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onResume();</span><br><span class="line"></span><br><span class="line">    btUpdate.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    tvNewThreadTitle.setText(<span class="string">&quot;修改后的 Text&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次运行发现居然没有 Crash，子线程成功更新了 UI！这难道又要再次推翻之前的结论吗？</p>
+<p>再重新翻一下 <code>TextView#setText(...)</code> 的源码，这一次仔细看看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TextView</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setText</span><span class="params">(CharSequence text, BufferType type, <span class="keyword">boolean</span> notifyBefore, <span class="keyword">int</span> oldlen)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">// 这一步可以理解成，把传进来的 text 存入到 TextView 的成员变量中</span></span><br><span class="line">        setTextInternal(text);</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">if</span> (mLayout != <span class="keyword">null</span>) &#123;</span><br><span class="line">            checkForRelayout();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkForRelayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// If we have a fixed width, we can just swap in a new text layout</span></span><br><span class="line">        <span class="comment">// if the text height stays the same or if the view height is fixed.</span></span><br><span class="line">        <span class="keyword">if</span> ((mLayoutParams.width != LayoutParams.WRAP_CONTENT</span><br><span class="line">                || (mMaxWidthMode == mMinWidthMode &amp;&amp; mMaxWidth == mMinWidth))</span><br><span class="line">                &amp;&amp; (mHint == <span class="keyword">null</span> || mHintLayout != <span class="keyword">null</span>)</span><br><span class="line">                &amp;&amp; (mRight - mLeft - getCompoundPaddingLeft() - getCompoundPaddingRight() &gt; <span class="number">0</span>)) &#123;</span><br><span class="line">            <span class="comment">// Static width, so try making a new text layout.</span></span><br><span class="line">            ......</span><br><span class="line">            <span class="keyword">if</span> (mEllipsize != TextUtils.TruncateAt.MARQUEE) &#123;</span><br><span class="line">                <span class="comment">// In a fixed-height view, so use our new text layout.</span></span><br><span class="line">                <span class="keyword">if</span> (mLayoutParams.height != LayoutParams.WRAP_CONTENT</span><br><span class="line">                        &amp;&amp; mLayoutParams.height != LayoutParams.MATCH_PARENT) &#123;</span><br><span class="line">                    autoSizeText();</span><br><span class="line">                    invalidate();</span><br><span class="line">                    <span class="comment">// ----- 重点：return 了 -----</span></span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Dynamic height, but height has stayed the same,</span></span><br><span class="line">                <span class="comment">// so use our new text layout.</span></span><br><span class="line">                <span class="keyword">if</span> (mLayout.getHeight() == oldht</span><br><span class="line">                        &amp;&amp; (mHintLayout == <span class="keyword">null</span> || mHintLayout.getHeight() == oldht)) &#123;</span><br><span class="line">                    autoSizeText();</span><br><span class="line">                    invalidate();</span><br><span class="line">                    <span class="comment">// ----- 重点：return 了 -----</span></span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// ----- 如果走到这里，就会触发 requestLayout，导致判断 ViewRootImpl 线程 -----</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// We lose: the height has changed and we have a dynamic height.</span></span><br><span class="line">            <span class="comment">// Request a new view layout using our new text layout.</span></span><br><span class="line">            requestLayout();</span><br><span class="line">            invalidate();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// ----- 如果走到这里，就会触发 requestLayout，导致判断 ViewRootImpl 线程 -----</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// Dynamic width, so we have no choice but to request a new</span></span><br><span class="line">            <span class="comment">// view layout with a new text layout.</span></span><br><span class="line">            nullLayouts();</span><br><span class="line">            requestLayout();</span><br><span class="line">            invalidate();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看源码可以发现，在 <code>checkForRelayout()</code> 之前，先通过 <code>setTextInternal(text);</code> 把 text 存入了成员变量，然后才会调用 <code>checkForRelayout()</code> 检查线程。</p>
+<p>通过上文已经知道，如果调用了 <code>requestLayout()</code>，就会导致 ViewRootImpl 判断线程。而 <code>TextView#checkForRelayout()</code> 中，<code>requestLayout()</code> 之前有两个 <code>return</code> 的机会（已在代码注释中标出），接下来就是看看如何才能触发这两个 <code>return</code>！</p>
+<p>（1）首先是最外层的 <code>if</code> 判断必须要满足的条件，否则 <code>else</code> 中一定会走到 <code>requestLayout</code>。这个最外层的 <code>if</code> 条件是（为了更加直观调整了缩进）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (</span><br><span class="line">    (</span><br><span class="line">        mLayoutParams.width != LayoutParams.WRAP_CONTENT</span><br><span class="line">        || (mMaxWidthMode == mMinWidthMode &amp;&amp; mMaxWidth == mMinWidth)</span><br><span class="line">    )</span><br><span class="line">    &amp;&amp; (mHint == <span class="keyword">null</span> || mHintLayout != <span class="keyword">null</span>)</span><br><span class="line">    &amp;&amp; (mRight - mLeft - getCompoundPaddingLeft() - getCompoundPaddingRight() &gt; <span class="number">0</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>简单来说，这三个条件均满足就表示 TextView 的宽度是固定值且大于 0，也就是宽度是不需要重新测绘的。这也是为什么当 TextView 的宽度设置为 <code>wrap_content</code> 时，子线程更新 TextView 会抛出异常的原因，因为这个最外层的 <code>if</code> 不满足而走到了 <code>else</code> 中。</p>
+<p>（2）接着是第二层的 <code>if</code> 判断也必须要满足条件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mEllipsize != TextUtils.TruncateAt.MARQUEE)</span><br></pre></td></tr></table></figure>
+
+<p>这个判断满足时表示 TextView 不是跑马灯效果的状态。这个很好理解，因为跑马灯效果是需要一直刷新 UI 的。</p>
+<p>（3）然后是第一个可能 <code>return</code> 的条件（为了更加直观调整了缩进）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (</span><br><span class="line">    mLayoutParams.height != LayoutParams.WRAP_CONTENT</span><br><span class="line">    &amp;&amp; mLayoutParams.height != LayoutParams.MATCH_PARENT</span><br><span class="line">) </span><br></pre></td></tr></table></figure>
+
+<p>代码很好懂，如果高度既不是 <code>wrap_content</code> 又不是 <code>match_parent</code>，那就只能是精确高度了，这也就表示高度也不需要重新测绘。</p>
+<p>（4）最后是第二个可能 <code>return</code> 的条件（为了更加直观调整了缩进）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (</span><br><span class="line">    mLayout.getHeight() == oldht</span><br><span class="line">    &amp;&amp; (</span><br><span class="line">        mHintLayout == <span class="keyword">null</span></span><br><span class="line">        || mHintLayout.getHeight() == oldht</span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>代码依然很好懂，如果新的高度和久的高度一致，也表示高度不需要重新测绘。</p>
+<p>综合上述的（1）、（2）、（3）、（4）可以得出结论：如果一个 TextView 的内容被改变了，但是新 TextView 的高度和宽度都不会发生变化，并且也不是跑马灯效果模式，也即 TextView 不需要重新测绘，则不需要调用 requestLayout，也就不会走到 ViewRootImpl 判断线程的地方！</p>
+<p>这里需要注意的是：宽度和高度必须同时都是固定值（精确值或 <code>match_parent</code>）才不会发生重绘。上面测试代码中，TextView 的高度为 <code>wrap_content</code> 却没问题的原因，是更新内容时能在一行内显示完全，因此高度没有发生变化，走进了条件（4）中的 <code>return</code>。如果把 TextView 改成宽度为很小的值、高度为自适应，然后子线程中 set 一个很长的文本，使得 TextView 会因为换行导致高度发生变化，则也是会抛出异常的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--布局中把 TextView 的宽度设为很小的值，高度为自适应，然后子线程中 set 一个很长的文本使其换行导致高度变化，会抛出异常--&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">TextView</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/tvNewThreadTitle&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:layout_width</span>=<span class="string">&quot;10dp&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">android:text</span>=<span class="string">&quot;初始 TextView&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    /&gt;</span></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">Button</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">......</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    /&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>因此 TextView 的 UI 更新方式可以总结为两种：</p>
+<ul>
+<li>如果更新后宽度或高度会发生变化，或者是跑马灯效果模式，则立即逐级向父 View 请求重绘一次，并在绘制时绘制出新的文本。</li>
+<li>否则就把把需要更新的文本存在 TextView 内，等下一次屏幕刷新的时候顺便就绘制成新的文本。</li>
+</ul>
+<p>实践证明：针对 TextView，通过避免重绘，的确可以实现子线程更新 UI，但仅针对 TextView 或类似有跳过重绘逻辑的 View。</p>
+<h3 id="4-4-使用SurfaceView-TextureView"><a href="#4-4-使用SurfaceView-TextureView" class="headerlink" title="4.4 使用SurfaceView/TextureView"></a>4.4 使用SurfaceView/TextureView</h3><p>SurfaceView 算是正儿八经使用子线程更新 UI 的例子了，也是其最大的优点。SurfaceView 的画面渲染主要是通过其持有的一个 <code>Surface</code> 类型的 <code>mSurface</code> 对象实现的，这个 <code>Surface</code> 并不是一个 View 的子类，因此其更新并不收到 View 更新中 <code>checkThread()</code> 的限制。简单来说，SurfaceView 可以在子线程中更新 UI 的原理是因为其渲染的目标并不是一个 View。</p>
+<p>当然，实际上 SurfaceView / TextureView 的原理远不止这么简单，本文主要聚焦于子线程更新 UI 的可行性，所以不对 SurfaceView / TextureView 的原理深入解析，相关解析也在计划中，感兴趣的读者可以关注后续更新。</p>
+<h3 id="4-5-特例Toast"><a href="#4-5-特例Toast" class="headerlink" title="4.5 特例Toast"></a>4.5 特例Toast</h3><p>Toast 作为 Android 系统级别的 UI 组件，甚至与 Activity 生命周期都无关，常见的例子就是如果一个 App 正在弹 Toast 的时候出现 Crash 或者手动杀掉了，Toast 还是能正常显示的。</p>
+<h4 id="4-5-1-Toast可以跨线程显示"><a href="#4-5-1-Toast可以跨线程显示" class="headerlink" title="4.5.1 Toast可以跨线程显示"></a>4.5.1 Toast可以跨线程显示</h4><p>实际上 Toast 的显示除了和 Activity 无关之外，也和线程无关，下面这段代码执行不会抛出异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">HandlerThread newThread = <span class="keyword">new</span> HandlerThread(<span class="string">&quot;NewThread&quot;</span>);</span><br><span class="line">newThread.start();</span><br><span class="line">Handler newThreadHandler = <span class="keyword">new</span> Handler(newThread.getLooper()) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">        Toast.makeText(NewThreadActivity.<span class="keyword">this</span>, <span class="string">&quot;子线程中的Toast&quot;</span>, Toast.LENGTH_LONG).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">newThreadHandler.sendEmptyMessage(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>同时抛出一个注意事项：如果需要在子线程中 Toast，则该子线程必须初始化 Looper，因此需要使用 HandlerThread 或者在子线程中手动调用 Looper 的初始化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 直接在未初始化 Looper 的子线程中 Toast 会抛出异常</span></span><br><span class="line"><span class="comment">// RuntimeException: Can&#x27;t toast on a thread that has not called Looper.prepare()</span></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Toast.makeText(context, <span class="string">&quot;未初始化Looper的子线程Toast会报错&quot;</span>, Toast.LENGTH_LONG).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以使用 HandlerThread，或者手动初始化 Looper</span></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Looper.prepare();</span><br><span class="line">        Toast.makeText(context, <span class="string">&quot;已初始化Looper的子线程可以正确Toast&quot;</span>, Toast.LENGTH_LONG).show();</span><br><span class="line">        Looper.loop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+
+<p>Toast 本质上也是一种 View，因此是可以通过 <code>toast.setView(View)</code> 来自定义 Toast 样式的，那既然 Toast 是 View，为什么可以在子线程显示呢？老办法，看源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Toast</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Toast <span class="title">makeText</span><span class="params">(Context context, CharSequence text, <span class="meta">@Duration</span> <span class="keyword">int</span> duration)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> makeText(context, <span class="keyword">null</span>, text, duration);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Make a standard toast to display using the specified looper.</span></span><br><span class="line"><span class="comment">     * If looper is null, Looper.myLooper() is used.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@hide</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Toast <span class="title">makeText</span><span class="params">(<span class="meta">@NonNull</span> Context context, <span class="meta">@Nullable</span> Looper looper,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="meta">@NonNull</span> CharSequence text, <span class="meta">@Duration</span> <span class="keyword">int</span> duration)</span> </span>&#123;</span><br><span class="line">        Toast result = <span class="keyword">new</span> Toast(context, looper);</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Constructs an empty Toast object.  If looper is null, Looper.myLooper() is used.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@hide</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Toast</span><span class="params">(<span class="meta">@NonNull</span> Context context, <span class="meta">@Nullable</span> Looper looper)</span> </span>&#123;</span><br><span class="line">        mContext = context;</span><br><span class="line">        mTN = <span class="keyword">new</span> TN(context.getPackageName(), looper);</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TN</span> <span class="keyword">extends</span> <span class="title">ITransientNotification</span>.<span class="title">Stub</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        TN(String packageName, <span class="meta">@Nullable</span> Looper looper) &#123;</span><br><span class="line">            ......</span><br><span class="line">            <span class="keyword">if</span> (looper == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// Use Looper.myLooper() if looper is not specified.</span></span><br><span class="line">                looper = Looper.myLooper();</span><br><span class="line">                <span class="keyword">if</span> (looper == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(</span><br><span class="line">                            <span class="string">&quot;Can&#x27;t toast on a thread that has not called Looper.prepare()&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到：</p>
+<ul>
+<li>默认情况下三参数的 <code>Toast.makeText(...)</code> 会调用四参数的重载方法，并且传入的 looper 参数是 <code>null</code></li>
+<li>四参数的方法中，<code>new</code> 了一个 Toast 实例</li>
+<li>查看对应的 Toast 构造方法发现，又用传入的 looper 作为构造函数参数 <code>new</code> 了一个 <code>TN</code> 类的实例</li>
+<li>再查看 TN 的构造方法发现，如果传入的 looper 为 <code>null</code>，就直接用当前调用线程的 Looper</li>
+</ul>
+<p>简言之，<code>Toast.makeText(...)</code> 是直接使用调用的线程作为显示线程的，这就可以直接验证上文说的 Toast 的两个特性：</p>
+<ul>
+<li>Toast 可以在子线程显示，因为 <code>Toast.makeText(...)</code> 内部在调用时每次都使用当前线程作为显示线程，因此实际上不存在跨线程的问题。</li>
+<li>Toast 要求线程初始化 Looper 否则在 <code>new TN(...)</code> 的时候就会因为拿不到 looper 抛出异常。</li>
+</ul>
+<h4 id="4-5-2-Toast不能跨线程更新"><a href="#4-5-2-Toast不能跨线程更新" class="headerlink" title="4.5.2 Toast不能跨线程更新"></a>4.5.2 Toast不能跨线程更新</h4><p>看到这个小标题别慌，Toast 可以在子线程中显示是毫无疑问的，但是有一种情况下，Toast 也会抛出 <code>CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.</code> 异常，就是更新内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Toast generalToast;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在子线程中弹一个 Toast，并把这个 Toast 持久化到成员变量</span></span><br><span class="line">HandlerThread newThread = <span class="keyword">new</span> HandlerThread(<span class="string">&quot;NewThread&quot;</span>);</span><br><span class="line">newThread.start();</span><br><span class="line">Handler newThreadHandler = <span class="keyword">new</span> Handler(newThread.getLooper()) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">        generalToast = Toast.makeText(NewThreadActivity.<span class="keyword">this</span>, <span class="string">&quot;子线程中创建并显示的Toast&quot;</span>, Toast.LENGTH_LONG);</span><br><span class="line">        generalToast.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">newThreadHandler.sendEmptyMessage(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 确保子线程已经弹了 Toast 之后，也就是 generalToast 已经初始化，再在主线程更新 generalToast 的内容</span></span><br><span class="line">btUpdateInMainThread.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (generalToast != <span class="keyword">null</span>) &#123;</span><br><span class="line">            generalToast.setText(<span class="string">&quot;在主线程更新子线程创建的Toast的内容&quot;</span>);</span><br><span class="line">            generalToast.show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行发现报错了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.</span><br></pre></td></tr></table></figure>
+
+<p>为什么 <code>Toast.makeText(...)</code> 不限制线程，但 <code>toast.setText(...)</code> 又限制线程呢？再仔细看看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Toast</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Toast <span class="title">makeText</span><span class="params">(<span class="meta">@NonNull</span> Context context, <span class="meta">@Nullable</span> Looper looper,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="meta">@NonNull</span> CharSequence text, <span class="meta">@Duration</span> <span class="keyword">int</span> duration)</span> </span>&#123;</span><br><span class="line">        Toast result = <span class="keyword">new</span> Toast(context, looper);</span><br><span class="line"></span><br><span class="line">        LayoutInflater inflate = (LayoutInflater)</span><br><span class="line">                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);</span><br><span class="line">        View v = inflate.inflate(com.android.internal.R.layout.transient_notification, <span class="keyword">null</span>);</span><br><span class="line">        TextView tv = (TextView)v.findViewById(com.android.internal.R.id.message);</span><br><span class="line">        tv.setText(text);</span><br><span class="line"></span><br><span class="line">        result.mNextView = v;</span><br><span class="line">        result.mDuration = duration;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setText</span><span class="params">(CharSequence s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mNextView == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;This Toast was not created with Toast.makeText()&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        TextView tv = mNextView.findViewById(com.android.internal.R.id.message);</span><br><span class="line">        <span class="keyword">if</span> (tv == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;This Toast was not created with Toast.makeText()&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        tv.setText(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原来在 <code>Toast.makeText(...)</code> 时，Toast 会使用当前线程作为该 Toast 的消息处理 Looper，然后使用系统的 Inflater 服务去加载一个 <code>com.android.internal.R.layout.transient_notification</code> 的布局作为 Toast 的根布局，其中具有一个 TextView 元素，使用该 TextView 元素承载需要显示的文字。</p>
+<p>当调用 <code>toast.setText(...)</code>  时，TextView 就会像文首提到的方式，一层层向上通知更新，因此如果线程与 toast 在初始化时的线程不一致，自然会抛出异常。</p>
+<h3 id="4-6-捕获异常"><a href="#4-6-捕获异常" class="headerlink" title="4.6 捕获异常"></a>4.6 捕获异常</h3><p>上述的在子线程更新 UI 的方式，都是通过避开已知会抛出异常的情况（SurfaceView 相当于直接不检查）实现的。还有一种更新 UI 的方式最为简单粗暴，就是捕获异常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HandlerThread newThread = <span class="keyword">new</span> HandlerThread(<span class="string">&quot;NewThread&quot;</span>);</span><br><span class="line">newThread.start();</span><br><span class="line">Handler newThreadHandler = <span class="keyword">new</span> Handler(newThread.getLooper()) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            tvNewThreadTitle.setText(<span class="string">&quot;子线程中更新UI并捕获异常&quot;</span>);</span><br><span class="line">            ivImage.setImageResource(R.drawable.ic_launcher_foreground);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception ignore)&#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">newThreadHandler.sendEmptyMessage(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这段代码当然不会抛出异常，并且 TextView 也确实能更新文本内容，但是 ImageView 却没有任何反应。对比一下 <code>TextView#setText(...)</code> 和 <code>ImageView#setImageResource(...)</code> 的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TextView</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setText</span><span class="params">(CharSequence text, BufferType type, <span class="keyword">boolean</span> notifyBefore, <span class="keyword">int</span> oldlen)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">// 这一步可以理解成，把传进来的 text 存入到 TextView 的成员变量中</span></span><br><span class="line">        setTextInternal(text);</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">if</span> (mLayout != <span class="keyword">null</span>) &#123;</span><br><span class="line">            checkForRelayout();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setImageResource</span><span class="params">(<span class="meta">@DrawableRes</span> <span class="keyword">int</span> resId)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">if</span> (oldWidth != mDrawableWidth || oldHeight != mDrawableHeight) &#123;</span><br><span class="line">            requestLayout();</span><br><span class="line">        &#125;</span><br><span class="line">        invalidate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过看源码发现：</p>
+<ul>
+<li><code>TextView#setText(...)</code> 是先通过 <code>setTextInternal(...)</code> 把 text 存入到成员变量，然后再调用 <code>checkForRelayout()</code> 检查是否需要重绘，如果需要的话才调用 <code>requestLayout()</code>，检查线程也就发生在 <code>ViewRootImpl#requestLayout()</code> 中。所以即使 <code>ViewRootImpl#requestLayout()</code> 抛出了异常，也不会影响到 <code>setTextInternal(...)</code> 已经把 text 存下来了，那只需要等待下一次屏幕刷新即可把文本刷新上去。</li>
+<li><code>ImageView#setImageResource(...)</code> 是先通过 <code>requestLayout()</code> 请求更新，并在 <code>ViewRootImpl#requestLayout()</code> 中检查了线程，只有未抛出异常时，才会走到 <code>invalidate()</code> 并重绘，否则抛出异常则会中断跳出方法。</li>
+</ul>
+<p>所以，通过捕获异常的方式，只能针对类似于 TextView 这种，可以在检查线程前先做更新 / 缓存的 View，其他 View 则尽管不会抛出异常，也无法更新 UI，所以捕获异常属于一种“骚操作”，是极为不建议使用的。</p>
+<hr>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><p>概括一下本文内容：</p>
+<ul>
+<li>Android 中视图的顶点都是 Window，显示视图的根基就是需要有一个可用的 Window</li>
+<li>Window 持有 DecorView</li>
+<li>Window 在创建并持有 DecorView 时会初始化 ViewRootImpl 时的当前线程会作为 ViewRootImpl 持有的初始化线程</li>
+<li>DecorView 加载 subDecor</li>
+<li>用 subDecor 承载 Activity 的 layout</li>
+<li>更新 View 时，如果需要重绘，会逐级调用父 View 的 <code>requestLayout()</code>，最上层的父 View 就是 ViewRootImpl，在 <code>ViewRootImpl#requestLayout()</code> 中判断了当前线程与初始化线程是否相同，如果不相同则抛出异常</li>
+<li>有几种方式是可以在子线程更新 UI 的：</li>
+<li>手动触发 ViewRootImpl 初始化：也就是手动创建 Window 并添加 DecorView。</li>
+<li>避开 ViewRootImpl 的检查：针对 TextView 这类先缓存再判断的 View 可以通过避开重绘等待下一次屏幕刷新时显示已缓存的内容来刷新 UI。</li>
+<li>使用 SurfaceView / TextureView。</li>
+<li>显示 Toast：Toast 的创建每次都会使用当前线程初始化，因此显示 Toast 不受跨线程的影响。但不能对其他线程的 Toast 实例对象调用 <code>Toast#setText(...)</code>，否则就相当于子线程更新 UI。</li>
+<li>捕获异常：针对 TextView 这类先缓存再判断的 View，可以更新 UI。但其他 View 通常会先检查线程再重绘，就会导致检查的那一步抛出异常，虽然捕获了不会 Crash，但也会中断重绘逻辑导致无法刷新。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub" ></i>&ensp;&ensp;支 持 一 下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信支付">
+        <span>微信支付</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者: </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接:</strong>
+      <a href="https://luisliu.cn/post/android/android-ui_thread/" title="Android子线程到底能否更新UI——可能是最全面的解析">https://luisliu.cn/post/android/android-ui_thread/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明: </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/%E5%AD%90%E7%BA%BF%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 子线程</a>
+              <a href="/tags/UI%E7%BA%BF%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> UI线程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/android/android-window/" rel="prev" title="Android-Window机制">
+                  <i class="fa fa-chevron-left"></i> Android-Window机制
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/android/android-activity_startup/" rel="next" title="Android-Activity启动流程">
+                  Android-Activity启动流程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Site Symbols:</span>
+    <span title="Site Symbols">498k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Site Read Time &asymp;</span>
+    <span title="Site Read Time">9:13</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>

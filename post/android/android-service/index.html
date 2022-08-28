@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）Service 的状态和种类；（2）Service 生命周期；（3）Client 与 Service 通信；（4）高 API 版本 Service 的限制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Service">
+<meta property="og:url" content="https://luisliu.cn/post/android/android-service/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）Service 的状态和种类；（2）Service 生命周期；（3）Client 与 Service 通信；（4）高 API 版本 Service 的限制。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-20T04:08:21.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="四大组件">
+<meta property="article:tag" content="Service">
+<meta property="article:tag" content="前台服务">
+<meta property="article:tag" content="后台服务">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/post/android/android-service/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/android/android-service/","path":"post/android/android-service/","title":"Android-Service"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android-Service | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle Navigation" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/08/28 - 08:13:42</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>About</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">80</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">149</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Catalogue
+        </li>
+        <li class="sidebar-nav-overview">
+          SiteInfo
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Service"><span class="nav-text">Android-Service</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Service%E7%9A%84%E7%8A%B6%E6%80%81%E5%92%8C%E7%A7%8D%E7%B1%BB"><span class="nav-text">1. Service的状态和种类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Service%E7%9A%84%E5%90%AF%E5%8A%A8%E5%92%8C%E7%BB%91%E5%AE%9A%E7%8A%B6%E6%80%81"><span class="nav-text">1.1 Service的启动和绑定状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Service%E7%9A%84%E5%89%8D%E5%8F%B0%E5%92%8C%E5%90%8E%E5%8F%B0"><span class="nav-text">1.2 Service的前台和后台</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Service%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">2. Service生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Start%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8Service"><span class="nav-text">2.1 Start方式启动Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Bind%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8Service"><span class="nav-text">2.2 Bind方式启动Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Service%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">2.3 Service生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Client%E4%B8%8EService%E9%80%9A%E4%BF%A1"><span class="nav-text">3. Client与Service通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%80%9A%E8%BF%87Binder%E6%8C%81%E6%9C%89Service"><span class="nav-text">3.1 通过Binder持有Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E9%80%9A%E8%BF%87Messenger%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF"><span class="nav-text">3.2 通过Messenger发送消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%85%B6%E4%BB%96%E6%96%B9%E5%BC%8F"><span class="nav-text">3.3 其他方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%AB%98%E7%89%88%E6%9C%ACService%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-text">4. 高版本Service的限制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Service%E4%BF%9D%E6%B4%BB"><span class="nav-text">4.1 Service保活</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%87%A0%E4%B9%8E%E4%B8%8D%E5%8F%AF%E8%A7%81%E7%9A%84Activity"><span class="nav-text">4.2 几乎不可见的Activity</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">Posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">149</span>
+        <span class="site-state-item-name">Tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/android/android-service/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-Service
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted:</span>
+
+      <time title="Created::2020-03-20 12:08:21" itemprop="dateCreated datePublished" datetime="2020-03-20T12:08:21+08:00">2020-03-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">Categories:</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          <a href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/" rel="tag"><i class="fa fa-tag"></i> 四大组件</a>
+          <a href="/tags/Service/" rel="tag"><i class="fa fa-tag"></i> Service</a>
+          <a href="/tags/%E5%89%8D%E5%8F%B0%E6%9C%8D%E5%8A%A1/" rel="tag"><i class="fa fa-tag"></i> 前台服务</a>
+          <a href="/tags/%E5%90%8E%E5%8F%B0%E6%9C%8D%E5%8A%A1/" rel="tag"><i class="fa fa-tag"></i> 后台服务</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="Post Symbols">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Post Symbols:</span>
+      <span>12k</span>
+    </span>
+    <span class="post-meta-item" title="Read Time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Read Time &asymp;</span>
+      <span>14 Min</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）Service 的状态和种类；（2）Service 生命周期；（3）Client 与 Service 通信；（4）高 API 版本 Service 的限制。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Android-Service"><a href="#Android-Service" class="headerlink" title="Android-Service"></a>Android-Service</h1><h2 id="1-Service的状态和种类"><a href="#1-Service的状态和种类" class="headerlink" title="1. Service的状态和种类"></a>1. Service的状态和种类</h2><p>Service 分为 <code>Started</code> 和 <code>Bound</code> 两种状态（可共存），以及 <code>Foreground</code> 和 <code>Background</code> 两种类型。</p>
+<h3 id="1-1-Service的启动和绑定状态"><a href="#1-1-Service的启动和绑定状态" class="headerlink" title="1.1 Service的启动和绑定状态"></a>1.1 Service的启动和绑定状态</h3><p>Service 可以通过 <code>start</code> 和 <code>bind</code> 两种方法启动。</p>
+<ul>
+<li><code>startService()</code> 后该 Service 即变为 <code>Stared</code> 状态，处于后台运行中，与启动它的 Activity 生命周期无关，除非手动 <code>stopService(Intent)</code> 或 Service 内部调用自己的 <code>stopSelf()</code> 终止，或被 Android 系统回收。</li>
+<li><code>bindService()</code> 后该 Service 为 <code>Bound</code> 状态，主要提供 C / S 接口，允许组件与 Service 通信或跨进程通信，生命周期与启动它的宿主绑定，宿主销毁时会自动解除与 Service 的绑定，当 <code>Bound</code> 状态的 Service 没有被任何宿主绑定时，就会销毁该 Service。</li>
+</ul>
+<p>Service 可以同时处于 <code>Started</code> 状态和 <code>Bound</code> 状态，也即 Service 通过一种方式启动后，仍然可以被其他宿主通过另一种方式连接（但不会重新启动）。当 Service 同时处于 <code>Started</code> 和 <code>Bound</code> 状态时，Service 的生命周期同时受到两种状态的影响，仅当两种状态都断开时，Service 才会销毁，也即：必须被 <code>stopService()</code> 并且被 <code>unbindService()</code> 后，Service 才会销毁。</p>
+<h3 id="1-2-Service的前台和后台"><a href="#1-2-Service的前台和后台" class="headerlink" title="1.2 Service的前台和后台"></a>1.2 Service的前台和后台</h3><p>Service 可以在后台执行长时间而无界面的操作，且默认处于主进程的主线程中。</p>
+<ul>
+<li><p>BackGround Service：用户不可感知的后台操作，如监控、轮询拉取等。</p>
+<ul>
+<li>默认情况下，不论通过 <code>start</code> 还是 <code>bind</code> 启动的 Service 都是后台 Service。后台 Service 对用户不可感知，但内存优先级较低，在内存不足时会被系统杀死（根据 Service 的参数可以指定是否需要在内存空闲后重新启动），最大允许 200 秒（<code>ActiveServices#SERVICE_BACKGROUND_TIMEOUT</code>）卡顿时间，超出则会抛出 ANR。</li>
+</ul>
+</li>
+<li><p>Foreground Service：执行一些用户可感知的操作，如 Audio 播放。</p>
+<ul>
+<li><p>可以通过调用 <code>Service#startForeground(int id, Notification notification)</code> 将一个 Service 设为前台 Service，其中 Notification 不能为 <code>null</code> 否则会抛出异常，因此 ForegroundService 强制要求在通知栏显示一个服务图标，但内存优先级高，即使内存不足也不会被系统杀死，最大允许 20 秒（<code>ActiveServices#SERVICE_TIMEOUT</code>）卡顿时间，超出则会抛出 ANR。</p>
+</li>
+<li><p>在 API 26 (Android 8.0) 以上可以直接通过 <code>startForegroundService()</code> 启动一个 ForegroundService，但在 ForegroundService 启动后需要在 10 秒（<code>ActiveServices#SERVICE_START_FOREGROUND_TIMEOUT</code>）内调用 <code>startForeground()</code>，否则会抛出 ANR。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-Service生命周期"><a href="#2-Service生命周期" class="headerlink" title="2. Service生命周期"></a>2. Service生命周期</h2><p>所有 Service 都必须在 Manifest 内声明注册：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;service</span><br><span class="line">    android:name=<span class="string">&quot;.DemoService&quot;</span></span><br><span class="line">    android:exported=<span class="string">&quot;true&quot;</span></span><br><span class="line">    android:process=<span class="string">&quot;:demo&quot;</span></span><br><span class="line">    android:isolatedProcess=<span class="string">&quot;false&quot;</span></span><br><span class="line">    android:enabled=<span class="string">&quot;true&quot;</span></span><br><span class="line">    &gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=<span class="string">&quot;service.DemoService&quot;</span>/&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>exported</code>: 是否能被其他 App 隐式启动（通过指定 Intent 的 ActionName 启动），当没有指定 <code>Intent-Filter</code> 时默认值为 <code>false</code>，指定了 <code>Intent-Filter</code> 时默认值为 <code>true</code>。</p>
+</li>
+<li><p><code>process</code>: 指定进程，默认情况下 Service 运行在主进程的主线程中，可以通过指定 <code>process</code> 属性分配独立进程。</p>
+</li>
+<li><p><code>isolatedProcess</code>: 是否运行在一个 <strong>没有任何权限</strong> 的特殊进程中，通常用于一些沙盒任务。</p>
+</li>
+<li><p><code>enabled</code>: 是否启用这个 Service (系统是否能实例化这个 Service)，默认为 <code>true</code>，当设置为 <code>false</code> 时，相当于在 Manifest 中移除该 Service 的标签。</p>
+<ul>
+<li>关于 <code>enabled</code> 属性有个很常见的问题就是：如果想要不启用这个 Service，为何要在 Manifest 中声明又禁用呢？直接不写这个 Service 或者不在 Manifest 中声明不就行了吗？实际上这个属性更多用在外部依赖上，例如项目依赖了一个 Module，但是又想禁用 Module 中的某个 Service，则可以在项目 Manifest 中禁用该 Service，然后 Manifest 合并后就会禁用该 Service，理论上四大组件都可以通过这个方式禁用。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-1-Start方式启动Service"><a href="#2-1-Start方式启动Service" class="headerlink" title="2.1 Start方式启动Service"></a>2.1 Start方式启动Service</h3><p>以 start 方式启动 Service：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(context, DemoService.class);</span><br><span class="line">startService(intent);</span><br><span class="line">stopService(intent);</span><br></pre></td></tr></table></figure>
+
+<p>需要注意：</p>
+<ul>
+<li><code>Service#stopSelf()</code> 和 <code>Service#stopSelfResult(int startId)</code> 的效果等同于 <code>Context#stopService(Intent)</code>。</li>
+<li>仅被 Start 启动而没有被任何 Client Bind 的后台 Service，将在 App 进入后台 1 分钟后被 Kill。</li>
+</ul>
+<h3 id="2-2-Bind方式启动Service"><a href="#2-2-Bind方式启动Service" class="headerlink" title="2.2 Bind方式启动Service"></a>2.2 Bind方式启动Service</h3><p>如果通过 bind 方式绑定 Service，在 Service 中返回 IBinder 类的实例，则 Client 就能通过 Binder 的方式与 Service 通信。</p>
+<blockquote>
+<p>虽然默认情况下 Service 运行在主进程的主线程当中，但 Service 本身是支持跨进程的，所以 Android 选择了 Binder 作为通信方式。</p>
+</blockquote>
+<h3 id="2-3-Service生命周期"><a href="#2-3-Service生命周期" class="headerlink" title="2.3 Service生命周期"></a>2.3 Service生命周期</h3><p>Service 中常见的生命周期回调如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 只有当 Service 第一次被启动的时候才回调。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Service 生命周期中，不论如何 onCreate() 都只会回调一次。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service 被调用 Start 时回调。</span></span><br><span class="line"><span class="comment">     * Service 运行过程中，被多次 Start 时会多次回调。</span></span><br><span class="line"><span class="comment">     * &lt;p/&gt;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> intent 正常 Start 启动 Service 时，Intent 即为 Start 时传入的 Intent。</span></span><br><span class="line"><span class="comment">     *               当 Service 被系统杀死后，如果重新启动，则传入的 intent 与该方法的返回值有关。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> flags 该 Service 启动时的参数，通常用于判断该 Service 被 Start 的原因。</span></span><br><span class="line"><span class="comment">     *              - 0: 表示 Service 是正常启动；</span></span><br><span class="line"><span class="comment">     *              - START_FLAG_REDELIVERY: 表示 Service 是由于被系统杀死，并在内存充足后被系统重新启动。</span></span><br><span class="line"><span class="comment">     *                仅当该方法返回值为 START_REDELIVER_INTENT 时生效。</span></span><br><span class="line"><span class="comment">     *              - START_FLAG_RETRY: 表示 Service 是由于该方法没有正常返回，系统重试。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> startId 表明一个启动 ID，通常与 stopSelfResult(int startId) 搭配使用，</span></span><br><span class="line"><span class="comment">                      在 Service 重启或重试后，避免早前的 stopSelfResult() 请求将后来启动的 Service 停止。</span></span><br><span class="line"><span class="comment">     *                例如：onStartCommand(intent, flags, 5) 启动的 Service，将无法被 stopSelfResult(4) 停止。</span></span><br><span class="line"><span class="comment">     * &lt;p/&gt;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 有三种典型取值，代表了 Service 被 Start 后，如果被系统杀死，后续的行为。</span></span><br><span class="line"><span class="comment">     *         - START_STICKY: 表示内存充足后需要重新启动，但传入的 intent == null，除非有 Intent 队列，例如 PendingIntent。</span></span><br><span class="line"><span class="comment">     *         - START_NOT_STICKY: 表示内存充足后也不重新启动。</span></span><br><span class="line"><span class="comment">     *         - START_REDELIVER_INTENT: 表示内存充足后需要重新启动，并且把上一次 Start 时使用的 Intent 再重新传入。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onStartCommand(intent, flags, startId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service 被首次 Bind 时回调，被 Start 启动时不会回调。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Service 生命周期中，不论如何 onBind() 都只会回调一次。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Service 在被销毁前，生命周期中只会在第一次被 Client 绑定时回调 onBind()，</span></span><br><span class="line"><span class="comment">     * 之后不论 Client 如何解绑并重新绑定，只要 Service 没有被销毁重启，都不会再次回调 onBind()。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service 被重新 Bind 时回调，仅当 onUnbind() 返回 true 时生效。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 仅当：</span></span><br><span class="line"><span class="comment">     * - Service 从 Bound 的状态下被所有 Client Unbind，</span></span><br><span class="line"><span class="comment">     * - 并且 onUnbind() 返回 true，</span></span><br><span class="line"><span class="comment">     * - 并且 Service 未被销毁（即同时处于 Started 状态），</span></span><br><span class="line"><span class="comment">     * 则下一次被 Bind 时才会回调 onRebind()。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onRebind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onRebind(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service 被所有 Client Unbind，或者被最后一个 Context.BIND_AUTO_CREATE 模式的 Client Unbind 后回调。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 需要注意：</span></span><br><span class="line"><span class="comment">     * - 如果 Service 被多个 Client Bind，只要所有 Context.BIND_AUTO_CREATE 模式的 Client Unbind 就会回调 onUnbind()，</span></span><br><span class="line"><span class="comment">     *   此时其他模式的 Client 就会收到 ServiceConnection#onServiceDisconnected() 回调。</span></span><br><span class="line"><span class="comment">     * - 否则当所有 Client Unbind 后才会触发该回调，且都不会收到 ServiceConnection#onServiceDisconnected() 回调。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 当首次从 Bound 状态下被所有以 Context.BIND_AUTO_CREATE 模式 Bind 的 Client Unbind 时会回调，</span></span><br><span class="line"><span class="comment">     * 之后被重新 Bind 和 Unbind，是否回调依赖上一次 onUnbind() 的返回值：</span></span><br><span class="line"><span class="comment">     * - 如果上一次返回 false，则下一次被 Client Bind 时不会回调 onRebind()，且被所有 Client Unbind 后也不会回调 onUnbind()。</span></span><br><span class="line"><span class="comment">     * - 如果上一次返回 true，则下一次被 Client Bind 时会回调 onRebind()，且被所有 Clinet Unbind 后会也回调 onUnbind()。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onUnbind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onUnbind(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service 真正被销毁时回调。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Service 生命周期中，不论如何 onDestroy() 都只会回调一次。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时处于 <code>Started</code> 和 <code>Bound</code> 状态下的 Service，在被 Stop 并且 <code>onUnbind()</code> 后才会销毁。需要注意的是，Service 的 <code>onUnbind()</code> 有两种触发方式，只要满足其中任意一条就会触发 <code>onUnbind()</code> 回调：</p>
+<ul>
+<li><p>所有 <code>Context.BIND_AUTO_CREATE</code> 模式 Bind 的 Client 均已 Unbind。</p>
+<p>此时其他模式 Bind 的 Client 会收到 <code>ServiceConnection#onServiceDisconnected()</code> 回调，视为其他 Client 异常断开。</p>
+</li>
+<li><p>所有 Client 都不是 <code>Context.BIND_AUTO_CREATE</code> 模式，且都已 Unbind。</p>
+<p>此时所有 Client 都不会收到 <code>ServiceConnection#onServiceDisconnected()</code> 回调，视为正常断开。</p>
+</li>
+</ul>
+<p>一个 Service 不论是否已经启动，都可以被多次 Start、Stop 和 Bind，Start 和 Stop 的次数不必须匹配，但 Unbind 的次数必须匹配 Bind 的次数，如果 Client 与 Service 不存在绑定关系，则调用 Unbind 会抛出异常。</p>
+<hr>
+<h2 id="3-Client与Service通信"><a href="#3-Client与Service通信" class="headerlink" title="3. Client与Service通信"></a>3. Client与Service通信</h2><p>如果 Client 需要与 Service 通信，则必须通过 <code>bind</code> 方式与目标 Service 绑定连接。</p>
+<h3 id="3-1-通过Binder持有Service"><a href="#3-1-通过Binder持有Service" class="headerlink" title="3.1 通过Binder持有Service"></a>3.1 通过Binder持有Service</h3><p>Client 直接持有 Service 实例对象通信，原理是：</p>
+<ul>
+<li>利用 Binder 跨进程通信的方式，直接在 Client 中拿到 Service 的 Binder 对象。</li>
+<li>然后从 ServiceBinder 中获取 Service 实例对象，相当于把 Service 的实例对象跨进程传到了 Client 进程中。</li>
+<li>Client 持有了 Service 实例对象，即可直接操作 Service。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 直接操作 Binder 对象的方式。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoBinder</span> <span class="keyword">extends</span> <span class="title">Binder</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 通过 Binder 返回 Service 实例，使得外部可以持有该 Service 对象并与之通信</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> DemoService <span class="title">getService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> DemoService.<span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123; <span class="keyword">return</span> <span class="keyword">new</span> DemoBinder(); &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 可以由外部调用的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        bindService(<span class="keyword">new</span> Intent(<span class="keyword">this</span>, DemoService.class), <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</span><br><span class="line">                DemoBinder demoBinder = (DemoBinder) service;</span><br><span class="line">                <span class="comment">// 持有 DemoService 的实例对象，并调用 Service 的公有方法。</span></span><br><span class="line">                demoBinder.getService().work(); </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123; <span class="comment">/* 仅当异常 Unbind 时才回调 */</span> &#125;</span><br><span class="line">        &#125;, Context.BIND_AUTO_CREATE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-通过Messenger发送消息"><a href="#3-2-通过Messenger发送消息" class="headerlink" title="3.2 通过Messenger发送消息"></a>3.2 通过Messenger发送消息</h3><p>Client 和 Service 通过互相持有对方的 Messenger 通信，原理是：</p>
+<ul>
+<li>Client 和 Service 各自通过 Handler 构造各自的 Messenger，则各自的 Messenger 都可以通过 Handler 接收消息。</li>
+<li>Service 在 <code>onBind()</code> 中返回 <code>serviceMessenger.getBinder()</code>，相当于返回 Service 进程的 Binder。</li>
+<li>然后 Client 在成功连接 Service 后，通过 Service 返回的 Binder 构造并持有 Service 的 Messenger，也就相当于能向 Service 的 Handler 发送消息。</li>
+<li>此时 Service 还不能向 Client 发送消息，所以 Client 需要首先向 Service 发送一条消息，在消息中指定 <code>replyTo</code> 为 Client 自己的 messenger。</li>
+<li>则 Service 收到这条消息后，就能通过消息的 <code>replyTo</code> 取出并持有 Client 的 Messenger，也就相当于能向 Client 的 Handler 发送消息。</li>
+<li>此时 Client 和 Service 都互相持有了对方的 Messenger，就可以互相发送消息。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 通过 Messenger 发送消息。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MSG_ON_BIND = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Service 自己的 Handler，用于处理来自 Client 的消息。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Handler serviceHandler = <span class="keyword">new</span> Handler(Looper.getMainLooper()) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">                <span class="keyword">case</span> MSG_ON_BIND: &#123;</span><br><span class="line">                    <span class="comment">// 通过接收 Client 发送过来的消息，从消息中获取 Client 的 Messenger。</span></span><br><span class="line">                    clientMessenger = msg.replyTo;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">default</span>: <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// Client 的 Messenger，用于向 Client 发送消息。</span></span><br><span class="line">    <span class="keyword">private</span> Messenger clientMessenger;</span><br><span class="line">    <span class="comment">// Service 自己的 Messenger，用于接收来自 Client 的消息。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Messenger serviceMessenger = <span class="keyword">new</span> Messenger(serviceHandler);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 返回 Service 的 Messenger，持有方就能向 Service 发送消息。</span></span><br><span class="line">        <span class="keyword">return</span> serviceMessenger.getBinder();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service 通过 Client 的 Messenger 向 Client 发送消息通信。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendToClient</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (clientMessenger != <span class="keyword">null</span>) &#123;</span><br><span class="line">            clientMessenger.send(Message.obtain());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Client 自己的 Handler，用于处理来自 Service 的消息。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Handler clientHandler = <span class="keyword">new</span> Handler(Looper.getMainLooper()) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 处理来自 Service 发送的消息</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// Client 自己的 Messenger，用于接收来自 Service 的消息。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Messenger clientMessenger = <span class="keyword">new</span> Messenger(clientHandler);</span><br><span class="line">    <span class="comment">// Service 的 Messenger，用于向 Service 发送消息。</span></span><br><span class="line">    <span class="keyword">private</span> Messenger serviceMessenger;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        bindService(<span class="keyword">new</span> Intent(<span class="keyword">this</span>, DemoService.class), <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</span><br><span class="line">                <span class="comment">// 通过 Service 的 Binder 来构造 Service 的 Messenger。</span></span><br><span class="line">                serviceMessenger = <span class="keyword">new</span> Messenger(service);</span><br><span class="line">                <span class="comment">// 先向 Service 发送一条消息，通过 Msg.replyTo 把 Client 自己的 Messenger 传过去，</span></span><br><span class="line">                <span class="comment">// 这样 Service 才能拿到 Client 的 Messenger，才能向 Client 发送消息。</span></span><br><span class="line">                Message onBindMsg = Message.obtain();</span><br><span class="line">                onBindMsg.what = DemoService.MSG_ON_BIND;</span><br><span class="line">                onBindMsg.replyTo = clientMessenger;</span><br><span class="line">                serviceMessenger.send(onBindMsg);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123; <span class="comment">/* 仅当异常 Unbind 时才回调 */</span> &#125;</span><br><span class="line">        &#125;, Context.BIND_AUTO_CREATE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Client 通过 Service 的 Messenger 向 Service 发送消息通信。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendOnBindToService</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (serviceMessenger != <span class="keyword">null</span>) &#123;</span><br><span class="line">            serviceMessenger.send(Message.obtain());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-其他方式"><a href="#3-3-其他方式" class="headerlink" title="3.3 其他方式"></a>3.3 其他方式</h3><p>除了使用 Binder 方式以外，Activity 与 Service 之间的通信还能通过 BroadCastReceiver 以及 EventBus 的方式实现。</p>
+<hr>
+<h2 id="4-高版本Service的限制"><a href="#4-高版本Service的限制" class="headerlink" title="4. 高版本Service的限制"></a>4. 高版本Service的限制</h2><p>从 API 21 (Android 5.0) 开始，Google 全面禁止了隐式启动 Service，仅允许显式启动 Service，不论目标 Service 是否处于同一个 App 内，都需要指定目标 Service 所在 App 的包名以及该 Service 的全路径。隐式启动 Service 将会抛出异常，该限制主要是为了避免 App 恶意唤起后台服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Service Intent must be explicit</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>隐式启动 Service 是指仅通过 ActionName 启动 Service，即使可能存在多个 Service 的 ActionName 重复。API 21 之后，必须使用显式启动，否则会抛出异常，</p>
+</blockquote>
+<p>从 API 26 (Android 8) 开始，Google 针对资源控制限制了后台服务，处于后台的 App 将不允许后台 Service 再直接通过 <code>startService()</code> 方式启动另一个后台 Service。此前 Service 需要启动后再调用 <code>Service#startForeground()</code> 才能将 Service 设为前台服务，而不论通过 Start 还是 Bind 启动的 Service 默认都作为后台服务，因此 API 26 提供了一个新的 Api <code>startForgroundService()</code> 来直接启动一个默认前台服务。</p>
+<ul>
+<li>由于指定了启动的是前台服务，因此其会在内部调用 <code>ActiveServices.setServiceForegroundInnerLocked()</code> Post 了一个延时消息，必须在 10s 内调用 <code>Service#startForeground()</code>，其内部 Remove 了该延时消息，否则该延时消息就会抛出 ANR。</li>
+<li>并且如果 <code>Service#startForeground(int id, Notification notification)</code> 中 <code>id == 0</code> 或 <code>notification == null</code> 都会抛出 <code>Null Notification</code> 异常，因此启动前台服务一定会创建一个通知提醒用户。</li>
+</ul>
+<p>后台 Service 不能直接 Start 另一个后台 Service，这条规则受到 App 前后台策略的影响：</p>
+<ul>
+<li>处于前台的 App 可以自由启动前台或后台 Service。</li>
+<li>进入后台的 App 在一段时间窗内（数分钟）仍然可以自由启动创建前台或后台 Service，在时间窗结束后系统将会停止 App 的后台 Service。</li>
+</ul>
+<p>但 Android 对 App 是否前台的判断，并非是简单地判断是否存在前台 Activity。Google 文档中指出，一个 App 如果满足以下几点，则被视为处于前台：</p>
+<ul>
+<li>具有可见 Activity</li>
+<li>具有前台 Service</li>
+<li>被另一个前台 App 关联（被另一个前台应用 Bind Service 或使用了 ContentProvider），例如：<ul>
+<li>IME</li>
+<li>壁纸 Service</li>
+<li>通知监听</li>
+<li>语音或文本服务</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-1-Service保活"><a href="#4-1-Service保活" class="headerlink" title="4.1 Service保活"></a>4.1 Service保活</h3><p>随着高版本 Android 对后台策略逐步收紧，理论上已经没有 100% 保活的方式，API 26 以上 Service 保活的思路主要就是两个 Service 互相启动并绑定；</p>
+<ul>
+<li>AService：<ul>
+<li>首先由某个前台 Activity Start 一个 AService。</li>
+<li>AService 的 <code>onStartCommand()</code> 返回 <code>START_STICKY</code>。</li>
+<li>AService Start 和 Bind BService。</li>
+<li>AService 在 <code>onDestroy()</code> 中再次 Start 和 Bind BService。</li>
+</ul>
+</li>
+<li>BService：<ul>
+<li>BService 的 <code>onStartCommand()</code> 同样返回 <code>START_STICKY</code>。</li>
+<li>BService 被启动后，Start 和 Bind AService。</li>
+<li>BService 在 <code>onDestroy()</code> 中再次 Start 和 Bind AService。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>AService 和 BService 都需要在 <code>onStartCommand()</code> 中返回 <code>START_STICKY</code>，这样其中一个 Service 由于内存被系统杀死后，仍有机会被重启并继续拉活对方。</p>
+<p>由于后台 Service 如果仅被 Start 而没有被 Bind，会在 App 置入后台 1 分钟后被 Kill，所以 Service 互相拉活时，需要同时 Start 和 Bind 对方。</p>
+<p>由于高版本禁止从后台启动任何后台服务，所以在 AService 和 BService 互相 Start 时需要判断版本，API 26 以上需要 <code>startForegroundService()</code>。</p>
+</blockquote>
+<h3 id="4-2-几乎不可见的Activity"><a href="#4-2-几乎不可见的Activity" class="headerlink" title="4.2 几乎不可见的Activity"></a>4.2 几乎不可见的Activity</h3><p>主要思路是在 <code>Activity#onCreate()</code> 中将 Activity 设置为只有一个像素大小的透明的背景。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    Window activityWindow = getWindow();</span><br><span class="line">    <span class="comment">// 设置 Window 不可点击：</span></span><br><span class="line">    activityWindow.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);</span><br><span class="line">    <span class="comment">// 设置 Window 不关心外界触摸事件：</span></span><br><span class="line">    activityWindow.addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);</span><br><span class="line">    <span class="comment">// 设置 DecorView 为全屏状态</span></span><br><span class="line">    View decorView = activityWindow.getDecorView();</span><br><span class="line">    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);</span><br><span class="line">    <span class="comment">// 设置状态栏透明不可见：</span></span><br><span class="line">    activityWindow.setStatusBarColor(Color.TRANSPARENT);</span><br><span class="line">    <span class="comment">// 设置 Window 位于左上角：</span></span><br><span class="line">    activityWindow.setGravity(Gravity.START | Gravity.TOP);</span><br><span class="line">    WindowManager.LayoutParams params = activityWindow.getAttributes();</span><br><span class="line">    <span class="comment">// 设置 Window 相对 Gravity 横纵坐标偏移均为 0：</span></span><br><span class="line">    params.x = <span class="number">0</span>;</span><br><span class="line">    params.y = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 设置 Window 的宽和高均为 1 像素：</span></span><br><span class="line">    params.height = <span class="number">1</span>;</span><br><span class="line">    params.width = <span class="number">1</span>;</span><br><span class="line">    activityWindow.setAttributes(params);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub" ></i>&ensp;&ensp;支 持 一 下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信支付">
+        <span>微信支付</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者: </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接:</strong>
+      <a href="https://luisliu.cn/post/android/android-service/" title="Android-Service">https://luisliu.cn/post/android/android-service/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明: </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/" rel="tag"><i class="fa fa-tag"></i> 四大组件</a>
+              <a href="/tags/Service/" rel="tag"><i class="fa fa-tag"></i> Service</a>
+              <a href="/tags/%E5%89%8D%E5%8F%B0%E6%9C%8D%E5%8A%A1/" rel="tag"><i class="fa fa-tag"></i> 前台服务</a>
+              <a href="/tags/%E5%90%8E%E5%8F%B0%E6%9C%8D%E5%8A%A1/" rel="tag"><i class="fa fa-tag"></i> 后台服务</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/android/android-messenger/" rel="prev" title="Android-Messenger">
+                  <i class="fa fa-chevron-left"></i> Android-Messenger
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/android/android-looper/" rel="next" title="Android-Looper">
+                  Android-Looper <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Site Symbols:</span>
+    <span title="Site Symbols">498k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Site Read Time &asymp;</span>
+    <span title="Site Read Time">9:13</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>

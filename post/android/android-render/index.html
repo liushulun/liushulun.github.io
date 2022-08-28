@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）View 发起绘制请求；（2）Android 绘制和渲染流程；（3）Surface 机制；（4）SurfaceView 原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-渲染机制">
+<meta property="og:url" content="https://luisliu.cn/post/android/android-render/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）View 发起绘制请求；（2）Android 绘制和渲染流程；（3）Surface 机制；（4）SurfaceView 原理。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://luisliu.cn/post/android/android-render/surface_and_surfaceflinger.png">
+<meta property="article:published_time" content="2021-05-15T10:46:25.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="渲染">
+<meta property="article:tag" content="绘制">
+<meta property="article:tag" content="VSync">
+<meta property="article:tag" content="Surface">
+<meta property="article:tag" content="Texture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luisliu.cn/post/android/android-render/surface_and_surfaceflinger.png">
+
+
+<link rel="canonical" href="https://luisliu.cn/post/android/android-render/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/android/android-render/","path":"post/android/android-render/","title":"Android-渲染机制"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android-渲染机制 | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle Navigation" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/08/28 - 08:13:42</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>About</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">80</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">149</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Catalogue
+        </li>
+        <li class="sidebar-nav-overview">
+          SiteInfo
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6"><span class="nav-text">Android渲染机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-View%E5%8F%91%E8%B5%B7%E7%BB%98%E5%88%B6%E8%AF%B7%E6%B1%82"><span class="nav-text">1. View发起绘制请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Android%E7%BB%98%E5%88%B6%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B"><span class="nav-text">2. Android绘制渲染流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%B3%A8%E5%86%8C%E7%BB%98%E5%88%B6%E4%BF%A1%E5%8F%B7%E5%9B%9E%E8%B0%83"><span class="nav-text">2.1 注册绘制信号回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8F%91%E8%B5%B7%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%BF%A1%E5%8F%B7"><span class="nav-text">2.2 发起帧同步信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%AD%89%E5%BE%85%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%BF%A1%E5%8F%B7"><span class="nav-text">2.3 等待帧同步信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%9B%9E%E8%B0%83%E5%B8%A7%E5%90%8C%E6%AD%A5%E4%BF%A1%E5%8F%B7"><span class="nav-text">2.4 回调帧同步信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-performTraversals%E5%BC%80%E5%A7%8B%E7%BB%98%E5%88%B6"><span class="nav-text">2.5 performTraversals开始绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-View%E5%87%86%E7%A1%AE%E6%B5%8B%E9%87%8F%E5%AE%BD%E9%AB%98"><span class="nav-text">2.6 View准确测量宽高</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-Activity%E9%A6%96%E5%B8%A7%E7%9B%91%E6%8E%A7"><span class="nav-text">2.7 Activity首帧监控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Surface%E6%9C%BA%E5%88%B6"><span class="nav-text">3. Surface机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-SurfaceView%E5%8E%9F%E7%90%86"><span class="nav-text">4. SurfaceView原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">Posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">149</span>
+        <span class="site-state-item-name">Tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/android/android-render/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-渲染机制
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted:</span>
+
+      <time title="Created::2021-05-15 18:46:25" itemprop="dateCreated datePublished" datetime="2021-05-15T18:46:25+08:00">2021-05-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">Categories:</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          <a href="/tags/%E6%B8%B2%E6%9F%93/" rel="tag"><i class="fa fa-tag"></i> 渲染</a>
+          <a href="/tags/%E7%BB%98%E5%88%B6/" rel="tag"><i class="fa fa-tag"></i> 绘制</a>
+          <a href="/tags/VSync/" rel="tag"><i class="fa fa-tag"></i> VSync</a>
+          <a href="/tags/Surface/" rel="tag"><i class="fa fa-tag"></i> Surface</a>
+          <a href="/tags/Texture/" rel="tag"><i class="fa fa-tag"></i> Texture</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="Post Symbols">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Post Symbols:</span>
+      <span>27k</span>
+    </span>
+    <span class="post-meta-item" title="Read Time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Read Time &asymp;</span>
+      <span>30 Min</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）View 发起绘制请求；（2）Android 绘制和渲染流程；（3）Surface 机制；（4）SurfaceView 原理。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Android渲染机制"><a href="#Android渲染机制" class="headerlink" title="Android渲染机制"></a>Android渲染机制</h1><h2 id="1-View发起绘制请求"><a href="#1-View发起绘制请求" class="headerlink" title="1. View发起绘制请求"></a>1. View发起绘制请求</h2><p>在 View 涉及到 UI 更新的方法中，几乎都会在最后调用 <code>View#invalidate()</code> 或者 <code>View#requestLayout()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">invalidate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        invalidate(<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">invalidate</span><span class="params">(<span class="keyword">boolean</span> invalidateCache)</span> </span>&#123;</span><br><span class="line">        invalidateInternal(<span class="number">0</span>, <span class="number">0</span>, mRight - mLeft, mBottom - mTop, invalidateCache, <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">invalidateInternal</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b, <span class="keyword">boolean</span> invalidateCache,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">boolean</span> fullInvalidate)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (...) &#123;</span><br><span class="line">            <span class="comment">// 调用 invalidate() 会给当前 View 添加 PFLAG_DIRTY 标志</span></span><br><span class="line">            mPrivateFlags |= PFLAG_DIRTY;</span><br><span class="line">            <span class="keyword">final</span> AttachInfo ai = mAttachInfo;</span><br><span class="line">            <span class="keyword">final</span> ViewParent p = mParent;</span><br><span class="line">            <span class="keyword">if</span> (p != <span class="keyword">null</span> &amp;&amp; ai != <span class="keyword">null</span> &amp;&amp; l &lt; r &amp;&amp; t &lt; b) &#123;</span><br><span class="line">                <span class="keyword">final</span> Rect damage = ai.mTmpInvalRect;</span><br><span class="line">                damage.set(l, t, r, b);</span><br><span class="line">                <span class="comment">// 调用父 View 的 ViewParent#invalidateCild(...)</span></span><br><span class="line">                p.invalidateChild(<span class="keyword">this</span>, damage);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 调用 requestLayout() 会给当前 View 添加 PFLAG_FORCE_LAYOUT 标志</span></span><br><span class="line">        mPrivateFlags |= PFLAG_FORCE_LAYOUT;</span><br><span class="line">        mPrivateFlags |= PFLAG_INVALIDATED;</span><br><span class="line">        <span class="keyword">if</span> (mParent != <span class="keyword">null</span> &amp;&amp; !mParent.isLayoutRequested()) &#123;</span><br><span class="line">            <span class="comment">// 向上递归调用 mParent.requestLayout()，直到 mParent == null</span></span><br><span class="line">            mParent.requestLayout();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewGroup</span> <span class="keyword">extends</span> <span class="title">View</span> <span class="keyword">implements</span> <span class="title">ViewParent</span>, <span class="title">ViewManager</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">invalidateChild</span><span class="params">(View child, <span class="keyword">final</span> Rect dirty)</span> </span>&#123;</span><br><span class="line">        ViewParent parent = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">if</span> (attachInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">do</span> &#123;</span><br><span class="line">                <span class="comment">// 返回值是 parent 的 parent，一直向上递归直到 parent == null</span></span><br><span class="line">                parent = parent.invalidateChildInParent(location, dirty);</span><br><span class="line">            &#125; <span class="keyword">while</span> (parent != <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ViewParent <span class="title">invalidateChildInParent</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span>[] location, <span class="keyword">final</span> Rect dirty)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">if</span> ((mPrivateFlags &amp; (PFLAG_DRAWN | PFLAG_DRAWING_CACHE_VALID)) != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> mParent;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>invalidate()</code> 会逐级递归调用 <code>ViewParent#invalidateChildInParent(...)</code>；</li>
+<li><code>requestLayout()</code> 会逐级递归调用 <code>mParent.requestLayout()</code>；</li>
+</ul>
+<p>而一个 ViewTree 中，最顶层的 ViewParent 就是 ViewRootImpl，所以实际上 <code>View#invalidate()</code> 和 <code>View#requestLayout()</code> 最终都会调用到 <code>ViewRootImpl#invalidateChildInParent(...)</code> 和 <code>ViewRootImpl#requestLayout()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewRootImpl</span> <span class="keyword">implements</span> <span class="title">ViewParent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ViewRootImpl 持有的成员变量 Handler，处于 ViewRootImpl 初始化线程。</span></span><br><span class="line">    <span class="keyword">final</span> ViewRootHandler mHandler = <span class="keyword">new</span> ViewRootHandler();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ViewParent <span class="title">invalidateChildInParent</span><span class="params">(<span class="keyword">int</span>[] location, Rect dirty)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 检查 UI 线程</span></span><br><span class="line">        checkThread();</span><br><span class="line">        <span class="keyword">if</span> (dirty == <span class="keyword">null</span>) &#123;</span><br><span class="line">            invalidate();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ......</span><br><span class="line">        invalidateRectOnScreen(dirty);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invalidateRectOnScreen</span><span class="params">(Rect dirty)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 收集汇总需要重绘的区域</span></span><br><span class="line">        localDirty.union(dirty.left, dirty.top, dirty.right, dirty.bottom);</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">// 发起绘制事件</span></span><br><span class="line">        scheduleTraversals();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mHandlingLayoutInLayoutRequest) &#123;</span><br><span class="line">            <span class="comment">// 检查 UI 线程</span></span><br><span class="line">            checkThread();</span><br><span class="line">            mLayoutRequested = <span class="keyword">true</span>;</span><br><span class="line">            <span class="comment">// 发起绘制事件</span></span><br><span class="line">            scheduleTraversals();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，不论是 <code>invalidate()</code> 还是 <code>requestLayout()</code>，最终在 ViewRootImpl 中都会通过 <code>checkThread()</code> 检查线程，并调用 <code>ViewRootImpl#scheduleTraversals()</code> 发起绘制。但是：</p>
+<ul>
+<li>调用 <code>View#invalidate()</code> 会将 View 的 Rect 标记 <code>PFLAG_DIRTY</code>，然后在下一帧刷新 ViewTree 时，ViewRootImpl 会调用最顶层的 <code>View#draw(Canvas)</code>，然后逐层向下分发，但只会在具有 <code>PFLAG_DIRTY</code> 时回调 <code>onDraw(Canvas)</code>。</li>
+<li>调用 <code>View#requestLayout()</code> 会将当前 View 标记 <code>PFLAG_FORCE_LAYOUT</code>，然后在下一帧刷新 ViewTree 时，ViewRootImpl 会调用最顶层的 <code>View#measure()</code> 和 <code>View#layout()</code>，然后逐层向下分发，但只会在具有 <code>PFLAG_FORCE_LAYOUT</code> 时回调 <code>onMeasure()</code> 和 <code>onLayout()</code>。</li>
+</ul>
+<p>此外，ViewRootImpl 在构造方法中记录了自己的初始化线程，作为允许更新 UI 的线程，并且持有了一个 Handler 成员变量，同样也处于 ViewRootImpl 的初始化线程。<code>View#postInvalidate()</code> 和 <code>View#postInvalidateDelayed(delayTime)</code> 会向这个 Handler 发送一个事件，携带了调用的 View 本身，然后 ViewRootImpl 会在事件回调中直接调用这个 <code>View#invalidate()</code>，因此相当于把 <code>View#invalidate()</code> 抛到 ViewRootImpl 初始线程中执行，多用于跨线程请求刷新 UI。</p>
+<hr>
+<h2 id="2-Android绘制渲染流程"><a href="#2-Android绘制渲染流程" class="headerlink" title="2. Android绘制渲染流程"></a>2. Android绘制渲染流程</h2><p>上文提到，View 在更新 UI 时会通过 <code>invalidate()</code> 或者 <code>requestLayout()</code> 请求 ViewRootImpl 绘制，最终都会调用到 <code>ViewRootImpl#scheduleTraversals()</code> 中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewRootImpl</span> <span class="keyword">implements</span> <span class="title">ViewParent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    Choreographer mChoreographer;</span><br><span class="line">    <span class="keyword">final</span> ViewRootHandler mHandler = <span class="keyword">new</span> ViewRootHandler();</span><br><span class="line">    <span class="keyword">final</span> TraversalRunnable mTraversalRunnable = <span class="keyword">new</span> TraversalRunnable();</span><br><span class="line">    <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TraversalRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            doTraversal();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doTraversal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTraversalScheduled) &#123;</span><br><span class="line">            mTraversalScheduled = <span class="keyword">false</span>;</span><br><span class="line">            <span class="comment">// 移除屏障消息</span></span><br><span class="line">            mHandler.getLooper().getQueue().removeSyncBarrier(mTraversalBarrier);</span><br><span class="line">            <span class="comment">// 真正开始绘制</span></span><br><span class="line">            performTraversals();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ViewRootImpl</span><span class="params">(Context context, Display display)</span> </span>&#123;</span><br><span class="line">        mChoreographer = Choreographer.getInstance();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">scheduleTraversals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mTraversalScheduled) &#123;</span><br><span class="line">            mTraversalScheduled = <span class="keyword">true</span>;</span><br><span class="line">            <span class="comment">// 先向 ViewRootImpl 的初始线程发送一条屏障消息，阻塞后续的同步消息。</span></span><br><span class="line">            mTraversalBarrier = mHandler.getLooper().getQueue().postSyncBarrier();</span><br><span class="line">            mChoreographer.postCallback(</span><br><span class="line">                    Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, <span class="keyword">null</span>);</span><br><span class="line">            ......</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>scheduleTraversals()</code> 先发送一条屏障消息阻塞了 ViewRootImpl 线程，然后 post 了一个 Runnable，这个 Runable 的目的是在回调时调用 <code>performTraversals()</code>，这也是绘制真正开始的入口。因此重点就在于 <code>mChoreographer.postCallback(...)</code> 内的逻辑。</p>
+<h3 id="2-1-注册绘制信号回调"><a href="#2-1-注册绘制信号回调" class="headerlink" title="2.1 注册绘制信号回调"></a>2.1 注册绘制信号回调</h3><p>Choreographer 中一共定义了 5 种帧同步信号回调类型，在 <code>ViewRootImpl#scheduleTraversals()</code> 中调用的 <code>mChoreographer#postCallback(...)</code> 指定了回调类型为 <code>CALLBACK_TRAVERSAL</code>，表示 <strong>绘制信号回调</strong>，并注册了一个回调 Runnable：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Choreographer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CALLBACK_INPUT = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CALLBACK_ANIMATION = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CALLBACK_INSETS_ANIMATION = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CALLBACK_TRAVERSAL = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CALLBACK_COMMIT = <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CALLBACK_LAST = CALLBACK_COMMIT;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CallbackQueue[] mCallbackQueues;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Choreographer</span><span class="params">(Looper looper, <span class="keyword">int</span> vsyncSource)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Choreographer 在 ThreadLocal 中使用当前线程的 Looper 初始化，</span></span><br><span class="line">        <span class="comment">// 由于 ViewRootImpl 在构造方法中初始化 Choreographer，</span></span><br><span class="line">        <span class="comment">// 因此 Choreographer 与 ViewRootImpl 是同一线程。</span></span><br><span class="line">        mLooper = looper;</span><br><span class="line">        <span class="comment">// 所以 Choreographer 的 mHandler 也是把消息发送到 ViewRootImpl 同一线程中。</span></span><br><span class="line">        mHandler = <span class="keyword">new</span> FrameHandler(looper);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 初始化 CallbackQueues，其中每一个 CallbackQueue 都是一个链表，</span></span><br><span class="line">        <span class="comment">// 每个 CallbackQueue 对应的下标就是常量中定义的 5 个 Callback 类型。</span></span><br><span class="line">        mCallbackQueues = <span class="keyword">new</span> CallbackQueue[CALLBACK_LAST + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= CALLBACK_LAST; i++) &#123;</span><br><span class="line">            mCallbackQueues[i] = <span class="keyword">new</span> CallbackQueue();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postCallback</span><span class="params">(<span class="keyword">int</span> callbackType, Runnable action, Object token)</span> </span>&#123;</span><br><span class="line">        postCallbackDelayed(callbackType, action, token, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postCallbackDelayed</span><span class="params">(<span class="keyword">int</span> callbackType,</span></span></span><br><span class="line"><span class="params"><span class="function">            Runnable action, Object token, <span class="keyword">long</span> delayMillis)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        postCallbackDelayedInternal(callbackType, action, token, delayMillis);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">postCallbackDelayedInternal</span><span class="params">(<span class="keyword">int</span> callbackType,</span></span></span><br><span class="line"><span class="params"><span class="function">            Object action, Object token, <span class="keyword">long</span> delayMillis)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">long</span> now = SystemClock.uptimeMillis();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">long</span> dueTime = now + delayMillis;</span><br><span class="line">            <span class="comment">// 按照传入的 Callback 类型，向对应类型的 CallbackQueue 中添加一个 Callback 节点</span></span><br><span class="line">            mCallbackQueues[callbackType].addCallbackLocked(dueTime, action, token);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 如果没有延迟则直接调用 scheduleFrameLocked(now)，</span></span><br><span class="line">            <span class="comment">// 否则会 post 一个延时消息，最终同样是调用 scheduleFrameLocked(now)</span></span><br><span class="line">            <span class="keyword">if</span> (dueTime &lt;= now) &#123;</span><br><span class="line">                scheduleFrameLocked(now);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Message msg = mHandler.obtainMessage(MSG_DO_SCHEDULE_CALLBACK, action);</span><br><span class="line">                msg.arg1 = callbackType;</span><br><span class="line">                msg.setAsynchronous(<span class="keyword">true</span>);</span><br><span class="line">                mHandler.sendMessageAtTime(msg, dueTime);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">FrameHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">                <span class="keyword">case</span> MSG_DO_SCHEDULE_CALLBACK:</span><br><span class="line">                    doScheduleCallback(msg.arg1);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doScheduleCallback</span><span class="params">(<span class="keyword">int</span> callbackType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!mFrameScheduled) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">long</span> now = SystemClock.uptimeMillis();</span><br><span class="line">                <span class="keyword">if</span> (mCallbackQueues[callbackType].hasDueCallbacksLocked(now)) &#123;</span><br><span class="line">                    scheduleFrameLocked(now);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Choreographer#postCallback(...)</code> 主要是为了注册一个帧同步信号的回调，包含了两个步骤：</p>
+<ul>
+<li>先根据传入的 callbackType 向对应类型的 CallbackQueue 中添加一个 Callback；</li>
+<li>然后根据是否延时判断是直接调用 <code>Choreographer#scheduleFrameLocked(now)</code> 或是延时后调用。</li>
+</ul>
+<h3 id="2-2-发起帧同步信号"><a href="#2-2-发起帧同步信号" class="headerlink" title="2.2 发起帧同步信号"></a>2.2 发起帧同步信号</h3><p>上文提到 Choreographer 一共有 5 种类型的帧同步信号回调，每一种类型的回调都是通过 CallbackQueue 链表存储的，<code>Choreographer#postCallback(...)</code> 就是为了注册回调：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Choreographer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">postCallbackDelayedInternal</span><span class="params">(<span class="keyword">int</span> callbackType,</span></span></span><br><span class="line"><span class="params"><span class="function">            Object action, Object token, <span class="keyword">long</span> delayMillis)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Step 1: 创建 CallbackRecord，并按照时间顺序插入到对应类型的 CallbackQueue 中。</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * mCallbackQueues[callbackType] 取出的就是 callbackType 对应的 CallbackQueue，</span></span><br><span class="line"><span class="comment">         * CallbackQueue 是 CallbackRecord 链表，CallbackRecord 用于记录注册的 Callback</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        mCallbackQueues[callbackType].addCallbackLocked(dueTime, action, token);</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Step 2: 发起帧同步信号的请求，在收到信号后按顺序回调 5 种 CallbackQueue 中的所有回调。</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        scheduleFrameLocked(now);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Choreographer 注册绘制信号回调分为两步：</p>
+<ul>
+<li>创建一个 CallbackRecord 对象用于存储 ViewRootImpl 注册的回调，然后把新创建的 CallbackRecord 按照时间戳的顺序添加到对应的 <code>CALLBACK_TRAVERSAL</code> 类型的 CallbackQueue 中。</li>
+<li>向 FrameDisplayEventReceiver 发起一个帧同步信号的请求，并等待帧同步信号回调，然后再按顺序依次回调 5 种 CallbackQueue 中的所有回调。</li>
+</ul>
+<p>（1）创建 CallbackRecord 并插入 CallbackQueue：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Choreographer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CallbackQueue</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> CallbackRecord mHead;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addCallbackLocked</span><span class="params">(<span class="keyword">long</span> dueTime, Object action, Object token)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 创建一个新的 CallbackRecord 节点，用于存储新增的 Callback，</span></span><br><span class="line">            CallbackRecord callback = obtainCallbackLocked(dueTime, action, token);</span><br><span class="line">            CallbackRecord entry = mHead;</span><br><span class="line">            <span class="comment">// 如果 entry == null，说明此时 mHead == null，说明 CallbackQueue 是一个空链表，</span></span><br><span class="line">            <span class="comment">// 因此将 mHead 指向新创建的 CallbackRecord</span></span><br><span class="line">            <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">                mHead = callback;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 此时 entry == mHead，</span></span><br><span class="line">            <span class="comment">// 则比较 mHead 的 dueTime 和新创建的 CallbackRecord 的 dueTime，</span></span><br><span class="line">            <span class="comment">// 如果新创建的 CallbackRecord 的 dueTime 更小，则插入到 mHead，</span></span><br><span class="line">            <span class="comment">// 把原来的 mHead 指向新创建的 CallbackRecord 的 next</span></span><br><span class="line">            <span class="keyword">if</span> (dueTime &lt; entry.dueTime) &#123;</span><br><span class="line">                callback.next = entry;</span><br><span class="line">                mHead = callback;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 否则如果新创建的 CallbackRecord 的 dueTime 不是最小的，</span></span><br><span class="line">            <span class="comment">// 就从 mHead 开始顺序遍历 CallbackQueue 链表，</span></span><br><span class="line">            <span class="comment">// 把新创建的 CallbackRecord 按 dueTime 从小到大的顺序插入到 CallbackQueue 中。</span></span><br><span class="line">            <span class="keyword">while</span> (entry.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (dueTime &lt; entry.next.dueTime) &#123;</span><br><span class="line">                    callback.next = entry.next;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                entry = entry.next;</span><br><span class="line">            &#125;</span><br><span class="line">            entry.next = callback;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（2）向 FrameDisplayEventReceiver 发起帧同步信号：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Choreographer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 内部类 FrameDisplayEventReceiver 继承自抽象类 DisplayEventReceiver</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> FrameDisplayEventReceiver mDisplayEventReceiver;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">scheduleFrameLocked</span><span class="params">(<span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mFrameScheduled) &#123;</span><br><span class="line">            mFrameScheduled = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">if</span> (USE_VSYNC) &#123;</span><br><span class="line">                <span class="comment">// Android 4.1 之后默认使用 VSync 信号。</span></span><br><span class="line">                <span class="keyword">if</span> (isRunningOnLooperThreadLocked()) &#123;</span><br><span class="line">                    <span class="comment">// 如果当前处于初始线程则直接调用 scheduleVsyncLocked()</span></span><br><span class="line">                    scheduleVsyncLocked();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 否则通过 mHandler 发送消息到初始线程，再调用 scheduleVsyncLocked()。</span></span><br><span class="line">                    Message msg = mHandler.obtainMessage(MSG_DO_SCHEDULE_VSYNC);</span><br><span class="line">                    <span class="comment">// 由于 Choreographer 与 ViewRootImpl 处于同一线程，</span></span><br><span class="line">                    <span class="comment">// ViewRootImpl#scheduleTraversals() 时用屏障消息阻塞了同步消息，</span></span><br><span class="line">                    <span class="comment">// 所以需要把这条消息设置为异步消息。</span></span><br><span class="line">                    msg.setAsynchronous(<span class="keyword">true</span>);</span><br><span class="line">                    mHandler.sendMessageAtFrontOfQueue(msg);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Android 4.1 之前不使用 VSync 信号，则直接发送消息，调用 doFrame(...)</span></span><br><span class="line">                Message msg = mHandler.obtainMessage(MSG_DO_FRAME);</span><br><span class="line">                <span class="comment">// 同样需要设置为异步消息。</span></span><br><span class="line">                msg.setAsynchronous(<span class="keyword">true</span>);</span><br><span class="line">                mHandler.sendMessageAtTime(msg, nextFrameTime);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">scheduleVsyncLocked</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mDisplayEventReceiver.scheduleVsync();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">FrameHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">            <span class="keyword">case</span> MSG_DO_FRAME:</span><br><span class="line">                doFrame(System.nanoTime(), <span class="number">0</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MSG_DO_SCHEDULE_VSYNC:</span><br><span class="line">                doScheduleVsync();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doScheduleVsync</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">            <span class="keyword">if</span> (mFrameScheduled) &#123;</span><br><span class="line">                scheduleVsyncLocked();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Choreographer 发起帧同步信号主要包括注册回调和发起信号两步：</p>
+<ul>
+<li>创建一个 CallbackRecord 用于存储回调，然后根据 <code>Choreographer#postCallback(...)</code> 传入的 callbackType，将创建的 CallbackRecord 按 dueTime 时间顺序插入到对应类型的 CallbackQueue 中。</li>
+<li>发起帧同步信号，并等待回调，根据 Android 版本分为两种方式：<ul>
+<li>Android 4.1 之前不使用 VSync 信号，则直接发送一条异步消息，调用 <code>Choreographer#doFrame()</code>。</li>
+<li>Android 4.1 之后默认使用 VSync 信号，则会调用 <code>FrameDisplayEventReceiver#scheduleVsync()</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-3-等待帧同步信号"><a href="#2-3-等待帧同步信号" class="headerlink" title="2.3 等待帧同步信号"></a>2.3 等待帧同步信号</h3><p>上文提到，Android 4.1 之前和之后，发起帧同步信号请求的方式不同：</p>
+<ul>
+<li>Android 4.1 之前直接调用了 <code>doFrame(...)</code>，内部根据当前时间、上一帧时间、帧率时间间隔判断是否需要回调。</li>
+<li>Android 4.1 之后则是通过发起下一个 VSync 信号监听的方式，调用 <code>FrameDisplayEventReceiver#scheduleVsync()</code>，由 Native 层通知下一帧 VSync 信号后再回调。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Choreographer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">FrameDisplayEventReceiver</span> <span class="keyword">extends</span> <span class="title">DisplayEventReceiver</span></span></span><br><span class="line"><span class="class">            <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onVsync</span><span class="params">(<span class="keyword">long</span> timestampNanos, <span class="keyword">long</span> physicalDisplayId, <span class="keyword">int</span> frame)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// scheduleVsync() 是父类 DisplayEventReceiver 中的方法，</span></span><br><span class="line">            <span class="comment">// 调用后会向 Native 层发起 VSync 信号请求，</span></span><br><span class="line">            <span class="comment">// 当收到来自 SurfaceFlinger 的下一帧 VSync 信号后，</span></span><br><span class="line">            <span class="comment">// 就会回调这个 onVsync(...) 方法。</span></span><br><span class="line">            ......</span><br><span class="line">            <span class="comment">// FrameDisplayEventReceiver 实现了 Runnable 接口，</span></span><br><span class="line">            <span class="comment">// 所以这里创建的 Message 实际上是创建的 Runnable 类型的 Message，</span></span><br><span class="line">            <span class="comment">// 在 post 到 Choreographer 线程后就会回调 FrameDisplayEventReceiver#run()</span></span><br><span class="line">            Message msg = Message.obtain(mHandler, <span class="keyword">this</span>);</span><br><span class="line">            <span class="comment">// 此时 Choreographer / ViewRootImpl 的同步消息仍被屏障消息阻塞</span></span><br><span class="line">            msg.setAsynchronous(<span class="keyword">true</span>);</span><br><span class="line">            mHandler.sendMessageAtTime(msg, timestampNanos / TimeUtils.NANOS_PER_MS);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            mHavePendingVsync = <span class="keyword">false</span>;</span><br><span class="line">            <span class="comment">// 实际上，即使 Android 4.1 之后用 VSync 信号，最终仍然是调用 doFrame(...)</span></span><br><span class="line">            doFrame(mTimestampNanos, mFrame);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">DisplayEventReceiver</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scheduleVsync</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">// Native 方法，向底层发起 VSync 信号请求</span></span><br><span class="line">        nativeScheduleVsync(mReceiverPtr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上，是否使用 VSync 信号的区别主要在于下一帧帧同步信号的接收方式：</p>
+<ol>
+<li>通过 <code>doFrame(...)</code> 中根据上一帧时间、当前时间、帧率间隔时间计算。</li>
+<li>接收来自 SurfaceFlinger 的 VSync 信号。</li>
+</ol>
+<p>这个区别只是体现在 Choreographer 如何知道需要下一帧帧同步，对于收到信号后回调到 ViewRootImpl，则最终都是通过 <code>doFrame(...)</code> 回调的。</p>
+<h3 id="2-4-回调帧同步信号"><a href="#2-4-回调帧同步信号" class="headerlink" title="2.4 回调帧同步信号"></a>2.4 回调帧同步信号</h3><p>根据上文的分析，Choreographer 在接收到帧同步信号后，最终都会通过 <code>doFrame(...)</code> 回调给 ViewRootImpl：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Choreographer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doFrame</span><span class="params">(<span class="keyword">long</span> frameTimeNanos, <span class="keyword">int</span> frame)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 按顺序第 1 个回调 Input 类型的 Callback</span></span><br><span class="line">            mFrameInfo.markInputHandlingStart();</span><br><span class="line">            doCallbacks(Choreographer.CALLBACK_INPUT, frameTimeNanos);</span><br><span class="line">            <span class="comment">// 按顺序第 2, 3 个回调 Animation 类型的 Callback</span></span><br><span class="line">            mFrameInfo.markAnimationsStart();</span><br><span class="line">            doCallbacks(Choreographer.CALLBACK_ANIMATION, frameTimeNanos);</span><br><span class="line">            doCallbacks(Choreographer.CALLBACK_INSETS_ANIMATION, frameTimeNanos);</span><br><span class="line">            <span class="comment">// 按顺序第 4 个回调 Traversal 类型的 Callback</span></span><br><span class="line">            mFrameInfo.markPerformTraversalsStart();</span><br><span class="line">            doCallbacks(Choreographer.CALLBACK_TRAVERSAL, frameTimeNanos);</span><br><span class="line">            <span class="comment">// 按顺序第 5 个回调 Commit 类型的 Callback</span></span><br><span class="line">            doCallbacks(Choreographer.CALLBACK_COMMIT, frameTimeNanos);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doCallbacks</span><span class="params">(<span class="keyword">int</span> callbackType, <span class="keyword">long</span> frameTimeNanos)</span> </span>&#123;</span><br><span class="line">        CallbackRecord callbacks;</span><br><span class="line">        <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">            <span class="comment">// 对当前 callbackType 类型的 CallbackQueue 循环遍历，</span></span><br><span class="line">            <span class="comment">// 找出 dueTime 大于当前时间的第一个 CallbackRecord，</span></span><br><span class="line">            <span class="comment">// 也即在当前时间之后的所有 CallbackRecord 中，dueTime 最小（最早）的。</span></span><br><span class="line">            <span class="comment">// 因为 CallbackQueue 是按照 dueTime「从小到大」（时间「从早到晚」）排序的，</span></span><br><span class="line">            <span class="comment">// 最早的 CallbackRecord 在 mHead 位置，</span></span><br><span class="line">            <span class="comment">// 因此从这个方法返回的 callback 开始，之后所有的 callback 都是比当前时间更早的。</span></span><br><span class="line">            callbacks = mCallbackQueues[callbackType].extractDueCallbacksLocked(</span><br><span class="line">                    now / TimeUtils.NANOS_PER_MS);</span><br><span class="line">            <span class="keyword">if</span> (callbacks == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            ......</span><br><span class="line">            <span class="keyword">for</span> (CallbackRecord c = callbacks; c != <span class="keyword">null</span>; c = c.next) &#123;</span><br><span class="line">                <span class="comment">// 遍历调用 dueTime 大于当前时间的所有 CallbackRecord#run()</span></span><br><span class="line">                c.run(frameTimeNanos);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postFrameCallback</span><span class="params">(FrameCallback callback)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 如果调用 Choreographer#postFrameCallback(FrameCallback)，</span></span><br><span class="line">        <span class="comment">// 则会注册一个 Animation 类型的 Callback，并且此时 token == FRAME_CALLBACK_TOKEN</span></span><br><span class="line">        postFrameCallbackDelayed(callback, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postFrameCallbackDelayed</span><span class="params">(FrameCallback callback, <span class="keyword">long</span> delayMillis)</span> </span>&#123;</span><br><span class="line">        postCallbackDelayedInternal(CALLBACK_ANIMATION,</span><br><span class="line">                callback, FRAME_CALLBACK_TOKEN, delayMillis);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CallbackRecord</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> CallbackRecord next;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">long</span> dueTime;</span><br><span class="line">        <span class="keyword">public</span> Object action;</span><br><span class="line">        <span class="keyword">public</span> Object token;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(<span class="keyword">long</span> frameTimeNanos)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 根据 token 的值判断 action 是 Runnable 还是 FrameCallback</span></span><br><span class="line">            <span class="keyword">if</span> (token == FRAME_CALLBACK_TOKEN) &#123;</span><br><span class="line">                <span class="comment">// 如果是通过 postFrameCallback(FrameCallback) 注册的 Callback，</span></span><br><span class="line">                <span class="comment">// 则 token == FRAME_CALLBACK_TOKEN，action 是 FrameCallback 类型。</span></span><br><span class="line">                ((FrameCallback)action).doFrame(frameTimeNanos);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 否则例如 ViewRootImpl 通过 postCallback(Runnable) 注册的 Callback，</span></span><br><span class="line">                <span class="comment">// 则 token == null，action 是 Runnable 类型。</span></span><br><span class="line">                ((Runnable)action).run();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ViewRootImpl 在 <code>scheduleTraversals()</code> 中调用了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 CallbackQueue#addCallbackLocked(...) 时会创建一个新的 CallbackRecord，</span></span><br><span class="line"><span class="comment">// CallbackRecord#action == mTraversalRunnable</span></span><br><span class="line"><span class="comment">// CallbackRecord#token == null</span></span><br><span class="line">mChoreographer.postCallback(Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+
+<p>所以在回调这个 <code>CallbackRecord#run()</code> 时 <code>token == null</code>，就会执行 <code>((Runnable)action).run()</code> 的逻辑，也就是执行 <code>ViewRootImpl#mTraversalRunnable#run()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewRootImpl</span> <span class="keyword">implements</span> <span class="title">ViewParent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TraversalRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            doTraversal();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> TraversalRunnable mTraversalRunnable = <span class="keyword">new</span> TraversalRunnable();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doTraversal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mTraversalScheduled) &#123;</span><br><span class="line">            mTraversalScheduled = <span class="keyword">false</span>;</span><br><span class="line">            <span class="comment">// 移除了屏障消息</span></span><br><span class="line">            mHandler.getLooper().getQueue().removeSyncBarrier(mTraversalBarrier);</span><br><span class="line">            <span class="comment">// 调用 performTraversals()，真正开始绘制流程，包括 measure, layout, draw</span></span><br><span class="line">            performTraversals();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时回调到 ViewRootImpl 之后，就会移除一开始在 <code>scheduleTraversals()</code> 中发送的屏障消息，然后调用 <code>performTraversals()</code> 正式开始绘制流程。</p>
+<p><strong>需要注意的是，移除屏障消息后，由于接下来的 <code>performTraversals()</code> 仍然在同一个线程的调用栈中，因此 ViewRootImpl 初始线程中原来被阻塞的同步消息，是在 <code>performTraversals()</code> 之后才执行的。</strong></p>
+<blockquote>
+<p>通过源码可知，<code>Choreographer.getInstance().postFrameCallback(FrameCallback)</code> 可以向 Choreographer 注册一个 Animation 类型的 VSync 回调，并在每一次收到来自 SurfaceFlinger 的 VSync 信号时回调。回调方法 <code>doFrame(long frameTimeNanos)</code> 携带的 <code>frameTimeNanos</code> 表示 Choreographer 收到本次 VSync 信号时的时间戳，因此可以通过比较两次 VSync 信号时间等方式获取帧率、绘制耗时等信息。</p>
+</blockquote>
+<h3 id="2-5-performTraversals开始绘制"><a href="#2-5-performTraversals开始绘制" class="headerlink" title="2.5 performTraversals开始绘制"></a>2.5 performTraversals开始绘制</h3><p>当 ViewRootImpl 收到了帧同步信号的渲染回调后，就会调用 <code>performTraversals()</code> 开始绘制 ViewTree：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewRootImpl</span> <span class="keyword">implements</span> <span class="title">ViewParent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performTraversals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        host.dispatchAttachedToWindow(mAttachInfo, <span class="number">0</span>);</span><br><span class="line">        ......</span><br><span class="line">        performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);</span><br><span class="line">        ......</span><br><span class="line">        performLayout(lp, mWidth, mHeight);</span><br><span class="line">        ......</span><br><span class="line">        performDraw();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ViewRootImpl 会分别调用其顶层 View 的 <code>measure(...)</code>、<code>layout(...)</code>、<code>draw(...)</code> 方法，并逐层向下分发，每一层 View 都会判断：</p>
+<ul>
+<li>如果自己具有 <code>PFLAG_FORCE_LAYOUT</code> 标志，则 <code>measure(...)</code> 会回调 <code>onMeasure(...)</code>，<code>layout(...)</code> 会回调 <code>onLayout(...)</code>。</li>
+<li>如果自己具有 <code>PFLAG_DIRTY</code> 标志，则 <code>draw(...)</code> 会回调 <code>onDraw(...)</code>。</li>
+</ul>
+<blockquote>
+<p>在 Measure 阶段，<code>getMeasureWidth()</code> 是 View 测量自己的宽度，<code>getWidth()</code> 是 View 的父布局测量 View 的宽度。当 View 需要的宽度大于屏幕宽度时，<code>getMeasureWidth()</code> 得到的仍然是 View 需要的宽高，而 <code>getWidth()</code> 得到的是屏幕实际显示的宽度。</p>
+</blockquote>
+<p>其中，<code>performDraw()</code> 根据硬件绘制、软件绘制分为两种方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewRootImpl</span> <span class="keyword">implements</span> <span class="title">ViewParent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performTraversals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        performDraw();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performDraw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">boolean</span> canUseAsync = draw(fullRedrawNeeded);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">draw</span><span class="params">(<span class="keyword">boolean</span> fullRedrawNeeded)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mAttachInfo.mThreadedRenderer != <span class="keyword">null</span> &amp;&amp; mAttachInfo.mThreadedRenderer.isEnabled()) &#123;</span><br><span class="line">            <span class="comment">// 硬件绘制</span></span><br><span class="line">            mAttachInfo.mThreadedRenderer.draw(mView, mAttachInfo, <span class="keyword">this</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 软件绘制</span></span><br><span class="line">            <span class="keyword">if</span> (!drawSoftware(...)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 软件绘制。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">drawSoftware</span><span class="params">(Surface surface, AttachInfo attachInfo, <span class="keyword">int</span> xoff, <span class="keyword">int</span> yoff,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">boolean</span> scalingRequired, Rect dirty, Rect surfaceInsets)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> Canvas canvas;</span><br><span class="line">        ......</span><br><span class="line">        canvas = mSurface.lockCanvas(dirty);</span><br><span class="line">        ......</span><br><span class="line">        surface.unlockCanvasAndPost(canvas);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 硬件绘制。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadedRenderer</span> <span class="keyword">extends</span> <span class="title">HardwareRenderer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">(View view, AttachInfo attachInfo, DrawCallbacks callbacks)</span> </span>&#123;</span><br><span class="line">        updateRootDisplayList(view, callbacks);</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateRootDisplayList</span><span class="params">(View view, DrawCallbacks callbacks)</span> </span>&#123;</span><br><span class="line">        updateViewTreeDisplayList(view);</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateViewTreeDisplayList</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        view.updateDisplayListIfDirty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> RenderNode <span class="title">updateDisplayListIfDirty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">final</span> RecordingCanvas canvas = renderNode.beginRecording(width, height);</span><br><span class="line">        ......</span><br><span class="line">        draw(canvas);</span><br><span class="line">        ......</span><br><span class="line">        renderNode.endRecording();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ViewTree 依次绘制自己的试图，完成整个绘制流程。</p>
+<h3 id="2-6-View准确测量宽高"><a href="#2-6-View准确测量宽高" class="headerlink" title="2.6 View准确测量宽高"></a>2.6 View准确测量宽高</h3><p>当一个 View 被加载时如果想要正确获取 View 的宽高，通常会通过 <code>View#post(Runnable)</code> 的方式，在回调中获取，而这种方式之所以有效，正是因为 <code>ViewRootImpl#scheduleTraversals()</code> 中的屏障消息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">post</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> AttachInfo attachInfo = mAttachInfo;</span><br><span class="line">        <span class="keyword">if</span> (attachInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> attachInfo.mHandler.post(action);</span><br><span class="line">        &#125;</span><br><span class="line">        getRunQueue().post(action);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> HandlerActionQueue <span class="title">getRunQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mRunQueue == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mRunQueue = <span class="keyword">new</span> HandlerActionQueue();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mRunQueue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dispatchAttachedToWindow</span><span class="params">(AttachInfo info, <span class="keyword">int</span> visibility)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mRunQueue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mRunQueue.executeActions(info.mHandler);</span><br><span class="line">            mRunQueue = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用 <code>View#post(Runnable)</code> 时会先判断 View 是否已经具有 AttachInfo：</p>
+<ul>
+<li>如果有则说明该 View 已经被关联到 Window 上了，则直接通过 AttachInfo 获取 ViewRootImpl 的 Handler 并向 ViewRootImpl 线程发送一条同步消息，由该消息回调 post 的 Runnable。</li>
+<li>否则说明 View 还没有被关联到 Window 上，也可以理解为 Window 还未创建完毕，则把 Runnable 添加到 View 持有的一个队列中，等待 View 被关联到 Window 之后（对应 ViewRootImpl 逐层分发 <code>dispatchAttachedToWindow(...)</code>），再一次性把队列中所有的 Runnable 都已同步消息发送到 ViewRootImpl 线程中。</li>
+</ul>
+<p><code>View#post(Runnable)</code> 通过这种方式，确保了 Runnable 始终在 Window 已经创建并与 View 关联后，才在 ViewRootImpl 线程中被回调。</p>
+<ul>
+<li>当 Window 被创建初始化时，<code>WindowManager#addView(...)</code> 中调用了 <code>ViewRootImpl#setView(...)</code>，其内部调用了 <code>ViewRootImpl#requestLayout()</code>，并触发 <code>ViewRootImpl#scheduleTraversals()</code>。</li>
+<li>当 Window 已经创建完毕并且已经与 View 关联后，每一次 View 发生 UI 的改变，都会调用 <code>invalidate()</code> 或 <code>requestLayout()</code>，并且最终都会触发 <code>ViewRootImpl#scheduleTraversals()</code>。</li>
+</ul>
+<p>综上所述，不论 Window 处于哪种状态，只要 UI 有变更，<code>View#post(Runnable)</code> 的 Runnable 都会被 <code>scheduleTraversals()</code> 中发送的屏障消息阻塞，并在 ViewRootImpl 收到下一帧 VSync 信号、调用 <code>performTraversals()</code> 完成下一帧的绘制之后，才移除屏障消息并依次执行这些同步消息中的 Runnable，所以这些 Runnable 执行的时候，一定能保证当前帧已经绘制完毕，绘制完毕意味着 View 已经被 Measure，所以获取的宽高是正确的。</p>
+<p>不过，<code>View#post(Runnable)</code> 在 Window 初次创建时的流程与 UI 发生变更时的流程有略微差别。</p>
+<ul>
+<li>当 Window 是已经创建完毕并与 View 关联后，则 View 已经具有 AttachInfo，因此 post 的 Runnable 会直接发送到 ViewRootImpl 线程的同步消息中，如果 UI 有变更，则会被屏障消息阻塞，等到下一帧绘制完毕后回调。需要注意的是，同步消息被阻塞并不意味着线程被阻塞，即使同步消息被阻塞，依旧可以继续发送消息，只是 Looper 不会取出消息并回调。</li>
+<li>当 Window 被首次创建和初始化，此时还未与 View 关联。在 <code>ViewRootImpl#setView(...)</code> 阶段，会调用一次 <code>requestLayout()</code>，并绘制第一帧，但此时 View 尚不具有 AttachInfo，Runnable 仍被存在 RunQueue 中。然后在 <code>performTraversals()</code> 绘制完首帧后，由于 <code>mFirst == true</code> 才会调用 <code>host.dispatchAttachedToWindow(mAttachInfo, 0)</code> 将 AttachInfo 分发给各个 View，此时 View 才将 RunQueue 中的 Runnable 再次发送到 ViewRootImpl 线程，因此需要在第二帧绘制后，才能回调 Runnable。</li>
+</ul>
+<h3 id="2-7-Activity首帧监控"><a href="#2-7-Activity首帧监控" class="headerlink" title="2.7 Activity首帧监控"></a>2.7 Activity首帧监控</h3><p>通过上述分析结合 Activity 启动流程，即可知道 Activitiy 首帧的渲染时机以及对应的监控方式：</p>
+<ul>
+<li><code>onCreate()</code> 中使用 <code>View#post(Runnable)</code>，但回调时只代表调用的这个 View 开始绘制，并不是首帧渲染完成。<ul>
+<li>改进方案：给 DecorView 添加一个 1 像素的 View，使得该 View 称为 DecorView 中最后一个子 View，然后在该 View 的 <code>onDraw()</code> 中通过 <code>Choreographer.getInstance().postFrameCallback(Runnable)</code> 监听下一个 VSync 信号，因为 VSync 只在需要绘制的时候才会触发，绘制一帧回调一次，所以在 <code>onDraw()</code> 里面确保已经绘制完成，然后下一次 VSync 信号回调的时候表示即将开始下一次绘制，此时的时间就能近似认为是首帧绘制完成的时间。</li>
+</ul>
+</li>
+<li>给 DecorView 添加 <code>addOnDrawListener(OnDrawListener)</code>，DecorView 开始绘制时会回调，但是此时 DecorView 内的所有子 View 都还没有开始绘制，并不能代表整个 Activity 绘制完成，只是在 View 很少的时候时间比较接近。<ul>
+<li>改进方案：在 DecorView 的 OnDrawListener 回调中重新 post 一个新的回调，则会在当前帧绘制完成后、下一帧即将开始绘制之前回调。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="3-Surface机制"><a href="#3-Surface机制" class="headerlink" title="3. Surface机制"></a>3. Surface机制</h2><p>Android 中的渲染和绘制，最终是通过 Surface 承载的，Surface 是一个真正用于渲染像素的区域，每个 Window 都有自己的 Surface，保存在 Window 的 ViewRootImpl 中，一个 App 可以有多个 Window，因此可以拥有多个 Surface，由 SurfaceFlinger 承担统一管理以及合成这些 Surface 的职责。</p>
+<p>ViewRootImpl 在 <code>performTraversals()</code> 绘制流程的 <code>draw()</code> 阶段，通过 <code>surface.lock()</code> 获取当前 Window 的 Surface 的 Canvas，然后把 Canvas 分发到每个 View，每个 View 自己绘制完之后再分发到自己的子 View，所以实际上一个 Window 内 ViewTree 中所有 View 都会共同渲染到所在 Window 的 Surface 上。</p>
+<p>Window、Surface、SurfaceFlinger 的关系大致如下图所示：</p>
+<p><img data-src="./surface_and_surfaceflinger.png" alt="Window、Surface、SurfaceFlinger 的关系" title="@ASSET"></p>
+<ul>
+<li>当 App 启动并创建一个 Window 后，ViewRootImpl 向 WMS 通知该 Window 的 Surface，WMS 判断 SurfaceFlinger 中是否已经存有该 Window 对应的 Layer，如果没有则在 SurfaceFlinger 中注册。注册的时候首先会创建一个与 App 一一对应的 Binder 代理对象 <code>Client</code>，用于 App 与 SurfaceFlinger 通信。</li>
+<li>当 App 需要渲染的时候，就会通过 Client 请求 SurfaceFlinger，把需要绘制的区域、位置等元数据发送给 SurfaceFlinger。由于 App 可能存在很多个 Surface，所以为了增强数据通信的性能，SurfaceFlinger 为每一个 App 创建了一块共享内存 SurfaceClient，App 直接把需要渲染的 UI 元数据直接写入 SurfaceClient，SurfaceFlinger 直接从 SurfaceClient 读取，避免了内核多次拷贝数据。</li>
+<li>每个 App 在 SurfaceFlinger 中都有自己对应的 SurfaceClient 共享内存区域，而 SerfaceClient 在每个 App 对应的 SurfaceClient 中各维护了一个 SharedBufferStack 的数组，长度为 31。</li>
+<li>每一个 SharedBufferStack 对应一个实际的 Surface，SharedBufferStack 的意义就是用作渲染缓冲区。常见的 UI 刷新模型采用的是双缓冲，一个 BackBuffer 一个 FrontBuffer，显示屏在读取渲染 FrontBuffer 时，UI 元素可以同时向 BackBuffer 写入下一部分需要渲染的数据，然后在 BackBuffer 写入完成后，再交换两个缓冲区，使得原来的 BackBuffer 变为 FrontBuffer，显示屏读取新的 FrontBuffer 渲染显示。而 SharedBufferStack 就是扩展了这个缓冲模型，使得一个 Surface 可以具有 2 个以上的缓冲区，Android 2.3 中 SharedBufferStack 有 2 个缓冲区，Android 4.1 中 SharedBufferStack 有 3 个缓冲区。</li>
+<li>一个 SharedBufferStack 中的结构包括：<ul>
+<li>多个缓冲区 Buffer：每一个 Buffer 保存的就是需要渲染的 UI 的元数据，但这些元数据并不包含具体需要渲染的 UI 数据，而是通过指向一个 GaphicBuffer，由 GaphicBuffer 保存了所有实际渲染的 UI 数据，当 SurfaceFlinger 真正绘制渲染的时候，就会通过 Buffer 找到指向的 GaphicBuffer，从 GaphicBuffer 中取出真实的 UI 数据来渲染。GraphicBuffer 中包含了一个 buffer_handle_t 对象用于描述实际渲染数据的缓冲区 ，而这个缓冲区是在 HAL 层的 Gralloc 模块在系统帧缓冲区 FrameBuffer 或者匿名共享内存 ASHMEM (Anonymous Shared Memory) 中分配的。</li>
+<li>两个计数器：<ul>
+<li>available 表示有几个可供写入的空闲缓冲区。</li>
+<li>queued 表示有几个已经写入等待被读取渲染的缓冲区。</li>
+</ul>
+</li>
+<li>三个指针：<ul>
+<li>head 和 tail 标记了可供写入的空闲 Buffer 的范围。</li>
+<li>queue_head 标记了已准备好的可供读取渲染的 Buffer 的头部。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Linux 中所有的设备都通过 <strong>主设备名</strong> 和 <strong>从设备名</strong> 来唯一定位。Linux 在启动时会创建一个类别为 <code>graphics</code>、名叫 <code>fb0</code> 的设备，用来描述系统中的第一个 <strong>帧缓冲区</strong>，也就是第一个显示屏。其中 <code>fb (Frame Buffer)</code> 是主设备名，<code>0</code> 是从设备名，系统必须至少具有一个显示屏，所以 <code>fb0</code> 设备必定存在，Android 基于 Linux 从内核上是支持多显示屏的，但是 Android 在实现上只使用一个显示屏。</p>
+<p>因此由于 buffer_handle_t 在 FrameBuffer 中分配，当 SurfaceFlinger 把实际的渲染数据写入 buffer_handle_t 后，也就相当于渲染到屏幕上。</p>
+<hr>
+<h2 id="4-SurfaceView原理"><a href="#4-SurfaceView原理" class="headerlink" title="4. SurfaceView原理"></a>4. SurfaceView原理</h2><p>SurfaceView 与 普通 View 不同的地方在于：</p>
+<ul>
+<li>一个 Window 下只有一个 ViewRootImpl，ViewRootImpl 持有 DecorView，DecorView 作为 ViewTree 的顶层 View，整个 ViewTree 中只有 ViewRootImpl 中持有一个 Surface 对象。</li>
+<li>而 SurfaceView 拥有一个自己的 Surface。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewRootImpl</span> <span class="keyword">implements</span> <span class="title">ViewParent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performTraversals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mFirst) &#123;</span><br><span class="line">            <span class="comment">// 首帧绘制时，从 DecorView 逐层向下分发 AttachInfo，</span></span><br><span class="line">            <span class="comment">// 并回调 View#onAttachedToWindow()</span></span><br><span class="line">            host.dispatchAttachedToWindow(mAttachInfo, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (viewVisibilityChanged) &#123;</span><br><span class="line">            <span class="comment">// 从 DecorView 开始逐层向下分发，</span></span><br><span class="line">            <span class="comment">// 并回调 View#onWindowVisibilityChanged(int)</span></span><br><span class="line">            host.dispatchWindowVisibilityChanged(viewVisibility);</span><br><span class="line">        &#125;</span><br><span class="line">        performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);</span><br><span class="line">        performLayout(lp, mWidth, mHeight);</span><br><span class="line">        ......</span><br><span class="line">        <span class="comment">// 收集汇总所有子 View 调用 requestTransparentRegion(View) 记录的需要透明的区域。</span></span><br><span class="line">        host.gatherTransparentRegion(mTransparentRegion);</span><br><span class="line">        <span class="comment">// 将需要透明的区域汇总后通知给 WMS，WMS 再发送给 SurfaceFlinger。</span></span><br><span class="line">        mWindowSession.setTransparentRegion(mWindow, mTransparentRegion);</span><br><span class="line">        ......</span><br><span class="line">        performDraw();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestTransparentRegion</span><span class="params">(View child)</span> </span>&#123;</span><br><span class="line">        checkThread();</span><br><span class="line">        <span class="keyword">if</span> (mView == child) &#123;</span><br><span class="line">            mView.mPrivateFlags |= View.PFLAG_REQUEST_TRANSPARENT_REGIONS;</span><br><span class="line">            requestLayout();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">dispatchAttachedToWindow</span><span class="params">(AttachInfo info, <span class="keyword">int</span> visibility)</span> </span>&#123;</span><br><span class="line">        onAttachedToWindow();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dispatchWindowVisibilityChanged</span><span class="params">(<span class="meta">@Visibility</span> <span class="keyword">int</span> visibility)</span> </span>&#123;</span><br><span class="line">        onWindowVisibilityChanged(visibility);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewGroup</span> <span class="keyword">extends</span> <span class="title">View</span> <span class="keyword">implements</span> <span class="title">ViewParent</span>, <span class="title">ViewManager</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestTransparentRegion</span><span class="params">(View child)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (child != <span class="keyword">null</span>) &#123;</span><br><span class="line">            child.mPrivateFlags |= View.PFLAG_REQUEST_TRANSPARENT_REGIONS;</span><br><span class="line">            <span class="keyword">if</span> (mParent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                mParent.requestTransparentRegion(<span class="keyword">this</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SurfaceView 重写了 View 中的部分方法，使其可以单独控制自己的 Surface 以及可见区域：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SurfaceView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    IWindowSession mSession;</span><br><span class="line">    <span class="comment">// SurfaceView 自己的 Surface</span></span><br><span class="line">    <span class="keyword">final</span> Surface mSurface = <span class="keyword">new</span> Surface();</span><br><span class="line">    <span class="comment">// MyWindow 是一个 IWindow 类型的 Binder 对象</span></span><br><span class="line">    MyWindow mWindow;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onAttachedToWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttachedToWindow();</span><br><span class="line">        <span class="comment">// 逐层向上递归，请求父类把 SurfaceView 所在区域设置为透明，</span></span><br><span class="line">        <span class="comment">// 直到递归到 ViewRootImpl</span></span><br><span class="line">        mParent.requestTransparentRegion(<span class="keyword">this</span>);</span><br><span class="line">        <span class="comment">// 持有 IWindowSession，就能与 WMS 通信</span></span><br><span class="line">        mSession = getWindowSession();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onWindowVisibilityChanged</span><span class="params">(<span class="keyword">int</span> visibility)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onWindowVisibilityChanged(visibility);</span><br><span class="line">        ......</span><br><span class="line">        updateWindow(<span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateWindow</span><span class="params">(<span class="keyword">boolean</span> force, <span class="keyword">boolean</span> redrawNeeded)</span> </span>&#123;</span><br><span class="line">        ......</span><br><span class="line">        mSurfaceLock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 通知 WMS 对 SurfaceView 的 Surface 重布局，</span></span><br><span class="line">            <span class="comment">// WMS 检查该 Surface 是否已经在 SurfaceFlinger 中注册了 Layer，</span></span><br><span class="line">            <span class="comment">// 如果还没有，则注册一个与该 Surface 对应的 Layer，</span></span><br><span class="line">            <span class="comment">// 注册了独立的 Layer 后，SurfaceView 及所属 Window 的 Surface 独立绘制，</span></span><br><span class="line">            <span class="comment">// 因此 SurfaceView 的绘制和更新不受其他 View 的影响，从而提高了性能。</span></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> relayoutResult = mSession.relayout(</span><br><span class="line">                mWindow, mLayout, mWidth, mHeight,</span><br><span class="line">                    visible ? VISIBLE : GONE, <span class="keyword">false</span>, mWinFrame, mContentInsets,</span><br><span class="line">                    mVisibleInsets, mConfiguration, mSurface);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            mSurfaceLock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SurfaceView 在 SurfaceFlinger 中的 Layer 的 Z-Order 位于所属 Window 的 Layer 的下方，所以 SurfaceView 才需要在 onAttachedToWindow() 中调用 mParent.requestTransparentRegion(this) 让 Window 对应 Surface 的这些区域变为透明，否则会被遮盖。但是这个请求设置为透明，设置的是 Window 对应 Surface 的区域，而不是 ViewGroup 或 ViewGroup 包含的 View，它们是否透明依然是由 <code>onDraw(Canvas)</code> 决定的，<code>mParent.requestTransparentRegion(this)</code> 仅仅只是为了把 SurfaceView 所在的 Rect 一层层传递到 ViewRootImpl，并由 ViewRootImpl 收集汇总而已。</p>
+<hr>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>View 的绘制流程：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/59b35102ce81" title="@LINK">Android中老生常谈的ViewRootImpl的scheduleTraversals()到底做了什么？</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/352843740" title="@LINK">谈谈 Android 渲染机制：如何绘制并显示一帧图像？</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/a785722173/article/details/112705044" title="@LINK">浅析丢帧检测机制上篇浅析丢帧检测机制上篇</a></li>
+</ul>
+<p>Android Surface 机制：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/luoshengyang/article/details/8661317" title="@LINK">Android视图SurfaceView的实现原理分析</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/luoshengyang/article/details/7846923" title="@LINK">Android应用程序与SurfaceFlinger服务的关系概述和学习计划</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/luoshengyang/article/details/8010977" title="@LINK">Android系统Surface机制的SurfaceFlinger服务简要介绍和学习计划</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wytiger/p/5693569.html" title="@LINK">SurfaceView, TextureView, SurfaceTexture等的区别</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/90a75b9b7115" title="@LINk">浅谈SurfaceView与GLSurfaceView</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b7eb74c1a1b7" title="@LINK">Surface 与 SurfaceFlinger 之间的关系</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub" ></i>&ensp;&ensp;支 持 一 下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信支付">
+        <span>微信支付</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者: </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接:</strong>
+      <a href="https://luisliu.cn/post/android/android-render/" title="Android-渲染机制">https://luisliu.cn/post/android/android-render/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明: </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/%E6%B8%B2%E6%9F%93/" rel="tag"><i class="fa fa-tag"></i> 渲染</a>
+              <a href="/tags/%E7%BB%98%E5%88%B6/" rel="tag"><i class="fa fa-tag"></i> 绘制</a>
+              <a href="/tags/VSync/" rel="tag"><i class="fa fa-tag"></i> VSync</a>
+              <a href="/tags/Surface/" rel="tag"><i class="fa fa-tag"></i> Surface</a>
+              <a href="/tags/Texture/" rel="tag"><i class="fa fa-tag"></i> Texture</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/network/network-rtmp/" rel="prev" title="Network-RTMP">
+                  <i class="fa fa-chevron-left"></i> Network-RTMP
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/android/android-touch_event/" rel="next" title="Android-触摸事件">
+                  Android-触摸事件 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Site Symbols:</span>
+    <span title="Site Symbols">498k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Site Read Time &asymp;</span>
+    <span title="Site Read Time">9:13</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）GitHub 多 Page 仓库部署（账号 Page 与项目 Page）；（2）云服务器部署（创建、配置、部署、SSL 证书）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo-自定义部署">
+<meta property="og:url" content="https://luisliu.cn/post/hexodiy/hexodiy-deploy/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）GitHub 多 Page 仓库部署（账号 Page 与项目 Page）；（2）云服务器部署（创建、配置、部署、SSL 证书）。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-21T22:30:25.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="自定义">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/post/hexodiy/hexodiy-deploy/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/hexodiy/hexodiy-deploy/","path":"post/hexodiy/hexodiy-deploy/","title":"Hexo-自定义部署"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hexo-自定义部署 | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle Navigation" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/08/28 - 08:13:42</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>About</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">80</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">15</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">149</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Catalogue
+        </li>
+        <li class="sidebar-nav-overview">
+          SiteInfo
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hexo-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%83%A8%E7%BD%B2"><span class="nav-text">Hexo-自定义部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%A4%9APage%E4%BB%93%E5%BA%93%E9%83%A8%E7%BD%B2"><span class="nav-text">1. 多Page仓库部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%BC%80%E5%90%AF%E9%A1%B9%E7%9B%AEPage"><span class="nav-text">1.1 开启项目Page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D"><span class="nav-text">1.2 自定义域名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2"><span class="nav-text">2. 云服务器部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%90%AD%E5%BB%BA%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">2.1 搭建云服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-%E5%87%86%E5%A4%87%E9%83%A8%E7%BD%B2%E7%8E%AF%E5%A2%83"><span class="nav-text">2.1.1 准备部署环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-%E9%85%8D%E7%BD%AEUbuntu%E9%BB%98%E8%AE%A4%E8%B4%A6%E5%8F%B7"><span class="nav-text">2.1.2 配置Ubuntu默认账号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-3-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">2.1.3 登录服务器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%85%8D%E7%BD%AE%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">2.2 配置云服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-%E5%BC%80%E5%90%AFRoot%E7%94%A8%E6%88%B7"><span class="nav-text">2.2.1 开启Root用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83"><span class="nav-text">2.2.2 安装环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-%E9%85%8D%E7%BD%AE%E7%BD%91%E7%AB%99%E7%9B%AE%E5%BD%95"><span class="nav-text">2.2.3 配置网站目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-4-%E9%AA%8C%E8%AF%81%E7%BD%91%E7%AB%99%E8%AE%BF%E9%97%AE%E6%80%A7"><span class="nav-text">2.2.4 验证网站访问性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-5-%E5%88%9B%E5%BB%BAGit-Hook"><span class="nav-text">2.2.5 创建Git-Hook</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%9C%AC%E5%9C%B0Push%E8%87%B3%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">2.3 本地Push至云服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AESSL%E8%AF%81%E4%B9%A6"><span class="nav-text">2.4 云服务器配置SSL证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-1-GitHub-Page%E5%BC%80%E5%90%AFHTTPS"><span class="nav-text">2.4.1 GitHub-Page开启HTTPS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-2-%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%90%AFHTTPS"><span class="nav-text">2.4.2 云服务器开启HTTPS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E9%AA%8C%E8%AF%81%E7%BD%91%E7%AB%99%E8%AE%BF%E9%97%AE"><span class="nav-text">2.5 验证网站访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8"><span class="nav-text">2.6 常见异常</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">Posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">149</span>
+        <span class="site-state-item-name">Tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/hexodiy/hexodiy-deploy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo-自定义部署
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted:</span>
+
+      <time title="Created::2018-07-22 06:30:25" itemprop="dateCreated datePublished" datetime="2018-07-22T06:30:25+08:00">2018-07-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">Categories:</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/HexoDIY/" itemprop="url" rel="index"><span itemprop="name">HexoDIY</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Hexo/" rel="tag"><i class="fa fa-tag"></i> Hexo</a>
+          <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/" rel="tag"><i class="fa fa-tag"></i> 自定义</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="Post Symbols">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Post Symbols:</span>
+      <span>12k</span>
+    </span>
+    <span class="post-meta-item" title="Read Time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Read Time &asymp;</span>
+      <span>13 Min</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）GitHub 多 Page 仓库部署（账号 Page 与项目 Page）；（2）云服务器部署（创建、配置、部署、SSL 证书）。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Hexo-自定义部署"><a href="#Hexo-自定义部署" class="headerlink" title="Hexo-自定义部署"></a>Hexo-自定义部署</h1><h2 id="1-多Page仓库部署"><a href="#1-多Page仓库部署" class="headerlink" title="1. 多Page仓库部署"></a>1. 多Page仓库部署</h2><p>在 <a href="/post/hexodiy/hexodiy-init/" title="@LINK">Hexo-初始化静态网站</a> 中提到，GitHub 允许一个账号拥有 1 个 <strong>账号 Page</strong> 和多个 <strong>项目 Page</strong>，因此可以利用多个项目 Page 达到分内容、分域名、冗余部署等。</p>
+<blockquote>
+<p>开启项目 Page 的前提是已经开启了账号 Page，确保可用默认域名 <code>[username].github.io</code> 访问账号 Page。</p>
+</blockquote>
+<h3 id="1-1-开启项目Page"><a href="#1-1-开启项目Page" class="headerlink" title="1.1 开启项目Page"></a>1.1 开启项目Page</h3><p>新建一个 GitHub 仓库用作项目 Page，GitHub 对项目 Page 的仓库名没有限制。</p>
+<p>新建完成后需要初始化仓库以及提交一个初始 Commit，以一个简单的 HTML 源文件为例，在本地创建如下代码并上传到项目 Page 仓库的 <code>main</code> 分支中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>This is Project Page.<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在项目 Page 仓库的 <code>Settings - Pages</code> 中的部署源选项 <code>Source</code> 选择 <code>main</code> 分支，则项目 Page 就已经建立好了，默认情况下这个项目 Page 的访问域名为：<code>[username].github.io/DemoPage</code>。</p>
+<h3 id="1-2-自定义域名"><a href="#1-2-自定义域名" class="headerlink" title="1.2 自定义域名"></a>1.2 自定义域名</h3><p>GitHub Page 设置域名的方式是在 Page 仓库根目录下创建一个没有后缀的文件 <code>CNAME</code>，并在文件中写入一行（且只能有一行）需要自定义的域名，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx.com</span><br></pre></td></tr></table></figure>
+
+<p>然后在 DNS 添加一条 CName记录，让 <code>xxx.com</code> 指向 <code>[username].github.io</code> 即可。需要注意的是，<code>CNAME</code> 文件中指定的是纯域名，不携带任何协议网络（例如 <code>http</code>、<code>https</code> 等）。</p>
+<blockquote>
+<p>假设账号 Page 设置了自定义域名 <code>xxx.com</code>、项目 Page 的仓库名为 <code>DemoPage</code>。</p>
+</blockquote>
+<p>默认情况下，项目 Page 的访问路径是作为账号 Page 的子路径访问的，则项目 Page 的访问路径会自动设置为 <code>xxx.com/DemoPage</code>。</p>
+<p>如果想要用自定义域名访问，只需要在 DemoPage 仓库根目录下创建 <code>CNAME</code> 文件，并在其中写入对应的域名。</p>
+<ul>
+<li>作为子域名访问时，写入例如：<code>demo.xxx.com</code></li>
+<li>作为独立的顶级域名访问时，写入例如：<code>yyy.com</code></li>
+</ul>
+<p>然后在对应域名的 DNS 中添加一条 CName 记录，同样指向账号 Page 的默认域名 <code>[username].github.io</code>，GitHub 会自动判断请求的域名是否指向了某个 Page，如果是则自动转发。</p>
+<hr>
+<h2 id="2-云服务器部署"><a href="#2-云服务器部署" class="headerlink" title="2. 云服务器部署"></a>2. 云服务器部署</h2><p>考虑到 GitHub Page 在国内访问不太稳定，受不同运营商、不同地域的影响差别很大，因此也希望能部署到云服务器上。</p>
+<h3 id="2-1-搭建云服务器"><a href="#2-1-搭建云服务器" class="headerlink" title="2.1 搭建云服务器"></a>2.1 搭建云服务器</h3><p>云服务器按照个人需求选择即可。</p>
+<blockquote>
+<p>以腾讯云轻量应用服务器 + Ubuntu Server 18 LTS 为例。</p>
+</blockquote>
+<h4 id="2-1-1-准备部署环境"><a href="#2-1-1-准备部署环境" class="headerlink" title="2.1.1 准备部署环境"></a>2.1.1 准备部署环境</h4><ul>
+<li>确保服务器已经可用，且具有公网 IP，允许公网访问。</li>
+<li>确保本地已有可用 SSH 密钥。</li>
+<li>服务器绑定 SSH 公钥，用于远端部署。</li>
+</ul>
+<h4 id="2-1-2-配置Ubuntu默认账号"><a href="#2-1-2-配置Ubuntu默认账号" class="headerlink" title="2.1.2 配置Ubuntu默认账号"></a>2.1.2 配置Ubuntu默认账号</h4><p>腾讯云轻量应用服务器的默认账号为 <code>ubuntu</code>，如果创建服务器实例时已经设置了该账号的密码则可以跳过。否则需要通过「重置密码」设置，注意设置时选择用户名 <code>系统默认 ubuntu</code>。</p>
+<h4 id="2-1-3-登录服务器"><a href="#2-1-3-登录服务器" class="headerlink" title="2.1.3 登录服务器"></a>2.1.3 登录服务器</h4><p>腾讯云轻量应用服务器在选择 Ubuntu 镜像时，默认会创建一个用户 <code>lighthouse</code>，并且腾讯云默认禁用了 root 用户，尽管可以通过配置开启，但远端登录时仍有许多问题。因此建议切换为标准的默认用户 <code>ubuntu</code>，否则后续需要多次调整权限。</p>
+<p>网页端控制台可以在登录后通过 <code>su ubuntu</code> 切换至 <code>ubuntu</code> 账号，远端登录时可以通过 SSH 连接直接指定登录用户：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// [username] 即为需要登录的用户，前提是该用户已创建。</span><br><span class="line">// [server ip] 即为服务器的公网 IP，如果没有则需要购买公网 IP。</span><br><span class="line">ssh [username]@[server ip]</span><br></pre></td></tr></table></figure>
+
+<p>（1）如果首次从本地远端登录，可能会提示密钥交换信息：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The authenticity of host &#x27;XXX.XXX.XXX.XXX (XXX.XXX.XXX.XXX)&#x27; can&#x27;t be established.</span><br><span class="line">RSA key fingerprint is XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.</span><br><span class="line">Are you sure you want to continue connecting (yes/no/fingerprint)?</span><br></pre></td></tr></table></figure>
+
+<p>输入 <code>yes</code> 继续即可。</p>
+<p>（2）如果曾经连接过，但是服务器重置了或者公网 IP 有变更，则远端登录时可能提示错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!</span><br><span class="line">Someone could be eavesdropping on you right now (man-in-the-middle attack)!</span><br><span class="line">It is also possible that a host key has just been changed.</span><br><span class="line">The fingerprint for the RSA key sent by the remote host is</span><br><span class="line">SHA256:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.</span><br><span class="line">Please contact your system administrator.</span><br><span class="line">Add correct host key in ~/.ssh/known_hosts to get rid of this message.</span><br><span class="line">Offending RSA key in ~/.ssh/known_hosts:4</span><br><span class="line">RSA host key for XXX.XXX.XXX.XXX has changed and you have requested strict checking.</span><br><span class="line">Host key verification failed.</span><br></pre></td></tr></table></figure>
+
+<p>根据提示编辑 <code>~/.ssh/known_hosts</code> 文件，删除曾经保存的服务器 IP 对应的 Host 信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 删除公网 IP 对应的这条 Host 记录并保存</span><br><span class="line">XXX.XXX.XXX.XXX ecdsa-sha2-nistp256 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br></pre></td></tr></table></figure>
+
+<p>然后再重新登录即可。</p>
+<h3 id="2-2-配置云服务器"><a href="#2-2-配置云服务器" class="headerlink" title="2.2 配置云服务器"></a>2.2 配置云服务器</h3><p>配置云服务器有两种方式：</p>
+<ol>
+<li>使用默认 ubuntu 用户 + <code>sudo</code> 操作，但某些脚本可能需要单独设置 root 权限。</li>
+<li>使用 root 用户配置，但远端使用 SSH 鉴权 Push 时也需要指定为 root 用户，可能会有安全性问题，不推荐。</li>
+</ol>
+<p>结合上述问题，本文以第 2 种方式为例，使用 root 用户配置服务器，但禁用远端登录 root 用户，配置完后再对远端 Push 涉及的目录设置为 ubuntu 用户权限。</p>
+<h4 id="2-2-1-开启Root用户"><a href="#2-2-1-开启Root用户" class="headerlink" title="2.2.1 开启Root用户"></a>2.2.1 开启Root用户</h4><p>腾讯云轻量应用服务器默认禁用了 root 用户，需要先以普通用户（例如 ubuntu）登录后再手动开启：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 1. 设置 root 用户密码，可以与其他用户的相同：</span><br><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> sudo passwd root</span></span><br><span class="line">// 二次输入密码后提示设置成功：</span><br><span class="line">passwd: password updated successfully</span><br><span class="line"></span><br><span class="line">// 2. 编辑配置文件 Authentication 部分，开启 root 密码登录：</span><br><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> sudo vi /etc/ssh/sshd_config</span></span><br><span class="line"></span><br><span class="line">// 2.1 取消 PermitRootLogin 选项的注释，</span><br><span class="line">// 默认配置 prohibit-password，禁止 Root 用户使用密码登录：</span><br><span class="line">PermitRootLogin prohibit-password</span><br><span class="line"></span><br><span class="line">// 2.2 如果需要允许 Root 用户登录，则修改 PermitRootLogin：</span><br><span class="line">PermitRootLogin yes</span><br><span class="line">// 然后添加一条配置，允许使用密码认证：</span><br><span class="line">PasswordAuthentication yes</span><br><span class="line"></span><br><span class="line">// 3. 保存配置退出编辑模式后，重启 SSH 服务</span><br><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> sudo service ssh restart</span></span><br></pre></td></tr></table></figure>
+
+<p>断开远端连接重新登录；如果允许直接通过密码远端登录 root 用户，则可以直接通过 <code>ssh root@[server ip]</code> 登录。本文为了安全性保持禁用 root 用户直接密码登录，因此仍需先以 ubuntu 用户登录，然后再切换至 root 用户：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 从本地登录至远端 ubuntu 用户：</span><br><span class="line"><span class="meta">[luis@~]#</span><span class="bash"> ssh ubuntu@XXX.XXX.XXX.XXX</span></span><br><span class="line"></span><br><span class="line">// 登录后切换至 root 用户，输入 root 密码：</span><br><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> su root</span></span><br><span class="line"></span><br><span class="line">// 切换成功后可以看到已经切换至 root 用户，且命令进入特权模式：</span><br><span class="line"><span class="meta">root@/home/ubuntu#</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-安装环境"><a href="#2-2-2-安装环境" class="headerlink" title="2.2.2 安装环境"></a>2.2.2 安装环境</h4><p>在云服务器部署静态网站，主要需要用到两个开发环境：</p>
+<ul>
+<li>Nginx: 用于自动把公网请求映射到具体的静态网页资源。</li>
+<li>Git: 用于从本地推送静态网站资源。</li>
+</ul>
+<p>腾讯云轻量应用服务器的 Ubuntu 系统默认自带了 Git 环境，因此只需要安装 Nginx：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 更新 apt：</span><br><span class="line"><span class="meta">root@/home/ubuntu#</span><span class="bash"> apt-get update</span></span><br><span class="line">// 安装 nginx：</span><br><span class="line"><span class="meta">root@/home/ubuntu#</span><span class="bash"> apt-get install git nginx -y</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-配置网站目录"><a href="#2-2-3-配置网站目录" class="headerlink" title="2.2.3 配置网站目录"></a>2.2.3 配置网站目录</h4><p>采用 Nginx + Git 托管静态网站需要用到两个目录：</p>
+<ul>
+<li>Nginx 最终代理和转发的网站资源文件目录。</li>
+<li>Git 接收远端 Push 网站资源文件的 Git 仓库目录。通过配置 Git Hook 将收到的文件自动关联到 Ngnix 的资源文件目录。</li>
+</ul>
+<blockquote>
+<p>由于本文最终远端 Push 时使用 ubuntu 用户，因此将在 ubuntu 的用户目录 <code>/home/ubuntu/</code> 下配置所有网站目录。</p>
+<p>本文中创建了 <code>/home/ubuntu/Projects/</code> 目录并将 Nginx 和 Git 目录统一配置在 Projects 目录下，实际路径可自由设置。</p>
+</blockquote>
+<p>（1）创建 Nginx 网站资源目录并授权；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@~#</span><span class="bash"> <span class="built_in">cd</span> /home/ubuntu/Projects</span></span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> mkdir -p ./WebServer</span></span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> chmod -R 755 ./WebServer</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）创建 Git 接收裸仓库的目录并授权；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 注意创建的是裸仓库，添加 --bare 参数</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> git init --bare Web.git</span></span><br><span class="line">// 提示创建成功</span><br><span class="line">Initialized empty Git repository in /home/ubuntu/Projects/LuisBlogWeb.git/</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> chmod -R 755 ./Web.git</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Git 裸仓库是指该仓库将只保存仓库的提交历史（<code>.git</code> 文件），而不会保存实际文件，但同样支持 Push 和 Pull，通常作为服务器存储仓库。</p>
+</blockquote>
+<p>（3）配置 Nginx 代理和转发目录（注意备份）；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim /etc/nginx/sites-available/default</span></span><br><span class="line"></span><br><span class="line">// 修改 server 部分</span><br><span class="line">server &#123;</span><br><span class="line">        # HTTP configuration</span><br><span class="line">        #</span><br><span class="line">        ## 监听普通 HTTP 的 80 端口：</span><br><span class="line">        listen 80 default_server;</span><br><span class="line">        listen [::]:80 default_server;</span><br><span class="line"></span><br><span class="line">        # SSL configuration</span><br><span class="line">        #</span><br><span class="line">        ## 监听 HTTPS 的 443 端口：</span><br><span class="line">        listen 443 ssl default_server;</span><br><span class="line">        listen [::]:443 ssl default_server;</span><br><span class="line"></span><br><span class="line">        ## 设置代理和转发的目录：</span><br><span class="line">        root /home/ubuntu/Projects/WebServer;</span><br><span class="line"></span><br><span class="line">        ## 设置自定义域名：</span><br><span class="line">        server_name XXX.YYY;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 然后重启 Nginx 服务。</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> service nginx restart</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-4-验证网站访问性"><a href="#2-2-4-验证网站访问性" class="headerlink" title="2.2.4 验证网站访问性"></a>2.2.4 验证网站访问性</h4><p>（1）在 <code>WebServer</code> 目录下创建一个测试网页：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim WebServer/index.html</span></span><br><span class="line"></span><br><span class="line">// 随便填充一个元素：</span><br><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;h1&gt;This is My Web.&lt;/h1&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后访问公网 IP，如果可以正常访问说明配置正确；如果网页报 404 错误，则需要查看 Nginx 错误日志。</p>
+<p>（2）Nginx 日志存放目录配置在 Nginx 配置文件中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim /etc/nginx/nginx.conf</span></span><br><span class="line"></span><br><span class="line">// 找到 http 部分的 Logging 设置：</span><br><span class="line">http &#123;</span><br><span class="line">        ##</span><br><span class="line">        # Logging Settings</span><br><span class="line">        ##</span><br><span class="line"></span><br><span class="line">        access_log /var/log/nginx/access.log;</span><br><span class="line">        error_log /var/log/nginx/error.log;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 然后查看错误日志：</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim /var/<span class="built_in">log</span>/nginx/error.log</span></span><br><span class="line"></span><br><span class="line">// 日志内容：</span><br><span class="line">yyyy/MM/dd hh:mm:ss [crit] 18205#18205: *1 stat() &quot;/home/ubuntu/Projects/WebServer/&quot; failed (13: Permission denied), client: XXX.XXX.XXX.XXX, server: XXX.YYY, request: &quot;GET / HTTP/1.1&quot;, host: &quot;XXX.XXX.XXX.XXX&quot;</span><br></pre></td></tr></table></figure>
+
+<p>错误日志提示发生了 403 权限拒绝问题。</p>
+<p>（3）查看 Nginx 的运行和启动用户：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> ps aux | grep <span class="string">&quot;nginx: worker process&quot;</span> | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span></span></span><br><span class="line"></span><br><span class="line">www-data</span><br><span class="line">root</span><br></pre></td></tr></table></figure>
+
+<p>发现 Nginx 启动用户是 root，但运行用户是 www-data，所以出现了用户权限被拒绝的情况。</p>
+<p>（4）将 Nginx 的运行用户也修改为 root 用户：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim /etc/nginx/nginx.conf</span></span><br><span class="line"></span><br><span class="line">// 将 user 修改为 root 用户：</span><br><span class="line">user root;</span><br><span class="line"></span><br><span class="line">// 然后重启 Nginx 服务</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> service nginx restart</span></span><br></pre></td></tr></table></figure>
+
+<p>再次访问云服务器的公网 IP，可以正确访问了。</p>
+<h4 id="2-2-5-创建Git-Hook"><a href="#2-2-5-创建Git-Hook" class="headerlink" title="2.2.5 创建Git-Hook"></a>2.2.5 创建Git-Hook</h4><p>由于 Nginx 只能将网络请求代理和转发到 <code>WebServer</code> 目录下的网站资源文件，而本地的网站资源文件是通过 Git Push 到 <code>Web.git</code> 仓库下的，因此需要创建一个 Git-Hook，自动将 <code>Web.git</code> 下的资源文件关联到 <code>WebServer</code> 目录中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 创建一个 Hook 文件 post-receive</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim ./Web.git/hooks/post-receive</span></span><br><span class="line"></span><br><span class="line">// 在 post-receive 中写入一行：</span><br><span class="line">git --work-tree=/home/ubuntu/Projects/WebServer --git-dir=/home/ubuntu/Projects/Web.git checkout -f</span><br><span class="line"></span><br><span class="line">// 保存退出后，给 post-receive 文件添加执行权限：</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> chmod +x ./Web.git/hooks/post-receive</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-本地Push至云服务器"><a href="#2-3-本地Push至云服务器" class="headerlink" title="2.3 本地Push至云服务器"></a>2.3 本地Push至云服务器</h3><p>经过上述配置，服务器中的 Git 接收和 Nginx 代理转发已经配置好了，即可从本地将 Hexo 生成的静态网站 Push 至服务器。</p>
+<p>（1）在 Hexo 站点配置文件中添加云服务器 Git 部署配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="comment">## 部署至 GitHub Page 仓库：</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repository:</span> <span class="string">git@github.com:[username]/[username].github.io.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br><span class="line">  <span class="comment">## 部署至云服务器：</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="attr">repository:</span> <span class="string">ubuntu@[server</span> <span class="string">ip]:/home/ubuntu/Projects/Web.git</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）本地执行 Hexo 命令部署：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[luis@WebLocal]#</span><span class="bash"> hexo clean &amp;&amp; hexo g -d</span></span><br><span class="line"></span><br><span class="line">// 有可能报错 unable to create temporary object directory：</span><br><span class="line">error: remote unpack failed: unable to create temporary object directory</span><br><span class="line">error: failed to push some refs to &#x27;ubuntu@43.129.198.91:/home/ubuntu/Projects/LuisBlogWeb.git&#x27;</span><br><span class="line"></span><br><span class="line">// 也有可能报错 Permission denied：</span><br><span class="line">error: unable to create file xxx: Permission denied</span><br></pre></td></tr></table></figure>
+
+<p>向云服务器 Push 时报错，如果原因都是类似于「无法创建 XXX」、「无法访问 XXX」、「Permission denied」等等，绝大多数是因为 Git Push 的用户没有目标路径的权限导致的，在本例中，<code>/home/ubuntu/Projects</code> 目录以及其内所有子文件都是 root 用户权限，而云服务器为了安全禁用了远端登录 root 用户，所以 Git 在以 ubuntu 用户 Push 时就会导致权限不足。</p>
+<p>（3）将云服务器中 <code>/home/ubuntu/Projects</code> 目录以及其内的所有子文件都改为 ubuntu 用户权限：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 先切换到 ubuntu 用户：</span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> su ubuntu</span></span><br><span class="line"></span><br><span class="line">// 然后切换到 ubuntu 用户目录下：</span><br><span class="line"><span class="meta">ubuntu@~/Projects$</span><span class="bash"> <span class="built_in">cd</span></span></span><br><span class="line"></span><br><span class="line">// 将 Projects 和其内的所有子文件都修改为 ubuntu 用户的权限：</span><br><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> sudo chown -R <span class="variable">$USER</span>:<span class="variable">$USER</span> ./Projects</span></span><br><span class="line"></span><br><span class="line">// 查看文件权限，Projects 已经变成 ubuntu 用户：</span><br><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> ll</span></span><br><span class="line"></span><br><span class="line">drwxr-xr-x 4 ubuntu ubuntu 4096 Aug  1 hh:mm Projects/</span><br></pre></td></tr></table></figure>
+
+<p>再次从本地执行 Hexo 命令，即可成功部署。</p>
+<h3 id="2-4-云服务器配置SSL证书"><a href="#2-4-云服务器配置SSL证书" class="headerlink" title="2.4 云服务器配置SSL证书"></a>2.4 云服务器配置SSL证书</h3><p>为了访问安全性以及提升访问质量，可以给域名套上 SSL 证书。</p>
+<blockquote>
+<p>如果使用自定义域名，需要确保自定义域名已经申请了 SSL 证书，并且认证通过绑定至域名。如果自定义二级域名访问，则需要分别为顶级域名和二级域名各申请一张 SSL 证书。</p>
+</blockquote>
+<h4 id="2-4-1-GitHub-Page开启HTTPS"><a href="#2-4-1-GitHub-Page开启HTTPS" class="headerlink" title="2.4.1 GitHub-Page开启HTTPS"></a>2.4.1 GitHub-Page开启HTTPS</h4><p>GitHub Page 只需要确保域名已绑定 SSL 证书，然后在 Page 仓库的 <code>Settings - Pages</code> 中勾选 <code>Enforce HTTPS</code> 即可。</p>
+<h4 id="2-4-2-云服务器开启HTTPS"><a href="#2-4-2-云服务器开启HTTPS" class="headerlink" title="2.4.2 云服务器开启HTTPS"></a>2.4.2 云服务器开启HTTPS</h4><p>由于云服务器采用 Nginx 转发请求，因此需要将 SSL 证书下载并配置到 Nginx 中。配置 SSL 需要切换至 root 用户。</p>
+<p>（1）上传 SSL 证书至云服务器；</p>
+<p>从域名注册商下载已绑定的 SSL 证书并解压，找到 Nginx 下的两个证书，例如：<code>domain.crt</code> 和 <code>domain.key</code>，然后从本地上传到远端：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[luis@ssl]#</span><span class="bash"> scp ./domain.crt ubuntu@XXX.XXX.XXX.XXX:/home/ubuntu/domain.crt</span></span><br><span class="line"><span class="meta">[luis@ssl]#</span><span class="bash"> scp ./domain.key ubuntu@XXX.XXX.XXX.XXX:/home/ubuntu/domain.key</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）将证书文件复制到云服务器中 Nginx 的默认配置路径：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> cp domain.crt /etc/nginx/domain.crt</span></span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> cp domain.key /etc/nginx/domain.key</span></span><br></pre></td></tr></table></figure>
+
+<p>（3）修改 Nginx SSL 配置（注意备份）；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim /etc/nginx/nginx.conf</span></span><br><span class="line"></span><br><span class="line">// 参考以下配置修改：</span><br><span class="line">http &#123;</span><br><span class="line">        ##</span><br><span class="line">        # Basic Settings</span><br><span class="line">        ##</span><br><span class="line"></span><br><span class="line">        sendfile on;</span><br><span class="line">        tcp_nopush on;</span><br><span class="line">        tcp_nodelay on;</span><br><span class="line">        keepalive_timeout 65;</span><br><span class="line">        types_hash_max_size 2048;</span><br><span class="line">        # server_tokens off;</span><br><span class="line"></span><br><span class="line">        # server_names_hash_bucket_size 64;</span><br><span class="line">        # server_name_in_redirect off;</span><br><span class="line"></span><br><span class="line">        include /etc/nginx/mime.types;</span><br><span class="line">        default_type application/octet-stream;</span><br><span class="line"></span><br><span class="line">        ## 开启访问错误拦截</span><br><span class="line">        proxy_intercept_errors on;</span><br><span class="line"></span><br><span class="line">        ##</span><br><span class="line">        # Server Settings</span><br><span class="line">        ##</span><br><span class="line">        ## 禁止 IP 直接访问</span><br><span class="line">        server &#123;</span><br><span class="line">                listen 80 default_server;</span><br><span class="line">                listen [::]:80 default_server;</span><br><span class="line">                listen 443 ssl default_server;</span><br><span class="line">                listen [::]:443 ssl default_server;</span><br><span class="line">                server_name _;</span><br><span class="line">                return 444;</span><br><span class="line">        &#125;</span><br><span class="line">        ## 特定子域名单独转发（需要 DNS 解析）</span><br><span class="line">        server &#123;</span><br><span class="line">                listen 80;</span><br><span class="line">                listen [::]:80;</span><br><span class="line">                listen 443 ssl;</span><br><span class="line">                listen [::]:443 ssl;</span><br><span class="line">                server_name AAA.xxx.yyy BBB.xxx.yyy;</span><br><span class="line">                return 301 https://xxx.yyy$request_uri;</span><br><span class="line">        &#125;</span><br><span class="line">        ## 其他子域名全部转发至顶级域名（需要 DNS 解析）</span><br><span class="line">        server &#123;</span><br><span class="line">                listen 80;</span><br><span class="line">                listen [::]:80;</span><br><span class="line">                listen 443 ssl;</span><br><span class="line">                listen [::]:443 ssl;</span><br><span class="line">                server_name *.xxx.yyy;</span><br><span class="line">                return 301 https://xxx.yyy$request_uri;</span><br><span class="line">        &#125;</span><br><span class="line">        ## HTTP 自动转发至 HTTPS</span><br><span class="line">        server &#123;</span><br><span class="line">                listen 80;</span><br><span class="line">                listen [::]:80;</span><br><span class="line">                server_name xxx.yyy; ## 自定义域名</span><br><span class="line">                return 301 https://$host$request_uri;</span><br><span class="line">        &#125;</span><br><span class="line">        ## 默认只代理 HTTPS 请求</span><br><span class="line">        server &#123;</span><br><span class="line">                listen 443 ssl;</span><br><span class="line">                listen [::]:443 ssl;</span><br><span class="line">                server_name xxx.yyy; ## 自定义域名</span><br><span class="line">                root /home/ubuntu/Projects/WebServer;</span><br><span class="line">                # autoindex on;</span><br><span class="line">                index index.html index.htm index.nginx-debian.html;</span><br><span class="line">                # 错误页面导航</span><br><span class="line">                error_page 404 500 502 503 504 https://xxx.yyy/404;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ##</span><br><span class="line">        # SSL Settings</span><br><span class="line">        ##</span><br><span class="line">        ssl_certificate domain.crt; ## 下载的 SSL CRT 证书</span><br><span class="line">        ssl_certificate_key domain.key; ## 下载的 SSL Key 密钥</span><br><span class="line">        ssl_session_timeout 5m;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE</span><br><span class="line">        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（4）修改 Nginx 默认 Server 配置（注意备份）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> vim /etc/nginx/sites-available/default</span></span><br><span class="line"></span><br><span class="line">// 去除（注释掉）默认配置中 Server 的重复配置项：</span><br><span class="line">server &#123;</span><br><span class="line">        # listen 80 default_server;</span><br><span class="line">        # listen [::]:80 default_server;</span><br><span class="line">        # root /var/www/html;</span><br><span class="line">        # server_name _;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（5）验证 Nginx 配置；</p>
+<p>执行 Nginx 测试命令，检查是否配置通过：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> sudo nginx -t</span></span><br><span class="line"></span><br><span class="line">// 如果输出如下，说明配置正确，否则根据 [warn] 或 [error] 的提示修改。</span><br><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf test is successful</span><br><span class="line"></span><br><span class="line">// 测试通过后，重启 Nginx 服务：</span><br><span class="line"><span class="meta">root@home/ubuntu/Projects#</span><span class="bash"> sudo nginx -s reload</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-验证网站访问"><a href="#2-5-验证网站访问" class="headerlink" title="2.5 验证网站访问"></a>2.5 验证网站访问</h3><ul>
+<li>以 HTTP 协议访问云服务器公网 IP：报错 444.</li>
+<li>以 HTTPS 协议访问云服务器公网 IP：报错 444。</li>
+<li>以 HTTP 协议访问自定义域名：自动转发至 HTTPS。</li>
+<li>以 HTTPS 协议访问自定义域名：正常访问。</li>
+</ul>
+<p>如果以上均验证成功，则网站已经正常部署。</p>
+<h3 id="2-6-常见异常"><a href="#2-6-常见异常" class="headerlink" title="2.6 常见异常"></a>2.6 常见异常</h3><p>如果访问服务器时报错 403，先按上文所述查看 Nginx 的报错日志：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> vim /var/<span class="built_in">log</span>/nginx/error.log</span></span><br></pre></td></tr></table></figure>
+
+<p>（1）<code>directory index of &quot;...&quot; is forbidden</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yyyy/MM/dd hh:mm:ss [error] 28043<span class="comment">#28043: *6 directory index of &quot;/home/ubuntu/Projects/WebServer/&quot; is forbidden, client: XXX.XXX.XXX.XXX, server: XXX.YYY, request: &quot;GET / HTTP/1.1&quot;, host: &quot;XXX.YYY&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>首先检查 Git Push 是否成功，Hexo 在 Deploy 时，一旦某个文件 Push 失败则 Git 会中断 Push 任务，但只要 Push 任务结束 Hexo 就会提示 <code>INFO  Deploy done: git</code>，所以看到这个提示并不一定代表 Push 是成功的，需要检查 Deploy 日志，确保没有提示任何文件写入失败。如果有，大概率是权限问题导致的，可参照上文配置；如果没有，则需要检查 Nginx 配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">ubuntu@~$</span><span class="bash"> vim /etc/nginx/nginx.conf</span></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">        ## 默认只代理 HTTPS 请求</span><br><span class="line">        server &#123;</span><br><span class="line">                // 在默认代理 server 内添加该配置：</span><br><span class="line">                index index.html index.htm index.nginx-debian.html;</span><br><span class="line">                // 如果不确定网站使用的默认页，则添加如下配置：</span><br><span class="line">                autoindex on;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/120743882" title="@LINK">将hexo个人博客部署到个人云服务器–最详细踩坑教程</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/1207/47027" title="@LINK">Nginx 服务器证书安装</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub" ></i>&ensp;&ensp;支 持 一 下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信支付">
+        <span>微信支付</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者: </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接:</strong>
+      <a href="https://luisliu.cn/post/hexodiy/hexodiy-deploy/" title="Hexo-自定义部署">https://luisliu.cn/post/hexodiy/hexodiy-deploy/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明: </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Hexo/" rel="tag"><i class="fa fa-tag"></i> Hexo</a>
+              <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/" rel="tag"><i class="fa fa-tag"></i> 自定义</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/hexodiy/hexodiy-solutions/" rel="prev" title="Hexo-问题及方案">
+                  <i class="fa fa-chevron-left"></i> Hexo-问题及方案
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/hexodiy/hexodiy-style/" rel="next" title="Hexo-自定义样式">
+                  Hexo-自定义样式 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Site Symbols:</span>
+    <span title="Site Symbols">498k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Site Read Time &asymp;</span>
+    <span title="Site Read Time">9:13</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>
