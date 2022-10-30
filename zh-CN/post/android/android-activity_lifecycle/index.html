@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）Activity 简介（Activity 的生命周期、Activity 的启动与退出）；（2）Activity 的启动模式（Standard、SingleTop、SingleTask、SingleInstance）；（3）Activity 使用 SingleInstance 启动模式导致的异常问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Activity生命周期">
+<meta property="og:url" content="https://luisliu.cn/zh-CN/post/android/android-activity_lifecycle/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）Activity 简介（Activity 的生命周期、Activity 的启动与退出）；（2）Activity 的启动模式（Standard、SingleTop、SingleTask、SingleInstance）；（3）Activity 使用 SingleInstance 启动模式导致的异常问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/android/android-activity_lifecycle/activity_lifecycle.svg">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/android/android-activity_lifecycle/failed_to_start_app.gif">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/android/android-activity_lifecycle/show_in_recent_task.gif">
+<meta property="article:published_time" content="2020-02-04T03:30:05.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="四大组件">
+<meta property="article:tag" content="Activty">
+<meta property="article:tag" content="生命周期">
+<meta property="article:tag" content="taskAffinity">
+<meta property="article:tag" content="启动模式">
+<meta property="article:tag" content="SingleInstance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luisliu.cn/zh-CN/post/android/android-activity_lifecycle/activity_lifecycle.svg">
+
+
+<link rel="canonical" href="https://luisliu.cn/zh-CN/post/android/android-activity_lifecycle/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luisliu.cn/post/android/android-activity_lifecycle/","path":"zh-CN/post/android/android-activity_lifecycle/","title":"Android-Activity生命周期"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android-Activity生命周期 | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/10/30 - 20:00:15</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>关于</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Activity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">Android-Activity生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Activity%E7%AE%80%E4%BB%8B"><span class="nav-text">1. Activity简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%90%AF%E5%8A%A8Activity"><span class="nav-text">1.1 启动Activity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E9%80%80%E5%87%BAActivity"><span class="nav-text">1.2 退出Activity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Fragment%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="nav-text">1.3 Fragment懒加载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Activity%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F"><span class="nav-text">2. Activity启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Standard"><span class="nav-text">2.1 Standard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-SingleTop"><span class="nav-text">2.2 SingleTop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-SingleTask"><span class="nav-text">2.3 SingleTask</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-SingleInstance"><span class="nav-text">2.4 SingleInstance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-SingleInstance%E5%AF%BC%E8%87%B4%E7%9A%84%E5%BC%82%E5%B8%B8%E7%8E%B0%E8%B1%A1"><span class="nav-text">3. SingleInstance导致的异常现象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D"><span class="nav-text">3.1 问题定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90"><span class="nav-text">3.2 原因分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-SingleInstance%E5%AF%B9Activity%E6%A0%88%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-text">3.3 SingleInstance对Activity栈的影响</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/android/android-activity_lifecycle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-Activity生命周期
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-04 11:30:05" itemprop="dateCreated datePublished" datetime="2020-02-04T11:30:05+08:00">2020-02-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          <a href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/" rel="tag"><i class="fa fa-tag"></i> 四大组件</a>
+          <a href="/tags/Activty/" rel="tag"><i class="fa fa-tag"></i> Activty</a>
+          <a href="/tags/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="tag"><i class="fa fa-tag"></i> 生命周期</a>
+          <a href="/tags/taskAffinity/" rel="tag"><i class="fa fa-tag"></i> taskAffinity</a>
+          <a href="/tags/%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 启动模式</a>
+          <a href="/tags/SingleInstance/" rel="tag"><i class="fa fa-tag"></i> SingleInstance</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>13k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）Activity 简介（Activity 的生命周期、Activity 的启动与退出）；（2）Activity 的启动模式（Standard、SingleTop、SingleTask、SingleInstance）；（3）Activity 使用 SingleInstance 启动模式导致的异常问题。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Android-Activity生命周期"><a href="#Android-Activity生命周期" class="headerlink" title="Android-Activity生命周期"></a>Android-Activity生命周期</h1><h2 id="1-Activity简介"><a href="#1-Activity简介" class="headerlink" title="1. Activity简介"></a>1. Activity简介</h2><p>Activity 即一个用户界面，可以理解成一个视图容器，容器内可以包裹和展示各类控件。全部 Activity 都需要在 Manifest 内声明。Activity 的生命周期为：</p>
+<p><img data-src="./activity_lifecycle.svg" alt="Activity 生命周期" title="@ASSET"></p>
+<p>需要注意的是：</p>
+<ul>
+<li><code>onStop()</code> 在 Activity 不可见时才调用，例如 AActivity 启动 BActivity，若 BActivity 是透明或弹窗形式（<code>android:theme=&quot;@android:style/Theme.Dialog&quot;</code>），则 AActiivty 不会调用 <code>onStop()</code>。</li>
+<li>Activity 的 <code>onSaveInstanceState()</code> 和 <code>onRestoreInstanceState()</code> 并不是生命周期方法，当 Activity 处于 <code>isFinishing()</code> 状态时，<code>onSaveInstanceState()</code> 就不会被调用，因此只适合用于保存一些临时性的状态。</li>
+</ul>
+<h3 id="1-1-启动Activity"><a href="#1-1-启动Activity" class="headerlink" title="1.1 启动Activity"></a>1.1 启动Activity</h3><p>假设有一个 DemoActivity 注册信息如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">&quot;demo.DemoActivity&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:exported</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:excludeFromRecents</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">    &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">&quot;demo.customActionName&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.category.DEFAULT&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>exported</code>: 是否对外部 App 可见，默认为 <code>false</code>。隐式启动 Activity 时搜索 ActionName 的范围是当前 App 内，如果允许被其他 App 启动，则需要设置为 <code>true</code>。</li>
+<li><code>excludeFromRecents</code>: 是否在 Activity 进入后台时立即从「最近任务」中移除记录，默认为 <code>false</code>。如果设置为 `true，则该 Activity 一旦进入后台，就会从「最近任务」中删除其记录，不论该 Activity 是否是最后一个或唯一一个活跃的 Activity。</li>
+</ul>
+<p>（1）显式启动 Actiivty：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(context, DemoActivity.class);</span><br><span class="line"><span class="comment">// 直接插入数据</span></span><br><span class="line">intent.putExtra(<span class="string">&quot;key&quot;</span>, value)</span><br><span class="line"><span class="comment">// 通过 Bundle</span></span><br><span class="line">Bundle bundle = <span class="keyword">new</span> Bundle();</span><br><span class="line">bundle.putXXX(String key, XXX value);</span><br><span class="line">intent.putExtra(bundle);</span><br><span class="line"></span><br><span class="line">context.startActivity(intent);</span><br></pre></td></tr></table></figure>
+
+<p>（2）隐式启动 Activity：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent();</span><br><span class="line">intent.setAction(<span class="string">&quot;demo.customActionName&quot;</span>);</span><br><span class="line">context.startActivity(intent)</span><br></pre></td></tr></table></figure>
+
+<p>（3）<code>startActivity()</code> 是 Context 中的方法，因此 Activity 或 Application 都可以调用。但如果使用 <code>Application.startActivity()</code> 则需要给 Intent 添加一个 Flag <code>FLAG_ACTIVITY_NEW_TASK</code>，否则会报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android.util.AndroidRuntimeException: Calling startActivity from outside of an Activity context requires the FLAG_ACTIVITY_NEW_TASK flag. Is this really what you want?</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Activity、Application 都是 Context 抽象类的子类，而 ContextImpl 是 Context 的实现。ActivityThread 在 <code>main()</code> 方法中实例化一个 ComtextImpl 并与 Activity 绑定。</p>
+</blockquote>
+<h3 id="1-2-退出Activity"><a href="#1-2-退出Activity" class="headerlink" title="1.2 退出Activity"></a>1.2 退出Activity</h3><p>Activity 可以通过调用 <code>finish()</code> 退出。当 App 正在退出时，<code>isFinishing() == true</code>，可用于在 <code>onPause()</code> 或 <code>onStop()</code> 中判断该 Activity 是正在退出或只是进入后台。</p>
+<p>同时退出多个 Activity 的方法：</p>
+<ul>
+<li>在所有被开启的 Activity 中注册特定的广播监听，收到该广播时退出自己，并在需要统一退出时发送广播。</li>
+<li>启动新的 Activity 时，使用 <code>startActivityForResult()</code> 替代 <code>startActivity()</code>，并在 <code>onActivityResult()</code> 中将自己 <code>finish()</code>。</li>
+<li>用 List 等记录每个启动的 Activity，并在需要时分别关闭。需要注意的是，使用 List 存放 Activity 有内存泄露的风险，当 Activity 关闭后，要及时清掉对应 List 中的引用。</li>
+<li>启动一个 <code>singleTask</code> 模式的 Activity，或是给 Intent 添加 Flag：<code>FLAG_ACTIVITY_CLEAR_TOP</code>，则系统会在新 Activity 启动后将其上的所有 Activity 销毁。</li>
+</ul>
+<h3 id="1-3-Fragment懒加载"><a href="#1-3-Fragment懒加载" class="headerlink" title="1.3 Fragment懒加载"></a>1.3 Fragment懒加载</h3><p>关键点在于 <code>setUserVisibleHint()</code> 会在 <code>onCreateView</code> 之前执行，当 Fragment 可见状态改变时调用，设置一个标志位表示是否已经加载过，在 <code>setUserVisibleHint()</code> 回调时如果没加载过且可见，则加载数据并将标志位改为已加载。</p>
+<hr>
+<h2 id="2-Activity启动模式"><a href="#2-Activity启动模式" class="headerlink" title="2. Activity启动模式"></a>2. Activity启动模式</h2><p>Activity 有 4 种启动模式：</p>
+<ul>
+<li><code>standard</code></li>
+<li><code>singleTop</code></li>
+<li><code>singleTask</code></li>
+<li><code>singleInstance</code></li>
+</ul>
+<p>需要先了解到，Android 中 Activity 是存在任务栈 Task 中的，启动一个 Activity 时会将其压栈，销毁时弹出，不同启动模式会导致 Activity 任务栈产生不同的行为，且一个 App 进程可以拥有多个 Activity 任务栈。</p>
+<p>Activity 可以通过在 Manifest 中指定 <code>taskAffinity</code> 来指定其 <strong>倾向于</strong> 加入的任务栈，但只有在满足条件时才会添加到该指定任务栈中。Activity 在启动时会先查找是否存在指定的栈，假如存在则会 <strong>「优先尝试」</strong> 压入对应栈，否则才会新建一个栈并启动。如果 Activity 没有指定，则默认等同于 Application 的 taskAffinity，如果 Application 也没有指定，则默认等同于包名。</p>
+<p>但是，<code>taskAffinity</code> 并非 100% 生效；例如 singleInstance 模式启动 Activity 时，其栈内仅允许存在该 Activity；即使其他 Activity 指定同一个 taskAffinity，依然会启动到新的栈中，但这两个栈的 taskAffinity 名称相同；所以判断栈是否相同仍然只能通过 TaskID，而不是 taskAffinity。</p>
+<blockquote>
+<p>下文描述了 Activity 不同启动模式对栈的影响，用 <code>/</code> 表示 <strong>栈底</strong>，<code>&gt;</code> 表示 <strong>栈顶</strong>，任务栈之间用 <code>-</code> 连接，右侧的任务栈为最新任务栈。</p>
+</blockquote>
+<h3 id="2-1-Standard"><a href="#2-1-Standard" class="headerlink" title="2.1 Standard"></a>2.1 Standard</h3><p>（1）Standard 即标准默认模式。启动一个 Activity 时，不论 Activity 在任务栈中是否已经有实例，都新建一个实例并压入任务栈。当前 Activity 在当前任务栈可以有多个实例，每个实例也可以在不同任务栈。</p>
+<table>
+<thead>
+<tr>
+<th align="left">当前任务栈</th>
+<th align="left">如果返回</th>
+<th align="center">执行任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">/A&gt;</td>
+<td align="left">退出</td>
+<td align="center">Start Standard B</td>
+</tr>
+<tr>
+<td align="left">/AB&gt;</td>
+<td align="left">/A&gt;</td>
+<td align="center">Start Standard B</td>
+</tr>
+<tr>
+<td align="left">/ABB&gt;</td>
+<td align="left">/AB&gt;</td>
+<td align="center">Start Standard A</td>
+</tr>
+<tr>
+<td align="left">/ABBA&gt;</td>
+<td align="left">/ABB&gt;</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+<p>（2）Standard 模式通常用于允许一个页面同时创建多个，或者从逻辑上可以保证不会触发多个的情况下。</p>
+<h3 id="2-2-SingleTop"><a href="#2-2-SingleTop" class="headerlink" title="2.2 SingleTop"></a>2.2 SingleTop</h3><p>（1）SingleTop 即栈顶唯一模式，启动一个 Activity 时，如果该 Activity 已在栈顶则不会新建一个 Activity 实例而是复用它，否则其行为和 Standard 模式一致。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">当前任务栈</th>
+<th align="left">如果返回</th>
+<th align="center">执行任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="left">/A&gt;</td>
+<td align="left">退出</td>
+<td align="center">Start SingleTop B</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="left">/AB&gt;</td>
+<td align="left">/A&gt;</td>
+<td align="center">Start SingleTop B</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="left">/AB&gt;</td>
+<td align="left">/A&gt;</td>
+<td align="center">Start SingleTop A</td>
+</tr>
+<tr>
+<td>4</td>
+<td align="left">/ABA&gt;</td>
+<td align="left">/AB&gt;</td>
+<td align="center">Start SingleTop B</td>
+</tr>
+<tr>
+<td>5</td>
+<td align="left">/ABAB&gt;</td>
+<td align="left">/ABA&gt;</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+<p>（2）SingleTop 模式通常用于可能多次弹出的页面。实际上，我认为除非某个 Activity 有明确的需求要打开多个实例，否则都应该使用 SingleTop。因为大多数页面跳转都有可能被误触发多次，但绝大多数情况下都是不希望同时存在多个实例的。</p>
+<h3 id="2-3-SingleTask"><a href="#2-3-SingleTask" class="headerlink" title="2.3 SingleTask"></a>2.3 SingleTask</h3><p>（1）SingleTask 即任务栈唯一模式，启动一个 Activity 时，如果任务栈中存在该 Activity 实例，则复用它，否则才创建一个新的 Activity 实例。SingleTask 和 SingleTop 的区别在于，SingleTop 只在栈顶 Activity 和要启动的 Activity 相同时才复用，而 SingleTask 是每个 Activity 在当前整个任务栈中都只有一个实例。</p>
+<p>此外 SingleTask 还有一个重要特性：当一个 SingleTask 模式 Activity 被从任务栈中间移到栈顶时，会将原本任务栈中位于该 SingleTask Activity 之上的其他 Activity 销毁。需要注意的是，如果新启动一个 SingleTask Activity 并压入任务栈，由于其原本并不在栈中而是直接压入栈顶，因此不会导致栈内其他 Activity 被销毁。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">当前任务栈</th>
+<th align="left">如果返回</th>
+<th align="center">执行任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="left">/A&gt;</td>
+<td align="left">退出</td>
+<td align="center">Start SingleTask B</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="left">/AB&gt;</td>
+<td align="left">/A&gt;</td>
+<td align="center">Start SingleTask B</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="left">/AB&gt;</td>
+<td align="left">/A&gt;</td>
+<td align="center">Start SingleTask A</td>
+</tr>
+<tr>
+<td>4</td>
+<td align="left">/A&gt;</td>
+<td align="left">退出</td>
+<td align="center">Start Standard B</td>
+</tr>
+<tr>
+<td>5</td>
+<td align="left">/AB&gt;</td>
+<td align="left">/A&gt;</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+<p>（2）SingleTask 模式常用在 App 的 MainActivity 中，因为大多数情况下 App 在主页面上返回时都应该返回到桌面或退出，而不是返回到其他页面中，因此可以在将 MainActivity 移入栈顶时，直接销毁其他 Activity。</p>
+<h3 id="2-4-SingleInstance"><a href="#2-4-SingleInstance" class="headerlink" title="2.4 SingleInstance"></a>2.4 SingleInstance</h3><p>（1）SingleInstance 即唯一实例模式，启动一个 Activity 时，寻找所有的任务栈，如果某个任务栈中存在该 Activity 实例，则切换到该任务栈，否则新建一个任务栈并创建该 Activity 实例。</p>
+<p>假如有三个 Activity 按照以下关系启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A(Standard) -&gt; B(SingleInstance) -&gt; C(Standard)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>因为 B 是 SingleInstance，所以会创建一个新的栈，并在新的栈中启动 B。</li>
+<li>而 B 启动 C 时，同样由于 B 设置了 SingleInstance 属性，因此会先判断 C 的启动模式，以及 Manifest 中 C 对应的 <code>taskAffinity</code>，如果没有指定，则会把 C 启动在默认栈中，也就是和 A 同一个栈。</li>
+<li>因此如果在 C 中按下返回键，由于 A 和 C 在同一个栈，所以会回到 A，而不是 B。</li>
+</ul>
+<p>重点在于：任务栈不是唯一的，一个 App 可以有多个任务栈，每个任务栈又分别管理包含的 Activity。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="left">当前任务栈</th>
+<th align="left">如果返回</th>
+<th align="center">执行任务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td align="left">未启动</td>
+<td align="left">未启动</td>
+<td align="center">Start standard M</td>
+</tr>
+<tr>
+<td>1</td>
+<td align="left">/M&gt;</td>
+<td align="left">退出</td>
+<td align="center">Start SingleInstance A</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="left">/M&gt; - /A&gt;</td>
+<td align="left">/M&gt;</td>
+<td align="center">Start SingleInstance B</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="left">/M&gt; - /A&gt; - /B&gt;</td>
+<td align="left">/M&gt; - /A&gt;</td>
+<td align="center">Start SingleInstance A</td>
+</tr>
+<tr>
+<td>4</td>
+<td align="left">/M&gt; - /B&gt; - /A&gt;</td>
+<td align="left">/M&gt; - /B&gt;</td>
+<td align="center">Start Standard C</td>
+</tr>
+<tr>
+<td>5</td>
+<td align="left">/B&gt; - /A&gt; - /MC&gt;</td>
+<td align="left">/B&gt; - /A&gt; - /M&gt;</td>
+<td align="center">返回</td>
+</tr>
+<tr>
+<td>6</td>
+<td align="left">/B&gt; - /A&gt; - /M&gt;</td>
+<td align="left">/B&gt; - /A&gt;</td>
+<td align="center">返回</td>
+</tr>
+<tr>
+<td>7</td>
+<td align="left">/B&gt; - /A&gt;</td>
+<td align="left">/B&gt;</td>
+<td align="center">返回</td>
+</tr>
+<tr>
+<td>8</td>
+<td align="left">/B&gt;</td>
+<td align="left">退出</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+<p>前 3 步都比较好理解，反正就是整个 App 所有任务栈都只允许有一个实例。重点在从第 4 步开始，由于最开始的 M 是 Standard 模式启动的，而第 4 步中 C 也是 Standard 模式，也就导致本来在最底下的任务栈 <code>/M&gt;</code> 处于最上层任务栈，并将 C 压入了 <code>/M&gt;</code> 所在的这个栈顶，因此从 C 返回的时候会先返回到 M。</p>
+<p>（2）SingleInstance 通常用于某些可被共享唤起的 App，但这些 App 仅有部分页面需要被共享唤起。</p>
+<p>例如：</p>
+<ul>
+<li>电话：其包括了拨号页和来电提醒页，而来电提醒页（通话页）则需要设置为 SingleInstance。</li>
+<li>闹铃：其包括了设置闹钟的页面和响铃提醒的页面，而响铃提醒页面则需要设置为 SingleInstance。</li>
+</ul>
+<p>以电话的来电提醒页为例：</p>
+<ul>
+<li>首先 standard 和 singleTop 是一定不能满足的，否则如果通话期间切到其他 App 后再切回来，就会再次创建一个新的「通话页」。</li>
+<li>而 singleTask 同样存在问题：假如用户通过「拨号页」拨打电话，进入「通话页」后，由于设置了 singleTask，「拨号页」就会被销毁，通话结束后用户就无法再次返回到「拨号页」了。收到来电提醒也是类似的场景。</li>
+<li>如果电话 App 的「拨号页」是启动的但被置到后台，假如用户正在某个 App「Demo」中，此时收到来电进入「通话页」，电话结束后用户当然是期望能返回到原先的「Demo」页面，因此「通话页」必须处于独立的栈中，否则「通话页」结束后返回时，就会回到「拨号页」了。</li>
+</ul>
+<hr>
+<h2 id="3-SingleInstance导致的异常现象"><a href="#3-SingleInstance导致的异常现象" class="headerlink" title="3. SingleInstance导致的异常现象"></a>3. SingleInstance导致的异常现象</h2><p>平时开发在绝大多数时候，都不会给 Activity 设置为 SingleInstance 模式，所以了解不够深入。有一次遇到一个需求，要给 App 开发一套闪屏 SplashActivity 流程，考虑到如下技术方案需求：</p>
+<ul>
+<li>闪屏页是 App 唯一的。</li>
+<li>由于闪屏是很重要的商业化手段，所以希望闪屏页可以在任意一个其他页面存在时被激活到前台。</li>
+<li>闪屏启动结束后，还需要返回到原来的页面（这也明确了不能使用 singleTask）。</li>
+</ul>
+<p>根据这三个需求，自然而然想到了 singleInstance，表面上看似乎完全满足以上条件。另外因为闪屏页会经常在触发某些条件时被唤起，但并不一定每一次都需要真实可见，例如闪屏资源未准备好时就需要直接 <code>finish()</code>，用伪代码表示如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Manifest</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">&lt;manifest&gt;</span><br><span class="line">    &lt;activity</span><br><span class="line">        android:name=<span class="string">&quot;demo.SplashActivity&quot;</span></span><br><span class="line">        android:launchMode=<span class="string">&quot;singleInstance&quot;</span>&gt;</span><br><span class="line">        &lt;intent-filter&gt;</span><br><span class="line">            &lt;action android:name=<span class="string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span><br><span class="line">            &lt;category android:name=<span class="string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span><br><span class="line">        &lt;/intent-filter&gt;</span><br><span class="line">    &lt;/activity&gt;</span><br><span class="line">    &lt;activity android:name=<span class="string">&quot;demo.MainActivity&quot;</span> /&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * SplashActivity</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SplashActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里用 isFirstTime 模拟第一次进入 App 后，会跳转到 MainActivity，</span></span><br><span class="line">    <span class="comment">// 然后退到后台再切回来后，即第二次打开时，视为不满足闪屏条件，直接关闭闪屏。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isFirstTime = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (isFirstTime) &#123;</span><br><span class="line">            isFirstTime = <span class="keyword">false</span>;</span><br><span class="line">            startActivity(<span class="keyword">new</span> Intent(<span class="keyword">this</span>, MainActivity.class));</span><br><span class="line">        &#125;</span><br><span class="line">        finish();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译运行，SplashActivity 正常跳转到 MainActivity，<strong>但此时如果在 MainActivity 点击 Home 键回到桌面，再点击 App 图标，不仅 App 无法唤起，而且最近任务中也没有 App 的记录了。</strong></p>
+<p><img data-src="./failed_to_start_app.gif" alt="返回桌面后，点击图标无法启动 Activity，且最近任务记录消失" title="@ASSET"></p>
+<h3 id="3-1-问题定位"><a href="#3-1-问题定位" class="headerlink" title="3.1 问题定位"></a>3.1 问题定位</h3><p>出现这个现象，我的第一反应就是：两个 Activity 都被杀了，于是分别给两个 Activity 都添加了生命周期的日志，发现打印出来的如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 首次启动 App 后：</span><br><span class="line">priv.luis.launchmodetest D/luis: SplashActivity - onCreate</span><br><span class="line">priv.luis.launchmodetest D/luis: MainActivity - onCreate</span><br><span class="line">priv.luis.launchmodetest D/luis: MainActivity - onResume</span><br><span class="line">priv.luis.launchmodetest D/luis: SplashActivity - onDestroy</span><br><span class="line">// 点击 Home 键：</span><br><span class="line">priv.luis.launchmodetest D/luis: MainActivity - onPause</span><br><span class="line">priv.luis.launchmodetest D/luis: MainActivity - onStop</span><br><span class="line">// 点击多任务键，从最近任务中返回 App：</span><br><span class="line">priv.luis.launchmodetest D/luis: MainActivity - onResume</span><br><span class="line">// 再次点击 Home 键：</span><br><span class="line">priv.luis.launchmodetest D/luis: MainActivity - onPause</span><br><span class="line">priv.luis.launchmodetest D/luis: MainActivity - onStop</span><br><span class="line">// 点击 App 图标：</span><br><span class="line">priv.luis.launchmodetest D/luis: SplashActivity - onCreate</span><br><span class="line">priv.luis.launchmodetest D/luis: SplashActivity - onDestroy</span><br></pre></td></tr></table></figure>
+
+<p>从日志上看，MainActivity 自始至终都没有被杀掉。如果仔细看录屏的后半部分，有一次在点击桌面图标之后，App 在一瞬间被拉起来了，然后又自动关闭了。结合点击 App 图标之后的日志来看，很明显是因为点击 App 图标后启动的是 <code>SplashActivity</code>，由于 <code>isFirstTime == false</code> 所以直接执行了 <code>finish()</code>。</p>
+<ul>
+<li>但是为什么 MainActivity 无法启动呢？难道是因为给 <code>SplashActivity</code> 设置了 <code>singleInstance</code> 吗？但即使改为给 <code>MainActivity</code> 设置 <code>singleInstance</code>，依然是同样的现象。</li>
+<li>为什么第一次点 Home 键返回桌面，最近任务中有 App 的记录，但是从桌面点击了 App 图标之后，即使 MainActivity 仍然存活，但最近任务中就没有 App 记录了呢？</li>
+<li>难道是 Application 被强制 Kill 掉了，以至于连 Log 的机会都没有吗？</li>
+</ul>
+<p>再次重复整个步骤，并且每一步都通过 ADB 查看当前 Activity 栈信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// （1）首次打开 APP，MainActivity 处于前台，Launcher 处于后台。</span></span><br><span class="line"><span class="function">Running <span class="title">activities</span> <span class="params">(most recent first)</span>:</span></span><br><span class="line"><span class="function">  TaskRecord</span>&#123;392952a #<span class="number">745</span> A=.abc U=<span class="number">0</span> StackId=<span class="number">744</span> sz=<span class="number">1</span>&#125;</span><br><span class="line">    Run #<span class="number">0</span>: ActivityRecord&#123;a4f60c2 u0 priv.luis.launchmodetest/.MainActivity t745&#125;</span><br><span class="line"><span class="function">Running <span class="title">activities</span> <span class="params">(most recent first)</span>:</span></span><br><span class="line"><span class="function">  TaskRecord</span>&#123;cf7cd87 #<span class="number">2</span> I=com.google.android.apps.nexuslauncher/.NexusLauncherActivity U=<span class="number">0</span> StackId=<span class="number">0</span> sz=<span class="number">1</span>&#125;</span><br><span class="line">    Run #<span class="number">0</span>: ActivityRecord&#123;5dab3ba u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// （2）点击 Home 键回到 Launcher，MainActivity 处于后台。</span></span><br><span class="line"><span class="comment">// 此时多任务中 App 记录正常显示，停留在 MainActivity 界面。</span></span><br><span class="line"><span class="function">Running <span class="title">activities</span> <span class="params">(most recent first)</span>:</span></span><br><span class="line"><span class="function">  TaskRecord</span>&#123;cf7cd87 #<span class="number">2</span> I=com.google.android.apps.nexuslauncher/.NexusLauncherActivity U=<span class="number">0</span> StackId=<span class="number">0</span> sz=<span class="number">1</span>&#125;</span><br><span class="line">    Run #<span class="number">0</span>: ActivityRecord&#123;5dab3ba u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2&#125;</span><br><span class="line"><span class="function">Running <span class="title">activities</span> <span class="params">(most recent first)</span>:</span></span><br><span class="line"><span class="function">  TaskRecord</span>&#123;392952a #<span class="number">745</span> A=.abc U=<span class="number">0</span> StackId=<span class="number">744</span> sz=<span class="number">1</span>&#125;</span><br><span class="line">    Run #<span class="number">0</span>: ActivityRecord&#123;a4f60c2 u0 priv.luis.launchmodetest/.MainActivity t745&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// （3）点击 App 图标，App 未被唤起，仍然停留在桌面。</span></span><br><span class="line"><span class="comment">// 此时 多任务中 App 记录已经消失。</span></span><br><span class="line"><span class="function">Running <span class="title">activities</span> <span class="params">(most recent first)</span>:</span></span><br><span class="line"><span class="function">  TaskRecord</span>&#123;cf7cd87 #<span class="number">2</span> I=com.google.android.apps.nexuslauncher/.NexusLauncherActivity U=<span class="number">0</span> StackId=<span class="number">0</span> sz=<span class="number">1</span>&#125;</span><br><span class="line">    Run #<span class="number">0</span>: ActivityRecord&#123;5dab3ba u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t2&#125;</span><br><span class="line"><span class="function">Running <span class="title">activities</span> <span class="params">(most recent first)</span>:</span></span><br><span class="line"><span class="function">  TaskRecord</span>&#123;96b6b62 #<span class="number">750</span> A=.abc U=<span class="number">0</span> StackId=<span class="number">749</span> sz=<span class="number">1</span>&#125;</span><br><span class="line">    Run #<span class="number">0</span>: ActivityRecord&#123;e949a28 u0 priv.luis.launchmodetest/.MainActivity t750&#125;</span><br></pre></td></tr></table></figure>
+
+<p>WTF？<code>MainActivity</code> 竟然还存活着，说明 App 并没有被杀死，然而最近任务并没有任何记录！</p>
+<h3 id="3-2-原因分析"><a href="#3-2-原因分析" class="headerlink" title="3.2 原因分析"></a>3.2 原因分析</h3><p>首先尝试反向验证，在 SplashActivity 启动 MainActivity 的 Intent 中添加两个 Flag，并且去掉 SplashActivity 中 <code>finish()</code> 的逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Manifest</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">&lt;manifest&gt;</span><br><span class="line">    &lt;activity</span><br><span class="line">        android:name=<span class="string">&quot;demo.SplashActivity&quot;</span></span><br><span class="line">        android:launchMode=<span class="string">&quot;singleInstance&quot;</span>&gt;</span><br><span class="line">        &lt;intent-filter&gt;</span><br><span class="line">            &lt;action android:name=<span class="string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span><br><span class="line">            &lt;category android:name=<span class="string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span><br><span class="line">        &lt;/intent-filter&gt;</span><br><span class="line">    &lt;/activity&gt;</span><br><span class="line">    &lt;activity android:name=<span class="string">&quot;demo.MainActivity&quot;</span> /&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * SplashActivity</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SplashActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里用 isFirstTime 模拟第一次进入 App 后，会跳转到 MainActivity，</span></span><br><span class="line">    <span class="comment">// 然后退到后台再切回来后，即第二次打开时，视为不满足闪屏条件，直接关闭闪屏。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isFirstTime = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle intent)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这里延迟 2 秒，只是为了让 SplashActivity 的界面加载出来，</span></span><br><span class="line">        <span class="comment">// 这样在最近任务中能看的更清晰，否则可能无法生成 Activity 的缩略图。</span></span><br><span class="line">        mainHandler.postDelayed(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (isFirstTime) &#123;</span><br><span class="line">                    isFirstTime = <span class="keyword">false</span>;</span><br><span class="line">                    Intent intent = <span class="keyword">new</span> Intent(SplashActivity.<span class="keyword">this</span>, MainActivity.class);</span><br><span class="line">                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);</span><br><span class="line">                    intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);</span><br><span class="line">                    startActivity(intent);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="number">2000</span>);</span><br><span class="line">        <span class="comment">// 不再退出 SplashActivity</span></span><br><span class="line">        <span class="comment">// finish();</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次尝试，即可在最近任务中看到 MainActivity 从启动后就一直存在未被销毁，只不过因为 App 进入后台后，点击图标启动时每次启动的都是 SplashActivity，且直接走了 <code>finishi()</code> 的逻辑（如果删除 <code>finish()</code> 的逻辑，就会停留在 SplashActivity 界面中），所以一直没有机会被唤醒而已：</p>
+<p><img data-src="./show_in_recent_task.gif" alt="在最近任务中显示 MainActivity 的记录" title="@ASSET"></p>
+<h3 id="3-3-SingleInstance对Activity栈的影响"><a href="#3-3-SingleInstance对Activity栈的影响" class="headerlink" title="3.3 SingleInstance对Activity栈的影响"></a>3.3 SingleInstance对Activity栈的影响</h3><p>（1）思考一个问题，从一个 App 返回到桌面（App 在后台）后，「点击 App 图标打开」和「从最近任务列表打开」有什么不同？</p>
+<p>答案如下：</p>
+<ul>
+<li>Android 的桌面（或者应用列表）本身也是一个 Activity（Launcher），因此从桌面点击 App 图标打开一个 Activity，本质上也是一个 Activity 通过 <code>startActivity()</code> 启动另一个 Activity 的过程，只不过此时会默认给 Intent 添加一个 <code>FLAG_ACTIVITY_NEW_TASK</code> 的 Flag，作用是先查找目标 Activity 指定的 <code>taskAffinity</code> 栈是否存在，如果存在就会直接唤起这个栈。</li>
+<li>Android 在通过点击 App 图标启动时，启动的是 Manifest 中指定了 <code>android.intent.category.LAUNCHER</code> 属性的 Activity，而最近任务列表中显示的则是 App 最后活跃的栈中的栈顶 Activity。</li>
+</ul>
+<p>（2）因此，对上文 4.1 节的异常现象完整回放整个 App 的 Activity 栈状态。其中，用 <code>/</code> 表示一个栈的栈底，用 <code>&gt;</code> 表示一个栈的栈顶，用 <code>***</code> 表示会被显示在最近任务记录中的栈，且最后活跃的栈位于最上方：</p>
+<ol>
+<li><p>首次点击 App 图标打开 App，打开的是作为 <code>android.intent.category.LAUNCHER</code> 的 SplashActivity：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ SplashActivity &gt; ***</span><br><span class="line">/ Launcher &gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SplashActivity 启动 MainActivity，由于 SplashActivity 是 singleInstance 模式而独享一个栈，因此 MainActivity 被启动到新建的栈中：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/ MainActivity &gt; ***</span><br><span class="line">/ SplashActivity &gt;</span><br><span class="line">/ Launcher &gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SplashActivity 调用 <code>finish()</code>，由于退出后其栈内所有 Activity 均已退出，所以该栈也被清理销毁：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ MainActivity &gt; ***</span><br><span class="line">/ Launcher &gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 MainActivity 中点击 Home 键返回桌面，MainActivity 及其栈进入后台：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ Laucher &gt;</span><br><span class="line">/ MainActivity &gt; ***</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据栈状态可知，此时最近任务中记录的是 MainActivity 及其栈，因此从最近任务中点击进入，也自然会激活 MainActivity：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ MainActivity &gt; ***</span><br><span class="line">/ Launcher &gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再次点击 Home 键回到桌面，MainActivity 再次进入后台：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ Laucher &gt;</span><br><span class="line">/ MainActivity &gt; ***</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>点击 App 图标打开 App，Launcher 通过 Manifest 定义的 <code>android.intent.category.LAUNCHER</code> 打开 SplashActivity，由于设置了 <code>singleInstance</code>，所以新建一个栈并在其中打开 SplashActivity：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/ SplashActivity &gt; ***</span><br><span class="line">/ Launcher &gt;</span><br><span class="line">/ MainActivity &gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SplashActivity 执行了 <code>finish()</code>，并且由于栈内所有 Activity 均已销毁，该栈也被清理销毁：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/ Launcher &gt;</span><br><span class="line">/ MainActivity &gt;</span><br></pre></td></tr></table></figure>
+
+<p> <strong>正是这一步将最近任务中的 App 记录清理了。因为默认情况下，一个 App 只在最近任务中记录一个栈，也就是最后活跃的栈，这个栈一旦被销毁，又没有其他栈被激活，则 App 记录就会从最近任务中删除。</strong></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luisliu.cn/post/android/android-activity_lifecycle/" title="Android-Activity生命周期">https://luisliu.cn/post/android/android-activity_lifecycle/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/" rel="tag"><i class="fa fa-tag"></i> 四大组件</a>
+              <a href="/tags/Activty/" rel="tag"><i class="fa fa-tag"></i> Activty</a>
+              <a href="/tags/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="tag"><i class="fa fa-tag"></i> 生命周期</a>
+              <a href="/tags/taskAffinity/" rel="tag"><i class="fa fa-tag"></i> taskAffinity</a>
+              <a href="/tags/%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F/" rel="tag"><i class="fa fa-tag"></i> 启动模式</a>
+              <a href="/tags/SingleInstance/" rel="tag"><i class="fa fa-tag"></i> SingleInstance</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/android/android-build_install/" rel="prev" title="Android-编译、打包、安装">
+                  <i class="fa fa-chevron-left"></i> Android-编译、打包、安装
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/android/android-itc/" rel="next" title="Android-线程间通信">
+                  Android-线程间通信 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="en" data-href="/post/android/android-activity_lifecycle/" selected="">
+          English
+        </option>
+      
+        <option value="zh-CN" data-href="/zh-CN/post/android/android-activity_lifecycle/" selected="">
+          简体中
+        </option>
+      
+    </select>
+  </div>
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">476k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:49</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>

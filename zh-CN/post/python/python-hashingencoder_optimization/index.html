@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="基于 Python 实现支持多进程的 HashingEncoder。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashingEncoder-多进程支持">
+<meta property="og:url" content="https://luisliu.cn/zh-CN/post/python/python-hashingencoder_optimization/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="基于 Python 实现支持多进程的 HashingEncoder。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-06-20T06:26:51.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="SKLearn">
+<meta property="article:tag" content="HashingEncoder">
+<meta property="article:tag" content="哈希编码">
+<meta property="article:tag" content="多线程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/zh-CN/post/python/python-hashingencoder_optimization/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luisliu.cn/post/python/python-hashingencoder_optimization/","path":"zh-CN/post/python/python-hashingencoder_optimization/","title":"HashingEncoder-多进程支持"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>HashingEncoder-多进程支持 | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/10/30 - 20:00:15</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>关于</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HashingEncoder-%E5%A4%9A%E8%BF%9B%E7%A8%8B%E6%94%AF%E6%8C%81"><span class="nav-text">HashingEncoder-多进程支持</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%BA%90%E7%A0%81"><span class="nav-text">1. 源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%94%B9%E8%BF%9B%E6%80%9D%E8%B7%AF"><span class="nav-text">2. 改进思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%90%86%E8%AE%BA%E6%94%AF%E6%8C%81"><span class="nav-text">2.1 理论支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%BB%A3%E7%A0%81%E6%80%9D%E6%83%B3"><span class="nav-text">2.2 代码思想</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91"><span class="nav-text">3. 踩过的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%97%AE%E9%A2%98"><span class="nav-text">3.1 多线程和多进程问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%B9%B6%E8%A1%8C%E9%A1%BA%E5%BA%8F%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE%E9%97%AE%E9%A2%98"><span class="nav-text">3.2 并行顺序读取数据问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%BC%96%E7%A0%81%E5%90%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E4%BF%9D%E5%AD%98%E9%97%AE%E9%A2%98"><span class="nav-text">3.3 编码后数据的保存问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="nav-text">3.4 结果数据顺序问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E5%AD%90%E8%BF%9B%E7%A8%8B%E8%B0%83%E7%94%A8%E9%97%AE%E9%A2%98"><span class="nav-text">3.5 子进程调用问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E9%97%AE%E9%A2%98"><span class="nav-text">3.6 深拷贝问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BC%98%E5%8C%96%E6%95%88%E6%9E%9C"><span class="nav-text">4. 优化效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/python/python-hashingencoder_optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HashingEncoder-多进程支持
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-06-20 14:26:51" itemprop="dateCreated datePublished" datetime="2019-06-20T14:26:51+08:00">2019-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
+          <a href="/tags/SKLearn/" rel="tag"><i class="fa fa-tag"></i> SKLearn</a>
+          <a href="/tags/HashingEncoder/" rel="tag"><i class="fa fa-tag"></i> HashingEncoder</a>
+          <a href="/tags/%E5%93%88%E5%B8%8C%E7%BC%96%E7%A0%81/" rel="tag"><i class="fa fa-tag"></i> 哈希编码</a>
+          <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 多线程</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>11k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">基于 Python 实现支持多进程的 HashingEncoder。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="HashingEncoder-多进程支持"><a href="#HashingEncoder-多进程支持" class="headerlink" title="HashingEncoder-多进程支持"></a>HashingEncoder-多进程支持</h1><p>对数据做特征工程时哈希编码器是常用分类器，Scikit-Learn 扩展工具包提供了一个默认基于 MD5 的哈希工具，可以将特征转换为指定长度的数字特征；但这个工具包的默认哈希有一个很致命的问题：慢。</p>
+<p>测试发现慢主要原因是没有利用多核 CPU 的并行能力，基于该结论通过增加并发的方式来提高编码速度，完整源码参阅：<a target="_blank" rel="noopener" href="https://github.com/scikit-learn-contrib/category_encoders/blob/master/category_encoders/hashing.py" title="@LINK">ScikitLearn_Contrib - hashing.py</a>。</p>
+<hr>
+<h2 id="1-源码"><a href="#1-源码" class="headerlink" title="1. 源码"></a>1. 源码</h2><p>遇到问题第一步：查接口。通常 Python 中支持并行处理的接口都会有类似 <code>n_thread</code> 的参数，可惜 sklearn 内置的 HashingEncoder 并没有。</p>
+<p>遇到问题第二部：看源码。HashingEncoder 的核心源码部分如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hashing_trick</span>(<span class="params">X_in, hashing_method=<span class="string">&#x27;md5&#x27;</span>, N=<span class="number">2</span>, cols=<span class="literal">None</span>, make_copy=<span class="literal">False</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;A basic hashing implementation with configurable dimensionality/precision</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Performs the hashing trick on a pandas dataframe, `X`, using the hashing method from hashlib</span></span><br><span class="line"><span class="string">    identified by `hashing_method`.  The number of output dimensions (`N`), and columns to hash (`cols`) are</span></span><br><span class="line"><span class="string">    also configurable.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    X_in: pandas dataframe</span></span><br><span class="line"><span class="string">        description text</span></span><br><span class="line"><span class="string">    hashing_method: string, optional</span></span><br><span class="line"><span class="string">        description text</span></span><br><span class="line"><span class="string">    N: int, optional</span></span><br><span class="line"><span class="string">        description text</span></span><br><span class="line"><span class="string">    cols: list, optional</span></span><br><span class="line"><span class="string">        description text</span></span><br><span class="line"><span class="string">    make_copy: bool, optional</span></span><br><span class="line"><span class="string">        description text</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns</span></span><br><span class="line"><span class="string">    -------</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    out : dataframe</span></span><br><span class="line"><span class="string">        A hashing encoded dataframe.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    References</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    Cite the relevant literature, e.g. [1]_.  You may also cite these</span></span><br><span class="line"><span class="string">    references in the notes section above.</span></span><br><span class="line"><span class="string">    .. [1] Kilian Weinberger; Anirban Dasgupta; John Langford; Alex Smola; Josh Attenberg (2009). Feature Hashing</span></span><br><span class="line"><span class="string">    for Large Scale Multitask Learning. Proc. ICML.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">if</span> hashing_method <span class="keyword">not</span> <span class="keyword">in</span> hashlib.algorithms_available:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&#x27;Hashing Method: %s Not Available. Please use one from: [%s]&#x27;</span> % (</span><br><span class="line">                hashing_method,</span><br><span class="line">                <span class="string">&#x27;, &#x27;</span>.join([<span class="built_in">str</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> hashlib.algorithms_available])</span><br><span class="line">            ))</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            _ = hashlib.new(hashing_method)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">&#x27;Hashing Method: %s Not Found.&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> make_copy:</span><br><span class="line">        X = X_in.copy(deep=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        X = X_in</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> cols <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        cols = X.columns.values</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hash_fn</span>(<span class="params">x</span>):</span></span><br><span class="line">        tmp = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(N)]</span><br><span class="line">        <span class="keyword">for</span> val <span class="keyword">in</span> x.values:</span><br><span class="line">            <span class="keyword">if</span> val <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                hasher = hashlib.new(hashing_method)</span><br><span class="line">                <span class="keyword">if</span> sys.version_info[<span class="number">0</span>] == <span class="number">2</span>:</span><br><span class="line">                    hasher.update(<span class="built_in">str</span>(val))</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    hasher.update(<span class="built_in">bytes</span>(<span class="built_in">str</span>(val), <span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">                tmp[<span class="built_in">int</span>(hasher.hexdigest(), <span class="number">16</span>) % N] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> pd.Series(tmp, index=new_cols)</span><br><span class="line"></span><br><span class="line">    new_cols = [<span class="string">&#x27;col_%d&#x27;</span> % d <span class="keyword">for</span> d <span class="keyword">in</span> <span class="built_in">range</span>(N)]</span><br><span class="line"></span><br><span class="line">    X_cat = X.loc[:, cols]</span><br><span class="line">    X_num = X.loc[:, [x <span class="keyword">for</span> x <span class="keyword">in</span> X.columns.values <span class="keyword">if</span> x <span class="keyword">not</span> <span class="keyword">in</span> cols]]</span><br><span class="line"></span><br><span class="line">    X_cat = X_cat.apply(hash_fn, axis=<span class="number">1</span>)</span><br><span class="line">    X_cat.columns = new_cols</span><br><span class="line"></span><br><span class="line">    X = pd.concat([X_cat, X_num], axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> X</span><br></pre></td></tr></table></figure>
+
+<p><del>一个 <code>for</code> 冲到底，什么叫简单粗暴啊（后仰）</del></p>
+<p>默认情况 Python 没有对多核环境做多线程优化，这意味着多个线程一定跑在同一个核心上，这在处理 UI、IO 密集型任务时可以更彻底发挥单核性能，但对于特征工程这种计算密集型任务来说，GIL 全局锁就是 Debuff。</p>
+<hr>
+<h2 id="2-改进思路"><a href="#2-改进思路" class="headerlink" title="2. 改进思路"></a>2. 改进思路</h2><h3 id="2-1-理论支持"><a href="#2-1-理论支持" class="headerlink" title="2.1 理论支持"></a>2.1 理论支持</h3><p>关于什么是哈希编码的内容网上有很多了。但在开始优化之前，需要考虑一个问题：</p>
+<blockquote>
+<p>按顺序依次编码，和多进程分别编码再拼接，最后的结果是一样的吗？</p>
+<p>换言之，哈希编码是否依赖数据之间的联系？如果多进程编码会导致结果变化，那一切都是白费功夫。</p>
+</blockquote>
+<p>幸运的是，哈希编码是对数据原始信息的编码，与数据间的联系无关，只要规定好输入特征和输出维度，最终的输出是确定的。也就是说，每一次送去编码的进程，其数据都是独立的，并且完全可以分开编码而不需要考虑别的数据，只要给每个进程设置相同的编码算法和输出维度，最后再将每个独立的数据块按照原数据的顺序重新排列即可。</p>
+<blockquote>
+<p>哈希编码的大致核心思想：</p>
+<ol>
+<li>哈希表把输入散列到指定的输出范围内</li>
+<li>对于不在训练数据的散列表中的输入，依然可以通过同样的哈希算法计算出散列值</li>
+<li>只要指定了相同的散列范围，新的输入也会具有相同的输出特征维度</li>
+<li>新输入可以直接进行哈希编码，而不需要再对整体数据重新处理，因此支持在线学习</li>
+<li>只有原始值非零，哈希编码才有效，因此可以保持编码前后的稀疏性</li>
+</ol>
+<p>参考的理论基础资料：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33762321/article/details/88275111">数据特征处理之特征哈希（Feature Hashing）</a></li>
+<li><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1593454269874725931">人工智能之机器学习篇——哈希学习learning to hash</a></li>
+<li><a target="_blank" rel="noopener" href="http://breezedeus.github.io/2014/11/20/breezedeus-feature-hashing.html">特征哈希（Feature Hashing）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.datalearner.com/blog/1051537932880901">数据特征处理之特征哈希（Feature Hashing）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/laolu1573/article/details/79410187">Feature hashing(特征哈希)</a></li>
+</ul>
+</blockquote>
+<h3 id="2-2-代码思想"><a href="#2-2-代码思想" class="headerlink" title="2.2 代码思想"></a>2.2 代码思想</h3><p>既然是多核性能没发挥出来，那就从并行的角度出发，大致的实现逻辑如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multithreading</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HashingEncoder</span>:</span></span><br><span class="line">    self.multi_data = []</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 每个线程调用的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">work</span>():</span></span><br><span class="line">        get_data() <span class="comment"># 每个线程都从整体数据中获取一部分数据</span></span><br><span class="line">        hashing_data = hashing() <span class="comment"># 每个线程都单独进行哈希编码</span></span><br><span class="line">        self.multi_data.append(hashing_data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">transform</span>():</span></span><br><span class="line">        <span class="keyword">for</span> thread <span class="keyword">in</span> multi_num</span><br><span class="line">            multithreading.Thread.Thread(target=work).start</span><br><span class="line"></span><br><span class="line">        data = pandas.concat(multi_data, ignore_index=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>简单来说我想做的事情是：</p>
+<ol>
+<li>允许用户自定义并行线程数以及每个线程每次编码的样本数</li>
+<li>根据参数创建 n 个进程</li>
+<li>每个线程都依次从所有数据中不重复地顺序取出参数定义数量的数据</li>
+<li>每个线程都独立对自己取到的数据进行哈希编码</li>
+<li>每个线程哈希编码完后将返回数据存储进一个列表内</li>
+<li>将列表内的数据拼接成回一个整体。</li>
+</ol>
+<hr>
+<h2 id="3-踩过的坑"><a href="#3-踩过的坑" class="headerlink" title="3. 踩过的坑"></a>3. 踩过的坑</h2><h3 id="3-1-多线程和多进程问题"><a href="#3-1-多线程和多进程问题" class="headerlink" title="3.1 多线程和多进程问题"></a>3.1 多线程和多进程问题</h3><p>可以看到上面的 Demo 伪代码，由于客户端开发的习惯使我想当然地认为多线程可以解决 CPU 利用率的问题，因此第一次优化时我在一个小型样本 Demo 上选择了 multithreading，尽管从 <code>print</code> 看起来似乎确实是并行处理，但上数据压测就发现一切都还在单核上，因此只能利用 multiprocessing 解决。</p>
+<h3 id="3-2-并行顺序读取数据问题"><a href="#3-2-并行顺序读取数据问题" class="headerlink" title="3.2 并行顺序读取数据问题"></a>3.2 并行顺序读取数据问题</h3><p>与其他平台的并发工具类似，Python 中多进程管理也有两种方式，一个是自行创建实例，另一个是创建实例「池」。相比之下使用进程池有以下特点：</p>
+<ul>
+<li>不必关心每个进程的生命周期；</li>
+<li>可以指定进程执行完成后的返回值；</li>
+<li>ProcessPool 内部维护的进程都是由公共 Process 创建的，每个进程的上下文天然具有继承关系，因此可以互相共享进程锁等资源；</li>
+<li>内部已经通过 Pickle 中的 <code>dump(obj, file, protocol=None,)</code> 方法对参数进行了封装处理，已经实现了拷贝的支持；</li>
+<li>比手动管理要多一些调度 / 资源分配，会略微损失一些性能；</li>
+</ul>
+<blockquote>
+<p>不过由于 Python 较少用在对性能敏感的场景，因此在很多时候进程池其实是更好的方案，此处选择手动管理仅是为了更好的示例。</p>
+</blockquote>
+<p>现在假设我们开启 4 个进程同时执行一个任务，代码应该大致如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>():</span></span><br><span class="line">    get_data() <span class="comment"># 每个线程都从整体数据中获取第 index 部分的数据</span></span><br><span class="line"></span><br><span class="line">process_list = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">    process.append(multiprocessing.Process(target=work, args=()))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> process_list:</span><br><span class="line">    p.start()</span><br><span class="line">    p.join()</span><br></pre></td></tr></table></figure>
+
+<p>由于在多核环境下，多进程是真正的并发，因此需要考虑数据异步读写的同步性问题。高端的框架往往使用简单的逻辑，加锁 + 分治就是处理低并发最经济的方式。为了确保每个进程能自己判断所需的数据范围，需要一个变量用于存放已被读取的范围，还需要注意一下锁的范围、锁重入、锁粗化的问题。代码思路就变成了（省略一些校验、判断细节）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.lock = multiprocessing.Lock()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>(<span class="params">self, done_index</span>):</span></span><br><span class="line">    <span class="keyword">if</span> self.lock.acquire():</span><br><span class="line">        start = done_index</span><br><span class="line">        end = done_index + max_samples  <span class="comment"># max_samples 是用户定义的每个进程单次读取数据量</span></span><br><span class="line">        done_index = end  <span class="comment"># 更新已完成的下标</span></span><br><span class="line">        self.lock.release()</span><br><span class="line">        get_data(start, end)</span><br><span class="line">        hashing()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.lock.release()</span><br><span class="line"></span><br><span class="line">done_index = <span class="number">0</span>  <span class="comment"># 初始化下标为从 0 开始</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(max_process):  <span class="comment"># max_process 是用户定义的最大并行进程数</span></span><br><span class="line">    process.append(multiprocessing.Process(target=work, args=(done_index)))</span><br><span class="line">  ...</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<p>聪明的你一定会发现一个问题：由于进程在创建时会为自己创建一份上下文拷贝，并运行在自己的独立内存中，所以每个进程在执行完成后，修改的 <code>done_index</code> 都只是自己内存中的引用（即便用 <code>global</code> 修饰为全局变量也同样），因此为了在进程间共享，就需要用 <code>multiprocessing.Value()</code> 实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.lock = multiprocessing.Lock()</span><br><span class="line">    self.done_index = multiprocessing.Value(<span class="string">&#x27;d&#x27;</span>, <span class="number">0</span>)</span><br><span class="line">    self.data_lines = <span class="built_in">len</span>(data)  <span class="comment"># 样本总数目</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>(<span class="params">self</span>):</span></span><br><span class="line">    <span class="keyword">if</span> self.lock.acquire():  <span class="comment"># 加锁，已确保自己获取到的 done_index 是最新的</span></span><br><span class="line">        start = self.done_index.value</span><br><span class="line">        end = start + max_samples  <span class="comment"># max_samples 是用户定义的每个进程单次读取数据量</span></span><br><span class="line">        self.done_index.value = end  <span class="comment"># 更新已完成的下标</span></span><br><span class="line">        self.lock.release() <span class="comment"># 释放锁，允许其他进程操作更新 done_index</span></span><br><span class="line">        get_data(start, end)</span><br><span class="line">        hashing()</span><br><span class="line">        <span class="keyword">if</span> end &lt; self.data_lines:  <span class="comment"># 尚有未完成的数据，再次调用分配</span></span><br><span class="line">            self.work()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.lock.release()</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-编码后数据的保存问题"><a href="#3-3-编码后数据的保存问题" class="headerlink" title="3.3 编码后数据的保存问题"></a>3.3 编码后数据的保存问题</h3><p>现在并发已经正常了，数据一致性也保证了，只要能在编码完成后把最终结果通知给主进程即可。</p>
+<blockquote>
+<p>这体现了进程池的好处之一：可以指定进程的返回值。</p>
+</blockquote>
+<p>由于手动管理模式并没有返回值，因此想借鉴上面的方法使用一个共享变量来存放，但查了一下 Api 发现 <code>multiprocessing.Value()</code> 只支持几种基本类型，而需要收集的数据类型复杂：</p>
+<blockquote>
+<p>表格来源：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Value" title="@LINK">multiprocessing — Process-based parallelism</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/array.html#module-array" title="@LINK">array — Efficient arrays of numeric values</a></li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">Type code</th>
+<th align="center">C Type</th>
+<th align="center">Python Type</th>
+<th align="center">Minimm size in bytes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">‘c’</td>
+<td align="center">char</td>
+<td align="center">character</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">‘b’</td>
+<td align="center">signed char</td>
+<td align="center">int</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">‘B’</td>
+<td align="center">unsigned char</td>
+<td align="center">int</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">‘u’</td>
+<td align="center">Py_UNICODE</td>
+<td align="center">Unicode character</td>
+<td align="center">2 (see note)</td>
+</tr>
+<tr>
+<td align="center">‘h’</td>
+<td align="center">signed short</td>
+<td align="center">int</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">‘H’</td>
+<td align="center">unsigned short</td>
+<td align="center">int</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">‘i’</td>
+<td align="center">signed int</td>
+<td align="center">int</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">‘I’</td>
+<td align="center">unsigned int</td>
+<td align="center">long</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">‘l’</td>
+<td align="center">signed long</td>
+<td align="center">int</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">‘L’</td>
+<td align="center">unsigned long</td>
+<td align="center">long</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">‘f’</td>
+<td align="center">float</td>
+<td align="center">float</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td align="center">‘d’</td>
+<td align="center">double</td>
+<td align="center">float</td>
+<td align="center">8</td>
+</tr>
+</tbody></table>
+<p>不过 multiprocessing 提供了一个非常好的内置方案：<code>Queue</code>。<code>multiprocessing.Queue</code> 允许进程通过加锁以 FIFO 的顺序使用 <code>put()</code> 或 <code>get()</code> 读写对象，且允许设置读写超时后中断锁并放弃操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.hashing_parts = multiprocessing.Queue()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>(<span class="params">self</span>):</span></span><br><span class="line">    ...</span><br><span class="line">    data = hashing()</span><br><span class="line">    self.hashing_parts.put(data)</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="comment"># 主线程等待所有子线程执行完毕</span></span><br><span class="line">list_data = []</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> hashing_parts.empty():</span><br><span class="line">    list_data.append(hashing_parts.get())</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-结果数据顺序问题"><a href="#3-4-结果数据顺序问题" class="headerlink" title="3.4 结果数据顺序问题"></a>3.4 结果数据顺序问题</h3><p>到这一步，已经可以将各个进程的编码结果存在 <code>list_data</code> 中，只需要使用 <code>pandas.concat(list_data, ignore_index = 0)</code> 就能把所有数据拼起来成为完整的编码后数据，但聪明的你一定又会想到，并发处理的返回顺序是不可预知的，直接按进程完成的顺序拼接很可能会改变原始样本数据的顺序：</p>
+<blockquote>
+<p>With return_df=False, a different ordering of the samples could lead into nasty surprises, because numpy.ndarray doesn’t preserve index -&gt; the training data would not be aligned with the labels anymore.</p>
+</blockquote>
+<p>因此还需要利用字典来存放当前数据块的索引位置与数据块的关系，最后主进程获取所有的字典数据，并按照键值顺序排序后再拼接：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.hashing_parts = multiprocessing.Queue()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>(<span class="params">self</span>):</span></span><br><span class="line">    ...</span><br><span class="line">    start = ...  <span class="comment"># 当前数据块起始下标</span></span><br><span class="line">    end = ...  <span class="comment"># 当前数据块结束下标</span></span><br><span class="line">    data = hashing()</span><br><span class="line">    part_index = <span class="built_in">int</span>(math.ceil(end_index / self.max_sample))</span><br><span class="line">    self.return_data.put(&#123;part_index: data&#125;&#125;)</span><br><span class="line"></span><br><span class="line">list_data = &#123;&#125;</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> hashing_parts.empty():</span><br><span class="line">    list_data.update(hashing_parts.get())  <span class="comment"># 取出所有的代码块（无序状态）</span></span><br><span class="line">sort_data = []</span><br><span class="line"><span class="keyword">for</span> part_index <span class="keyword">in</span> <span class="built_in">sorted</span>(list_data):  <span class="comment"># 将所有字典型数据块按照 key 排序后把 value 取出</span></span><br><span class="line">    sort_data.append(list_data[part_index])</span><br><span class="line">data = pandas.concat(sort_data, ignore_index=<span class="literal">True</span>)  <span class="comment"># 拼接数据</span></span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>part_index</code> 的算法是用当前已完成的下标除以每个进程单次处理的下标，并向上取整（为了让结果更直观地从 1 开始），来作为当前数据块的定位。</p>
+<h3 id="3-5-子进程调用问题"><a href="#3-5-子进程调用问题" class="headerlink" title="3.5 子进程调用问题"></a>3.5 子进程调用问题</h3><p>到了这一步，终于 Demo 测试已经完整支持了并发，但聪明的你一定会问：我们写代码不仅要能用还要足够鲁棒，你测试过代码吗？</p>
+<blockquote>
+<p><del>好了小明你出去，这里不允许提问。</del></p>
+</blockquote>
+<p>由于 sklearn-category_encoders 的 CI 接入了 nose 单元测试，流水线在跑单元测试代码时报了这么一个错误：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Runtime Error: Lock objects should only be shared between processes through inheritance.</span><br><span class="line"></span><br><span class="line">意思大致是进程锁只能被锁的创建者的子进程共享。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这体现了进程池的好处之一：每个进程天然具有继承关系，可以共享进程锁等资源。</p>
+</blockquote>
+<p>为了解决这个问题，可以通过 <code>multiprocessing.Manager.XXX</code> 来代替所有需要进程共享的资源：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.lock = multiprocessing.Manager.Lock()</span><br><span class="line">    self.hashing_parts = multiprocessing.Manager.Queue()</span><br><span class="line">    self.done_index = multiprocessing.Manager.Value(<span class="string">&#x27;d&#x27;</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-6-深拷贝问题"><a href="#3-6-深拷贝问题" class="headerlink" title="3.6 深拷贝问题"></a>3.6 深拷贝问题</h3><p>现在数据测试已经通过，CI 测试也已经通过，可当使用这套 HashingEncoder 运行一个大数据量的基准测试时，multiprocessing 的 Manager 又报错了（省略部分信息）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    File <span class="string">&quot;/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/copy.py&quot;</span>, line <span class="number">180</span>, <span class="keyword">in</span> deepcopy</span><br><span class="line">        y = _reconstruct(x, memo, *rv)</span><br><span class="line">    File <span class="string">&quot;/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/copy.py&quot;</span>, line <span class="number">280</span>, <span class="keyword">in</span> _reconstruct</span><br><span class="line">        state = deepcopy(state, memo)</span><br><span class="line">    File <span class="string">&quot;/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/copy.py&quot;</span>, line <span class="number">150</span>, <span class="keyword">in</span> deepcopy</span><br><span class="line">        y = copier(x, memo)</span><br><span class="line">    File <span class="string">&quot;/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/copy.py&quot;</span>, line <span class="number">240</span>, <span class="keyword">in</span> _deepcopy_dict</span><br><span class="line">        y[deepcopy(key, memo)] = deepcopy(value, memo)</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">multiprocessing.managers.RemoteError:</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">Unserializable message: Traceback (most recent call last):</span><br><span class="line">    File <span class="string">&quot;/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/multiprocessing/managers.py&quot;</span>, line <span class="number">289</span>, <span class="keyword">in</span> serve_client</span><br><span class="line">        send(msg)</span><br><span class="line">    File <span class="string">&quot;/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/multiprocessing/connection.py&quot;</span>, line <span class="number">206</span>, <span class="keyword">in</span> send</span><br><span class="line">        self._send_bytes(_ForkingPickler.dumps(obj))</span><br><span class="line">    File <span class="string">&quot;/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/multiprocessing/reduction.py&quot;</span>, line <span class="number">51</span>, <span class="keyword">in</span> dumps</span><br><span class="line">        cls(buf, protocol).dump(obj)</span><br><span class="line">TypeError: can<span class="string">&#x27;t pickle _thread.lock objects</span></span><br></pre></td></tr></table></figure>
+
+<p>Traceback 中的信息不够清晰，但是发现了一个关键信息：<strong>deepcopy</strong>，为了验证写个小测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> copy <span class="keyword">import</span> deepcopy</span><br><span class="line"></span><br><span class="line">he = HashingEncoder()</span><br><span class="line">he_cp = deepcopy(he)</span><br></pre></td></tr></table></figure>
+
+<p>报错复现，看来主要问题就出在深拷贝上。从网上搜，能参考的信息实在太少了，不过参考 Pickle 模块的作用（用于 Python 特有数据类型和基本数据类型转换），聪明的你一定又想到了：这不就是序列化吗？</p>
+<blockquote>
+<p>这体现了进程池的好处之一：内部对参数进行了封装处理，实现了拷贝的支持。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.lock = multiprocessing.Manager.Lock()</span><br><span class="line">    self.hashing_parts = multiprocessing.Manager.Queue()</span><br><span class="line">    self.done_index = multiprocessing.Manager.Value(<span class="string">&#x27;d&#x27;</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.lock ...</span><br><span class="line">    self.hashing_parts ...</span><br><span class="line">    self.done_index ...</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(max_process):  <span class="comment"># max_process 是用户定义的最大并行进程数</span></span><br><span class="line">    process.append(multiprocessing.Process(target=work, args=()))</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><code>lock</code>, <code>hashing_parts</code>, <code>done_index</code>，都是在 HashingEncoder 初始化时定义的，虽然这些都不是我的自定义类对象，但报错信息的最后一行：<code>TypeError: can&#39;t pickle \_thread.lock objects</code> 明确指出：进程锁 Lock 是不能被 pickle 转化的，事实上，另外两种 Value 和 Queue 都不可以，只不过因为执行到 pickle Lock 的时候就报错中断了而已。</p>
+<p>不过因为这几个参数的目的只是为了运行时记录一下数据处理进度并不需要实现得太复杂，既然造成这个错误的原因是开启子进程时，参数带有自定义类对象（通常是不可被 pickle 的），那就把这些 Manager() 下的对象都放到创建子进程之前，并通过参数传递进去即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>(<span class="params">self, _lock, _hashing_parts, _done_index</span>):</span></span><br><span class="line">    _lock ...</span><br><span class="line">    _hashing_parts ...</span><br><span class="line">    _done_index ...</span><br><span class="line"></span><br><span class="line">lock = multiprocessing.Manager.Lock()  <span class="comment"># 创建为局部变量</span></span><br><span class="line">hashing_parts = multiprocessing.Manager.Queue()  <span class="comment"># 创建为局部变量</span></span><br><span class="line">done_index = multiprocessing.Manager.Value(<span class="string">&#x27;d&#x27;</span>, <span class="number">0</span>)  <span class="comment"># 创建为局部变量</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(max_process):  <span class="comment"># max_process 是用户定义的最大并行进程数</span></span><br><span class="line">    process.append(</span><br><span class="line">        <span class="comment"># 通过参数传递</span></span><br><span class="line">        multiprocessing.Process(target=work,</span><br><span class="line">                                args=(lock, hashing_parts, done_index)))</span><br></pre></td></tr></table></figure>
+
+<p>另外，在查找 multiprocessing 相关内容的时候，无意间看到一个因为 <code>logging</code> 导致多进程死锁的问题，出现概率较低，记录在附录【10】。作者自己的解答为：</p>
+<blockquote>
+<p>由于主进程中使用了thread+mutiprocessing(fork)，导致logging出现死锁，现象就是遇到子进程里第一句logging就hang住。问题只会发生在Linux下。</p>
+</blockquote>
+<p>以及在本地进行单元测试时通常使用 nose 模块测试，但在提交 PR 时测试是部署在 CI 上进行的，这里面也遇到了一些问题，例如代码文件内的 example 的输入和输出必须是真实运行结果，CI 检测时会真实运行 example 的输入，并且所写的输出也要和 CI 运行结果一致。</p>
+<hr>
+<h2 id="4-优化效果"><a href="#4-优化效果" class="headerlink" title="4. 优化效果"></a>4. 优化效果</h2><p>释放多核能力，相比单核的提升当然是巨大的，不信你问问 Intel 和 AMD。放上一些毫无悬念的对比测试：</p>
+<table>
+<thead>
+<tr>
+<th align="center">样本数量</th>
+<th align="center">特征数量</th>
+<th align="center">CPU 物理核心数</th>
+<th align="center">优化前编码耗时</th>
+<th align="center">优化后编码耗时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">100,000</td>
+<td align="center">2</td>
+<td align="center">8</td>
+<td align="center">166.02 s</td>
+<td align="center">25.79 s</td>
+</tr>
+<tr>
+<td align="center">1,000,000</td>
+<td align="center">8</td>
+<td align="center">8</td>
+<td align="center">1.89 h</td>
+<td align="center">15.56 min</td>
+</tr>
+<tr>
+<td align="center">50,000,000</td>
+<td align="center">4</td>
+<td align="center">12</td>
+<td align="center">48.22 h</td>
+<td align="center">4.39 h</td>
+</tr>
+</tbody></table>
+<p>（测试都是在 ECS 上跑出来的，真金白银……）</p>
+<p>The End</p>
+<hr>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chenyulancn/article/details/77836593" title="@LINK">python多进程共享变量Value使用tips</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27292549/article/details/78929296" title="@LINK">python中的multiprocessing在map函数中的加锁lock处理方式</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41935140/article/details/81153611" title="@LINK">使用进程池时遇到的坑…</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38765321/article/details/88376031" title="@LINK">TypeError: can’t pickle _thread.lock objects</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/SuKiWX/p/8804974.html" title="@LINK">python中的GIL详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kaituorensheng/p/4445418.html" title="@LINK">Python多进程编程</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gengyi/p/8647950.html" title="@LINK">python学习笔记——multiprocessing 多进程组件-队列Queue</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013066730/article/details/82763115" title="@LINK">python多进程（multiprocessing）中的Queue，Pipe</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sch01ar/p/8215042.html" title="@LINK">Python多进程-进程间数据的传递</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000005919174" title="@LINK">使用multiprocessing.Process调用start方法后，有较小的几率子进程中run方法未执行</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8978aceac3b6" title="@LINK">基于travis-ci的单元自测</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33762321/article/details/88275111" title="@LINK">数据特征处理之特征哈希（Feature Hashing）</a></li>
+<li><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1593454269874725931&wfr=spider&for=pc&isFailFlag=1" title="@LINK">人工智能之机器学习篇——哈希学习learning to hash</a></li>
+<li><a target="_blank" rel="noopener" href="http://breezedeus.github.io/2014/11/20/breezedeus-feature-hashing.html" title="@LINK">特征哈希（Feature Hashing）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.datalearner.com/blog/1051537932880901" title="@LINK">数据特征处理之特征哈希（Feature Hashing）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/laolu1573/article/details/79410187" title="@LINK">Feature hashing(特征哈希)</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/vim_wj/article/details/78300239" title="@LINK">github—-向开源框架提交pr的过程</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luisliu.cn/post/python/python-hashingencoder_optimization/" title="HashingEncoder-多进程支持">https://luisliu.cn/post/python/python-hashingencoder_optimization/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"><i class="fa fa-tag"></i> AI</a>
+              <a href="/tags/SKLearn/" rel="tag"><i class="fa fa-tag"></i> SKLearn</a>
+              <a href="/tags/HashingEncoder/" rel="tag"><i class="fa fa-tag"></i> HashingEncoder</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E7%BC%96%E7%A0%81/" rel="tag"><i class="fa fa-tag"></i> 哈希编码</a>
+              <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 多线程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/linux/linux-process/" rel="prev" title="Linux-Process">
+                  <i class="fa fa-chevron-left"></i> Linux-Process
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/note/note-cloud-server/" rel="next" title="Linux云服务器远程任务随笔">
+                  Linux云服务器远程任务随笔 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="en" data-href="/post/python/python-hashingencoder_optimization/" selected="">
+          English
+        </option>
+      
+        <option value="zh-CN" data-href="/zh-CN/post/python/python-hashingencoder_optimization/" selected="">
+          简体中
+        </option>
+      
+    </select>
+  </div>
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">476k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:49</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>

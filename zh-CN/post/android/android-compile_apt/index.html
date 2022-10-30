@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<meta name="generator" content="Hexo 5.4.0">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）自定义注解和 Processor（AutoService 自动注册、手动注册）；（2）Processor 增量模式（AutoService 增量模式、手动注册开启增量模式）；（3）APT 过滤处理元素（过滤注解、过滤被注解元素）；（4）APT 编译生成类。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-编译时注解APT">
+<meta property="og:url" content="https://luisliu.cn/zh-CN/post/android/android-compile_apt/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）自定义注解和 Processor（AutoService 自动注册、手动注册）；（2）Processor 增量模式（AutoService 增量模式、手动注册开启增量模式）；（3）APT 过滤处理元素（过滤注解、过滤被注解元素）；（4）APT 编译生成类。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-26T05:26:35.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Annotation">
+<meta property="article:tag" content="注解">
+<meta property="article:tag" content="Processor">
+<meta property="article:tag" content="APT">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/zh-CN/post/android/android-compile_apt/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luisliu.cn/post/android/android-compile_apt/","path":"zh-CN/post/android/android-compile_apt/","title":"Android-编译时注解APT"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android-编译时注解APT | LuisLiu</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2022/10/30 - 20:00:15</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        
+            
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>关于</a></li>
+
+
+      
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-APT"><span class="nav-text">Android-APT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%87%AA%E5%AE%9A%E4%B9%89APT"><span class="nav-text">1. 自定义APT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%88%9B%E5%BB%BA%E6%B3%A8%E8%A7%A3%E7%B1%BB"><span class="nav-text">1.1 创建注解类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%88%9B%E5%BB%BAProcessor"><span class="nav-text">1.2 创建Processor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%B3%A8%E5%86%8CProcessor"><span class="nav-text">1.3 注册Processor</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-1-AutoService%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C"><span class="nav-text">1.3.1 AutoService自动注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-2-META-INF%E4%B8%AD%E6%89%8B%E5%8A%A8%E6%B3%A8%E5%86%8C"><span class="nav-text">1.3.2 META-INF中手动注册</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E4%BD%BF%E7%94%A8Processor"><span class="nav-text">1.4 使用Processor</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Processor%E5%BC%80%E5%90%AF%E5%A2%9E%E9%87%8F%E7%BC%96%E8%AF%91"><span class="nav-text">2. Processor开启增量编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-AutoService%E5%BC%80%E5%90%AF%E5%A2%9E%E9%87%8F%E7%BC%96%E8%AF%91"><span class="nav-text">2.1 AutoService开启增量编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%89%8B%E5%8A%A8%E6%B3%A8%E5%86%8C%E5%BC%80%E5%90%AF%E5%A2%9E%E9%87%8F%E7%BC%96%E8%AF%91"><span class="nav-text">2.2 手动注册开启增量编译</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-APT%E8%BF%87%E6%BB%A4%E5%85%83%E7%B4%A0"><span class="nav-text">3. APT过滤元素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E9%80%89%E6%8B%A9%E9%9C%80%E8%A6%81%E8%BF%87%E6%BB%A4%E7%9A%84%E6%B3%A8%E8%A7%A3"><span class="nav-text">3.1 选择需要过滤的注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%A0%B9%E6%8D%AE%E6%B3%A8%E8%A7%A3%E8%BF%87%E6%BB%A4%E9%9C%80%E8%A6%81%E5%A4%84%E7%90%86%E7%9A%84%E5%85%83%E7%B4%A0"><span class="nav-text">3.2 根据注解过滤需要处理的元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-APT%E7%94%9F%E6%88%90%E7%B1%BB"><span class="nav-text">4. APT生成类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%9C%A8%E5%90%8C%E4%B8%80%E4%B8%AAModule%E4%B8%AD%E7%94%9F%E6%88%90%E7%B1%BB"><span class="nav-text">4.1 在同一个Module中生成类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%9B%AE%E5%BD%95%E7%94%9F%E6%88%90%E7%B1%BB"><span class="nav-text">4.2 在任意目录生成类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/android/android-compile_apt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-编译时注解APT
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-06-26 13:26:35" itemprop="dateCreated datePublished" datetime="2021-06-26T13:26:35+08:00">2021-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Annotation/" rel="tag"><i class="fa fa-tag"></i> Annotation</a>
+          <a href="/tags/%E6%B3%A8%E8%A7%A3/" rel="tag"><i class="fa fa-tag"></i> 注解</a>
+          <a href="/tags/Processor/" rel="tag"><i class="fa fa-tag"></i> Processor</a>
+          <a href="/tags/APT/" rel="tag"><i class="fa fa-tag"></i> APT</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>12k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）自定义注解和 Processor（AutoService 自动注册、手动注册）；（2）Processor 增量模式（AutoService 增量模式、手动注册开启增量模式）；（3）APT 过滤处理元素（过滤注解、过滤被注解元素）；（4）APT 编译生成类。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <span id="more"></span>
+
+<h1 id="Android-APT"><a href="#Android-APT" class="headerlink" title="Android-APT"></a>Android-APT</h1><p>APT (Annotation Processing Tool) 发生在 Javac 编译成 Class 文件之后、Class 编码成 Dex 之前。Processor 处理的输入数据是 Javac 编译后的 Class 信息，因此 APT 的执行流程在 Javac 之后，对于 Android 开发中多 Module 的场景，由于每一个 Module 都是并行编译的，只有在产生依赖关系时才会具有先后顺序，因此只要 Module 在 Gradle 中声明了 <code>annotationProcessor</code>，则每个声明了的 Module 都会独立在 Javac 之后调用对应的 Processor 进行处理。因此 Processor 的代码可能会被调用多次，而且每一次调用时的环境都是独立、互不影响的。</p>
+<h2 id="1-自定义APT"><a href="#1-自定义APT" class="headerlink" title="1. 自定义APT"></a>1. 自定义APT</h2><p>创建自定义的 Annotation Processor 有两个前提：</p>
+<ul>
+<li><strong>Processor Module 必须是纯 Java / Kotlin Library</strong></li>
+<li><strong>Module 只需要通过 <code>annotationProcessor xxx</code> 即可应用 APT，不需要也不能依赖 Processor Module</strong></li>
+</ul>
+<p>因此 APT 的整体结构一般分为如下几个部分：</p>
+<ul>
+<li>AnnotationModule：用于存放自定义注解类，并且为纯 Java / Kotlin Library（应为需要被 Processor Module 依赖，而后者也是纯 Java / Kotlin Library）；</li>
+<li>ProcessorModule：用于存放扫描自定义注解的 Processor，依赖 AnnotationModule，同样为纯 Java / Kotlin Library；</li>
+<li>APIModule：用于对外提供业务功能，因为 APT 的作用是根据注解完成一些自动化逻辑，因此通常还会提供一些接口，当然如果是一个纯粹服务于编译流程的 APT，可以没有该 Module。同样依赖 AnnotationModule，可以是纯 Java / Kotlin Library、也可以是一个 Android Library，。</li>
+</ul>
+<h3 id="1-1-创建注解类"><a href="#1-1-创建注解类" class="headerlink" title="1.1 创建注解类"></a>1.1 创建注解类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DemoAnnotation &#123;</span><br><span class="line">    <span class="comment">// 示例：如何为注解添加参数</span></span><br><span class="line">    <span class="comment">// 如果参数名为 value，则使用注解时可以隐式赋值</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> 0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-创建Processor"><a href="#1-2-创建Processor" class="headerlink" title="1.2 创建Processor"></a>1.2 创建Processor</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @SupportedOptions 注解搭配 #getSupportedOptions() 回调使用</span></span><br><span class="line"><span class="meta">@SupportedOptions(&#123;&quot;org.gradle.annotation.processing.aggregating&quot;&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoProcessor</span> <span class="keyword">extends</span> <span class="title">AbstractProcessor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Filer filer;</span><br><span class="line">    <span class="keyword">private</span> Messager messager;</span><br><span class="line">    <span class="keyword">private</span> Types typeUtils;</span><br><span class="line">    <span class="keyword">private</span> Elements elements;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化 Processor 环境，通常用于初始化 Filer，Message，ElementUtil。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ProcessingEnvironment processingEnvironment)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.init(processingEnvironment);</span><br><span class="line"></span><br><span class="line">        filer = processingEnvironment.getFiler();</span><br><span class="line">        messager = processingEnvironment.getMessager();</span><br><span class="line">        typeUtils = processingEnvironment.getTypeUtils();</span><br><span class="line">        elements = processingEnvironment.getElementUtils();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 支持的 JDK 版本，通常选择最新版。</span></span><br><span class="line"><span class="comment">     * 如果用到了某个版本 JDK 特性，则需要选择该版本或更新版本。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> SourceVersion <span class="title">getSupportedSourceVersion</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// return SourceVersion.RELEASE_8;</span></span><br><span class="line">        <span class="keyword">return</span> SourceVersion.latestSupported();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 指定 Processor 编译选项，需要 Processor 添加 <span class="doctag">@SupportedOptions</span> 并指定同样的 Options。</span></span><br><span class="line"><span class="comment">     * &lt;p/&gt;</span></span><br><span class="line"><span class="comment">     * 通过该方法可以指定 Processor 的编译方式，包括全量、增量两种：</span></span><br><span class="line"><span class="comment">     * &lt;ul&gt;</span></span><br><span class="line"><span class="comment">     *     &lt;li&gt;默认为全量编译。&lt;/li&gt;</span></span><br><span class="line"><span class="comment">     *     &lt;li&gt;在 META-INF 中注册 Processor 时指定为 isolating，则使用增量编译。&lt;/li&gt;</span></span><br><span class="line"><span class="comment">     *     &lt;li&gt;在 META-INF 中注册 Processor 时指定为 dynamic，则可在该方法中选择增量编译。&lt;/li&gt;</span></span><br><span class="line"><span class="comment">     * &lt;/ul&gt;</span></span><br><span class="line"><span class="comment">     * Note: 如果一个 Module 应用了 Processor 但又没有任何一个类被 Process、</span></span><br><span class="line"><span class="comment">     * 或是在 Gradle 中设置了自定义 compileOptions 但未在 SupportedOptions 中定义，</span></span><br><span class="line"><span class="comment">     * 则会出现日志警告：</span></span><br><span class="line"><span class="comment">     * &lt;pre&gt;</span></span><br><span class="line"><span class="comment">     *     The following options were not recognized by any processor: &#x27;[xxxOptionName]&#x27;</span></span><br><span class="line"><span class="comment">     * &lt;/pre&gt;</span></span><br><span class="line"><span class="comment">     * Note: Auto-Service 1.0-rc6 才支持增量编译。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Set&lt;String&gt; <span class="title">getSupportedOptions</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// return super.getSupportedOptions();</span></span><br><span class="line">        <span class="comment">// 支持增量模式：</span></span><br><span class="line">        <span class="keyword">return</span> Collections.singleton(<span class="string">&quot;org.gradle.annotation.processing.aggregating&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用于指定该 Processor 需要处理的注解的类。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 一个 Processor 可以同时处理多个注解，所以返回值为 Set。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Set&lt;String&gt; <span class="title">getSupportedAnnotationTypes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Colletions.singleton(DemoAnnotation.class.getCanonicalName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 编译时处理注解的入口。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">process</span><span class="params">(Set&lt;? extends TypeElement&gt; set, RoundEnvironment roundEnvironment)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-注册Processor"><a href="#1-3-注册Processor" class="headerlink" title="1.3 注册Processor"></a>1.3 注册Processor</h3><p>在 Android 中使用自定义注解，有两种注册 Processor 的方式：</p>
+<ul>
+<li>AutoService 自动注册</li>
+<li>META-INF 中手动注册</li>
+</ul>
+<blockquote>
+<p>假设 Processor 所在 Module 为 <code>module_processor</code>。</p>
+</blockquote>
+<h4 id="1-3-1-AutoService自动注册"><a href="#1-3-1-AutoService自动注册" class="headerlink" title="1.3.1 AutoService自动注册"></a>1.3.1 AutoService自动注册</h4><p>借助 Google 推出的 AutoService 工具自动完成 Processor 的注册：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Processor 所在 Module 添加 AutoService 的依赖，并用 AutoService 的注解处理器代替完成注册：</span></span><br><span class="line">implementation <span class="string">&#x27;com.google.auto.service:auto-service:1.0&#x27;</span></span><br><span class="line">annotationProcessor <span class="string">&#x27;com.google.auto.service:auto-service:1.0&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 给 Processor 添加 AutoService 的注解：</span></span><br><span class="line"><span class="meta">@AutoService(Processor.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoProcessor</span> <span class="keyword">extends</span> <span class="title">AbstractProcessor</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上就是用 <code>@AutoService</code> 的 Processor 动态创建了 DemoProcessor 的注册信息完成注册的。</p>
+<h4 id="1-3-2-META-INF中手动注册"><a href="#1-3-2-META-INF中手动注册" class="headerlink" title="1.3.2 META-INF中手动注册"></a>1.3.2 META-INF中手动注册</h4><p>通过 META-INF 手动注册，与 Java 中的注册方式是一样的：</p>
+<p>（1）在 Processor 所在 Module 下创建注册信息文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">module_processor/src/main/resources/META-INF/services/javax.annotation.processing.Processor</span><br><span class="line"></span><br><span class="line">// 该文件目录结构如下：</span><br><span class="line">module_processor</span><br><span class="line">    └─ src</span><br><span class="line">        └─ main</span><br><span class="line">            └─ java</span><br><span class="line">            └─ resources</span><br><span class="line">                └─ META-INF</span><br><span class="line">                    └─ services</span><br><span class="line">                        └─ javax.annotation.processing.Processor</span><br></pre></td></tr></table></figure>
+
+<p>（2）在 <code>javax.annotation.processing.Processor</code> 中声明 Processor 的全路径，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">priv.demo.DemoProcessor</span><br></pre></td></tr></table></figure>
+
+<p>重新 Build 即可发现 DemoProcessor 已经可以正确处理。</p>
+<h3 id="1-4-使用Processor"><a href="#1-4-使用Processor" class="headerlink" title="1.4 使用Processor"></a>1.4 使用Processor</h3><p>当一个 Processor 成功被注册后，默认情况下只会处理 Processor 所在 Module 的注解，如果其他 Module 也需要使用该 Processor，则需要在 Gradle 中声明：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 应用 module_processor 的 Processor，并不要求与 module_processor 有依赖关系</span></span><br><span class="line">annotationProcessor project(<span class="attr">path:</span> <span class="string">&#x27;:module_processor&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果想对 Gradle 编译时断点调试，需要新增单独的调试任务：</p>
+<p>（1）在 <code>Run/Debug Configurations</code> 中新增一个 <code>Remote</code> 或 <code>Remote JVM Debug</code> 任务，然后再右侧栏将目标地址选择为本地的某个端口，例如 8888：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Name: RemoteDebug（可自定义）</span><br><span class="line">......</span><br><span class="line">Host: localhost  Port: 8888</span><br></pre></td></tr></table></figure>
+
+<p>（2）修改项目根目录下的 <code>gradle.properties</code>，为 Gradle 添加 2 条 Debug 配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-Dorg.gradle.debug=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意配置中 address 参数的端口号要和 Configuration 中的一致：</span></span><br><span class="line">org.gradle.jvmargs=-agentlib:jdwp=transport=dt_socket,server=y,<span class="built_in">suspend</span>=n,address=8888</span><br></pre></td></tr></table></figure>
+
+<p>（3）重新进入 <code>Run/Debug Configurations</code> 中查看新增的 Remote Configuration，可以在其中的 <code>Command line arguments for remote JVM</code> 看到新增的 Gradle 配置参数。</p>
+<p>（4）在 <code>Run/Debug Configurations</code> 中选中新增的 Remote Configuration，执行 <strong>Debug</strong>，然后再执行编译任务（Rebuild, Assemble…），即可进入断点。</p>
+<hr>
+<h2 id="2-Processor开启增量编译"><a href="#2-Processor开启增量编译" class="headerlink" title="2. Processor开启增量编译"></a>2. Processor开启增量编译</h2><p>通过上述方式成功注册一个 Processor 后，在 Build 时 Gradle 可能会报如下警告：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The following annotation processors are not incremental: jetified-module_processor.jar (project :module_processor).</span><br><span class="line">Make sure all annotation processors are incremental to improve your build speed.</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>大致含义为 Processor 每次都是全量编译的，尽可能确保采用增量编译以提高编译速度。</p>
+</blockquote>
+<p>查阅相关资料后发现，增量编译选项需要在 Processor 的注册信息中指定，对于上文中的两种注册方式：</p>
+<ul>
+<li>如果使用 AutoService 自动注册，Auto-Service 在 1.0-rc6 版本中才支持增量编译。</li>
+<li>如果使用手动注册，则需要从 Java 原生模式注册信息修改为 Gradle 注册信息。</li>
+</ul>
+<h3 id="2-1-AutoService开启增量编译"><a href="#2-1-AutoService开启增量编译" class="headerlink" title="2.1 AutoService开启增量编译"></a>2.1 AutoService开启增量编译</h3><p>将 AutoService 的依赖以及对应的 annotationProcessor 升级到 <code>1.0-rc6</code> 或以上即可。</p>
+<h3 id="2-2-手动注册开启增量编译"><a href="#2-2-手动注册开启增量编译" class="headerlink" title="2.2 手动注册开启增量编译"></a>2.2 手动注册开启增量编译</h3><p>手动注册的 Processor 要开启增量编译，则需要切换为 Gradle 模式的注册信息。</p>
+<p>（1）在 Processor 所在 Module 创建 Gradle 模式的注册信息文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">module_processor/src/main/resources/META-INF/gradle/incremental.annotation.processors</span><br><span class="line"></span><br><span class="line">// Java 原生模式和 Gradle 模式的注册信息文件结构对比：</span><br><span class="line">module_processor</span><br><span class="line">    └─ src</span><br><span class="line">        └─ main</span><br><span class="line">            └─ java</span><br><span class="line">            └─ resources</span><br><span class="line">                └─ META-INF</span><br><span class="line">                    └─ gradle</span><br><span class="line">                        └─ incremental.annotation.processors (Gradle 模式注册信息文件)</span><br><span class="line">                    └─ services</span><br><span class="line">                        └─ javax.annotation.processing.Processor (Java 原生模式注册信息文件)</span><br></pre></td></tr></table></figure>
+
+<p>两种模式的注册信息文件可以共存，Gradle 编译时会优先选择 Gradle 模式的注册信息。</p>
+<p>（2）在 <code>incremental.annotation.processors</code> 中声明支持增量编译的注册信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">priv.demo.DemoProcessor,isolating</span><br></pre></td></tr></table></figure>
+
+<p>重新 Build，Gradle 相关警告日志已经消除。</p>
+<p>此外，Gradle 模式注册信息还支持在 Processor 代码中决定编译类型，只需要在 <code>incremental.annotation.processors</code> 中的注册信息声明为 <code>dynamic</code> 类型，然后在 <code>Processor#getSupportedOptions(...)</code> 中指定具体的编译类型即可：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// incremental.annotation.processors 文件中声明为 dynamic 模式：</span></span><br><span class="line">priv.demo.DemoProcessor,dynamic</span><br><span class="line"></span><br><span class="line"><span class="comment">// Processor#getSupportedOptions(...) 中指定编译类型：</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoProcessor</span> <span class="keyword">extends</span> <span class="title">AbstractProcessor</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Set&lt;String&gt; <span class="title">getSupportedOptions</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Aggregating 增量编译</span></span><br><span class="line">        <span class="keyword">return</span> Collections.singleton(<span class="string">&quot;org.gradle.annotation.processing.aggregating&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-APT过滤元素"><a href="#3-APT过滤元素" class="headerlink" title="3. APT过滤元素"></a>3. APT过滤元素</h2><p>一个 Processor 可以同时处理多个自定义注解，因此过滤 Class 分为两步：</p>
+<ul>
+<li>确定需要过滤的注解</li>
+<li>获取并处理包含注解的元素（类、方法、属性等）。</li>
+</ul>
+<h3 id="3-1-选择需要过滤的注解"><a href="#3-1-选择需要过滤的注解" class="headerlink" title="3.1 选择需要过滤的注解"></a>3.1 选择需要过滤的注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoProcessor</span> <span class="keyword">extends</span> <span class="title">AbstractProcessor</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Set&lt;String&gt; <span class="title">getSupportedAnnotationTypes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Set&lt;String&gt; routerAnnotationTypeSet = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">        <span class="comment">// 添加需要处理的注解类的全限定类名。</span></span><br><span class="line">        routerAnnotationTypeSet.add(DemoAnnotation.class.getCanonicalName());</span><br><span class="line">        <span class="comment">// 值得注意的是，方法返回的集合是注解类全限定类名的集合，</span></span><br><span class="line">        <span class="comment">// 这意味着 Processor 并不一定要真正具有注解类的依赖关系，</span></span><br><span class="line">        <span class="comment">// 手动指定一个类的全限定类名也是可行的，例如：</span></span><br><span class="line">        routerAnnotationTypeSet.add(<span class="string">&quot;priv.demo.DemoAnnotation&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> routerAnnotationTypeSet;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-根据注解过滤需要处理的元素"><a href="#3-2-根据注解过滤需要处理的元素" class="headerlink" title="3.2 根据注解过滤需要处理的元素"></a>3.2 根据注解过滤需要处理的元素</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoProcessor</span> <span class="keyword">extends</span> <span class="title">AbstractProcessor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Elements elementUtils;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ProcessingEnvironment processingEnvironment)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.init(processingEnvironment);</span><br><span class="line"></span><br><span class="line">        elementUtils = processingEnvironment.getElementUtils();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">process</span><span class="params">(Set&lt;? extends TypeElement&gt; set, RoundEnvironment roundEnvironment)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (set == <span class="keyword">null</span> || set.isEmpty() || roundEnvironment == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (roundEnvironment != <span class="keyword">null</span> &amp;&amp; roundEnvironment.processingOver()) &#123;</span><br><span class="line">            <span class="comment">// 示例：判断是否正在处理当前 Module 的最后一个</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取包含了某个注解的元素集合：</span></span><br><span class="line">        Set&lt;? extends Element&gt; demoAnnotatedClassSet = roundEnvironment.getElementsAnnotatedWith(DemoAnnotation.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 同样也可以直接通过注解的全限定类名获取：</span></span><br><span class="line">        TypeElement demoAnnotationClassElement = elementUtils.getTypeElement(<span class="string">&quot;priv.demo.DemoAnnotation&quot;</span>);</span><br><span class="line">        Set&lt;? extends Element&gt; demoAnnotatedClassSet = roundEnvironment.getElementsAnnotatedWith(demoAnnotationClassElement);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 处理包含了注解的元素：</span></span><br><span class="line">        <span class="keyword">for</span> (Element annotatedElement : demoAnnotatedClassSet) &#123;</span><br><span class="line">            processElement(annotatedElement);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(RoundEnvironment roundEnvironment, Element annotatedElement)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (annotatedElement == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ((annotatedElement <span class="keyword">instanceof</span> TypeElement) &amp;&amp; annotatedElement.getKind() == ElementKind.CLASS) &#123;</span><br><span class="line">            <span class="comment">// 示例：判断注解是否声明在类上，同理也可判断是否在方法、属性等元素上，</span></span><br><span class="line">            <span class="comment">// 可根据注解定义的类型选择是否需要处理该元素。</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (annotatedElement.getModifiers().contains(Modifier.PUBLIC)) &#123;</span><br><span class="line">            <span class="comment">// 示例：判断被注解的元素包含的标识符，同理也可判断 private、static 等。</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 示例：获取被注解的 Class（前提是被注解的元素是 Class 类型）实现的所有接口：</span></span><br><span class="line">        TypeElement annotatedTypeElement = ((TypeElement) annotatedElement);</span><br><span class="line">        <span class="keyword">for</span> (TypeMirror eachTypeMirror : annotatedTypeElement.getInterfaces()) &#123;</span><br><span class="line">            <span class="comment">// 示例：判断某个接口是否是另一个接口或是其子类：</span></span><br><span class="line">            TypeMirror superInterfaceTypeMirror = elementUtils.getTypeElement(<span class="string">&quot;priv.demo.IDemoInterface&quot;</span>).asType();</span><br><span class="line">            <span class="keyword">boolean</span> isSubInterface = typeUtils.isSubtype(eachTypeMirror, superInterfaceTypeMirror);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，当使用全限定类名的方式（<code>elementUtils.getTypeElement(&quot;priv.demo.DemoAnnotation&quot;)</code>）获取注解类对应的 TypeElement 对象时，仅当应用了 Processor 的 Module 可以访问注解类时返回值才不为 null，但与 Processor 所在 Module 本身是否可以访问注解类无关，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- module_annotation：不依赖任何 Module</span><br><span class="line">- module_processor：不依赖任何 Module</span><br><span class="line">- module_app：通过 annotationProcessor project(path: <span class="string">&#x27;:module_processor&#x27;</span>) 应用 APT</span><br></pre></td></tr></table></figure>
+
+<p>此时如果 module_app 具有 module_annotation 的依赖，则 <code>elementUtils.getTypeElement(&quot;priv.demo.DemoAnnotation&quot;)</code> 可以正确返回 DemoAnnotation 的 TypeElement 对象，否则将返回 null，与 module_processor 是否具有 module_annotation 的依赖无关。</p>
+<hr>
+<h2 id="4-APT生成类"><a href="#4-APT生成类" class="headerlink" title="4. APT生成类"></a>4. APT生成类</h2><p>成功注册一个 Processor 后，就能通过对应的注解获取相关信息，并根据这些信息动态生成类。生成类文件时，可以通过 JavaPoet 等工具生成，也可以自行拼接代码文本 String 内容后直接写入文件。</p>
+<h3 id="4-1-在同一个Module中生成类"><a href="#4-1-在同一个Module中生成类" class="headerlink" title="4.1 在同一个Module中生成类"></a>4.1 在同一个Module中生成类</h3><p>仍以 <code>DemoAnnotation</code> 为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DemoAnnotation &#123;</span><br><span class="line">    <span class="comment">// 如果参数名为 value，则使用注解时可以隐式赋值</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> 0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以 JavaPoet 为例，获取所有添加了 <code>@DemoAnnotation</code> 注解的类，并在与之相同的 Module 的 Build 目录下生成一个名为 <code>&#123;ClassName&#125;_&#123;AnnotationValue&#125;</code> 新的类：</p>
+<blockquote>
+<p>例如：</p>
+<ul>
+<li><code>@DemoAnnotation class DemoClassA &#123;&#125;</code> 将生成一个名为 <code>DemoClassA_0</code> 的类（因为 <code>DemoAnnotation#value()</code> 的默认值为 0）；</li>
+<li><code>@DemoAnnotation(123) class DemoClassB &#123;&#125;</code> 将生成一个名为 <code>DemoClassB_123</code> 的类。</li>
+</ul>
+<p>使用 JavaPoet 需要添加依赖：<code>implementation &#39;com.squareup:javapoet:1.13.0&#39;</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoProcessor</span> <span class="keyword">extends</span> <span class="title">BaseRouterProcessor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(Element annotatedElement)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 示例 1：获取被添加了注解的类所在的包名以及类名</span></span><br><span class="line">        <span class="keyword">if</span> ((eachElement <span class="keyword">instanceof</span> TypeElement) &amp;&amp; annotatedElement.getKind() == ElementKind.CLASS) &#123;</span><br><span class="line">            String packageName = annotatedElement.getEnclosingElement().toString();</span><br><span class="line">            String className = annotatedElement.getSimpleName().toString();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 示例 2：获取元素上的注解实例（前提是有注解类的依赖，能直接访问注解类），返回值是泛型：</span></span><br><span class="line">        DemoAnnotation demoAnnotation = annotatedElement.getAnnotation(DemoAnnotation.class);</span><br><span class="line">        <span class="comment">// 然后就能获取使用注解时的参数赋值（如果有参数的话）：</span></span><br><span class="line">        <span class="keyword">int</span> value = demoAnnotation.value();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 示例 3：如果 Processor 不能直接访问注解类，则只能获取注解包含的抽象参数 List：</span></span><br><span class="line">        <span class="comment">// 可以通过 List 是否为空判断元素上的注解是否设置了参数，</span></span><br><span class="line">        <span class="comment">// 如果参数是枚举或 String 类型，可以尝试是否能通过字符串匹配的方式判断取值。</span></span><br><span class="line">        List&lt;? extends AnnotationMirror&gt; annotationMirrorList = element.getAnnotationMirrors();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 示例：使用 JavaPoet 生成类（伪代码）</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            JavaFile.builder(packageName,</span><br><span class="line">                    TypeSpec.classBuilder(className + <span class="string">&quot;_&quot;</span> + value)</span><br><span class="line">                            .addJavadoc(<span class="string">&quot;DO NOT edit this file !!!&quot;</span>)</span><br><span class="line">                            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)</span><br><span class="line">                            .build())</span><br><span class="line">                    .build()</span><br><span class="line">                    .writeTo(filer);</span><br><span class="line">            messager.printMessage(Kind.NOTE, <span class="string">&quot;Generated: &quot;</span> + packageName + <span class="string">&quot;.&quot;</span> + className);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            messager.printMessage(Kind.ERROR, <span class="string">&quot;Failed: &quot;</span> + packageName + <span class="string">&quot;.&quot;</span> + className);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中在 <code>Processor#process(...)</code> 中，通过 JavaPoet 生成类的最后一步，调用的是 <code>writeTo(filer)</code>，而 <code>filer</code> 是在 <code>Processor#init(...)</code> 中通过运行环境获取的，可以理解为：每一个 Module 在 Javac 之后，Processor 都会被当前 Module 调用，因此 Filer 中的信息都是针对当前 Module 的，所以 <code>writeTo(filer)</code> 将会在当前 Module 下生成文件。</p>
+<h3 id="4-2-在任意目录生成类"><a href="#4-2-在任意目录生成类" class="headerlink" title="4.2 在任意目录生成类"></a>4.2 在任意目录生成类</h3><p>通过查看 JavaPoet 和 Filer 的源码可以知道，<code>writeTo(filer)</code> 实际上也是通过 Filer 获取了当前 Module 的路径信息，只不过该路径信息是相对当前 Module 的，但实际上 JavaPoet 的 <code>writeTo(...)</code> 是允许直接指定任意路径的，只需要传入对应路径的 Path 对象即可：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">File generatedFile = <span class="keyword">new</span> File(<span class="string">&quot;/DemoProject/&quot;</span> + className + <span class="string">&quot;.java&quot;</span>);</span><br><span class="line">JavaFile.builder(packageName,</span><br><span class="line">        TypeSpec.classBuilder(className)</span><br><span class="line">                .build())</span><br><span class="line">        .build()</span><br><span class="line">        .writeTo(generatedFile.toPath());</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4fef2ad51f5a?utm_campaign" title="@LINK">Android APT 编译期进入debug模式</a></li>
+<li><a target="_blank" rel="noopener" href="https://jiyang.site/posts/2020-03-24-让annotation-processor-支持增量编译/" title="@LINK">让 Annotation Processor 支持增量编译</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.gradle.org/4.10.1/userguide/java_plugin.html#sec:incremental_annotation_processing" title="@LINK">Incremental annotation processing</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.mindorks.com/speed-up-gradle-build-for-android-to-save-your-time" title="@LINK">Speed up Gradle build for Android to save your time</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9bbbf66b4fbf" title="@LINK">Gradle字符串替换</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+
+
+
+<!-- 注释开始 ########################################
+
+
+
+    
+    
+    <style type="text/css">
+        .postEndContainer {
+            margin-top: 50px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .postEndLabel {
+            width: 300px;
+            max-width: 100%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+        .postEndText {
+            animation: slideHorizontal 4.0s ease infinite;
+        }
+        .toAbout {
+            color: var(--custom-color-theme);
+            background: var(--custom-color-background-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-radius: var(--custom-radius-main);
+            border-bottom: none;
+        }
+        .toAbout:hover {
+            background: var(--custom-color-theme);
+            color: #FFFFFF;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        
+        @keyframes slideHorizontal {
+            0% {
+                transform: rotateX(0deg);
+            }
+            25% {
+                transform: rotateX(360deg);
+            }
+            50% {
+                transform: rotateX(720deg);
+            }
+            100% {
+                transform: rotateX(720deg);
+            }
+        }
+    </style>
+
+    <div class="postEndContainer">
+        
+            
+            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
+                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
+            </div>
+        
+
+        
+        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
+    </div>
+
+
+######################################## 注释结束 -->
+
+          <div class="reward-container">
+  <div></div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luisliu.cn/post/android/android-compile_apt/" title="Android-编译时注解APT">https://luisliu.cn/post/android/android-compile_apt/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Annotation/" rel="tag"><i class="fa fa-tag"></i> Annotation</a>
+              <a href="/tags/%E6%B3%A8%E8%A7%A3/" rel="tag"><i class="fa fa-tag"></i> 注解</a>
+              <a href="/tags/Processor/" rel="tag"><i class="fa fa-tag"></i> Processor</a>
+              <a href="/tags/APT/" rel="tag"><i class="fa fa-tag"></i> APT</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/android/android-compile_plugin/" rel="prev" title="Android-编译时插件Plugin">
+                  <i class="fa fa-chevron-left"></i> Android-编译时插件Plugin
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/network/network-rtmp/" rel="next" title="Network-RTMP">
+                  Network-RTMP <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="en" data-href="/post/android/android-compile_apt/" selected="">
+          English
+        </option>
+      
+        <option value="zh-CN" data-href="/zh-CN/post/android/android-compile_apt/" selected="">
+          简体中
+        </option>
+      
+    </select>
+  </div>
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">476k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:49</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <span class="fa fa-arrow-down"> Down</span>
+</div>
+
+<script>
+    $(function() {
+        $('.scrollToBottom').click(function(){
+            
+            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>
