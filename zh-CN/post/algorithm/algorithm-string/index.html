@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
@@ -23,14 +23,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="（1）最长无重复字符子串；（2）最长回文子串。">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="（1）最长无重复字符子串；（2）最长回文子串；（3）正则匹配。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="算法-查找子串">
-<meta property="og:url" content="https://luisliu.cn/post/algorithm/algorithm-substring/index.html">
+<meta property="og:title" content="算法-字符串问题">
+<meta property="og:url" content="https://luisliu.cn/zh-CN/post/algorithm/algorithm-string/index.html">
 <meta property="og:site_name" content="LuisLiu">
-<meta property="og:description" content="（1）最长无重复字符子串；（2）最长回文子串。">
-<meta property="og:locale" content="en_US">
+<meta property="og:description" content="（1）最长无重复字符子串；（2）最长回文子串；（3）正则匹配。">
+<meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-01-26T04:15:06.000Z">
 <meta property="article:author" content="LuisLiu">
 <meta property="article:tag" content="Algorithm">
@@ -38,14 +38,14 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://luisliu.cn/post/algorithm/algorithm-substring/">
+<link rel="canonical" href="https://luisliu.cn/zh-CN/post/algorithm/algorithm-string/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/algorithm/algorithm-substring/","path":"post/algorithm/algorithm-substring/","title":"算法-查找子串"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luisliu.cn/post/algorithm/algorithm-string/","path":"zh-CN/post/algorithm/algorithm-string/","title":"算法-字符串问题"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>算法-查找子串 | LuisLiu</title>
+<title>算法-字符串问题 | LuisLiu</title>
   
 
 
@@ -64,7 +64,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle Navigation" role="button">
+    <div class="toggle" aria-label="切换导航栏" role="button">
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
         <span class="toggle-line"></span>
@@ -78,7 +78,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2022/10/30 - 21:28:05</p>
+      <p class="site-subtitle" itemprop="description">2022/12/07 - 20:29:06</p>
   </div>
 
   <div class="site-nav-right">
@@ -94,15 +94,15 @@
   <ul class="main-menu menu">
         
             
-  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>About</a></li>
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>关于</a></li>
 
 
       
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">83</span></a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">153</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
       <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
       </li>
   </ul>
@@ -117,7 +117,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocapitalize="off" maxlength="80"
-           placeholder="Searching..." spellcheck="false"
+           placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
   <span class="popup-btn-close" role="button">
@@ -148,17 +148,17 @@
     <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
-          Catalogue
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          SiteInfo
+          站点概览
         </li>
       </ul>
 
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-%E6%9F%A5%E6%89%BE%E5%AD%90%E4%B8%B2"><span class="nav-text">算法-查找子串</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%80%E9%95%BF%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E5%AD%90%E4%B8%B2"><span class="nav-text">1. 最长无重复字符子串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%8F%8C%E9%87%8D%E5%BE%AA%E7%8E%AF%E6%9A%B4%E5%8A%9B%E6%B3%95"><span class="nav-text">1.1 双重循环暴力法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B3%95%EF%BC%88List%EF%BC%89"><span class="nav-text">1.2 滑动窗口法（List）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B3%95%EF%BC%88Map%EF%BC%89"><span class="nav-text">1.3 滑动窗口法（Map）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2"><span class="nav-text">2 最长回文子串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%B8%AD%E5%BF%83%E6%89%A9%E6%95%A3%E6%B3%95"><span class="nav-text">2.1 中心扩散法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B3%95"><span class="nav-text">2.2 动态规划法</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95-%E6%9F%A5%E6%89%BE%E5%AD%90%E4%B8%B2"><span class="nav-text">算法-查找子串</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%80%E9%95%BF%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E5%AD%90%E4%B8%B2"><span class="nav-text">1. 最长无重复字符子串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%8F%8C%E9%87%8D%E5%BE%AA%E7%8E%AF%E6%9A%B4%E5%8A%9B%E6%B3%95"><span class="nav-text">1.1 双重循环暴力法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B3%95%EF%BC%88List%EF%BC%89"><span class="nav-text">1.2 滑动窗口法（List）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B3%95%EF%BC%88Map%EF%BC%89"><span class="nav-text">1.3 滑动窗口法（Map）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2"><span class="nav-text">2 最长回文子串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%B8%AD%E5%BF%83%E6%89%A9%E6%95%A3%E6%B3%95"><span class="nav-text">2.1 中心扩散法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B3%95"><span class="nav-text">2.2 动态规划法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D"><span class="nav-text">3. 正则匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B3%95"><span class="nav-text">3.1 动态规划法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-%E5%88%86%E6%9E%90%E5%8C%B9%E9%85%8D%E8%BF%87%E7%A8%8B"><span class="nav-text">3.1.1 分析匹配过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-%E6%8A%BD%E8%B1%A1%E5%8C%B9%E9%85%8D%E9%97%AE%E9%A2%98"><span class="nav-text">3.1.2 抽象匹配问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-3-%E6%8B%86%E8%A7%A3%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="nav-text">3.1.3 拆解匹配规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-4-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-text">3.1.4 代码实现</span></a></li></ol></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -174,18 +174,18 @@
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
           <span class="site-state-item-count">83</span>
-          <span class="site-state-item-name">Posts</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
         <span class="site-state-item-count">13</span>
-        <span class="site-state-item-name">Categories</span></a>
+        <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
         <span class="site-state-item-count">153</span>
-        <span class="site-state-item-name">Tags</span></a>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -217,7 +217,7 @@
     </header>
 
     
-  <div class="back-to-top" role="button" aria-label="Back to top">
+  <div class="back-to-top" role="button" aria-label="返回顶部">
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
@@ -240,8 +240,8 @@
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/algorithm/algorithm-substring/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/algorithm/algorithm-string/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -254,7 +254,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          算法-查找子串
+          算法-字符串问题
         </h1>
 
         <div class="post-meta-container">
@@ -263,15 +263,15 @@
       <span class="post-meta-item-icon">
         <i class="far fa-calendar"></i>
       </span>
-      <span class="post-meta-item-text">Posted:</span>
+      <span class="post-meta-item-text">发表于</span>
 
-      <time title="Created::2020-01-26 12:15:06" itemprop="dateCreated datePublished" datetime="2020-01-26T12:15:06+08:00">2020-01-26</time>
+      <time title="创建时间：2020-01-26 12:15:06" itemprop="dateCreated datePublished" datetime="2020-01-26T12:15:06+08:00">2020-01-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
       </span>
-      <span class="post-meta-item-text">Categories:</span>
+      <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
         </span>
@@ -324,23 +324,23 @@
   </div>
 ############################################# 注释结束 -->
 
-    <span class="post-meta-item" title="Post Symbols">
+    <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-word"></i>
       </span>
-      <span class="post-meta-item-text">Post Symbols:</span>
-      <span>7.5k</span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>14k</span>
     </span>
-    <span class="post-meta-item" title="Read Time">
+    <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
-      <span class="post-meta-item-text">Read Time &asymp;</span>
-      <span>8 Min</span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
     </span>
 </div>
 
-            <div class="post-description">（1）最长无重复字符子串；（2）最长回文子串。</div>
+            <div class="post-description">（1）最长无重复字符子串；（2）最长回文子串；（3）正则匹配。</div>
         </div>
       </header>
 
@@ -350,12 +350,13 @@
     <div class="post-body" itemprop="articleBody">
         <span id="more"></span>
 
-<h1 id="算法-查找子串"><a href="#算法-查找子串" class="headerlink" title="算法-查找子串"></a>算法-查找子串</h1><h2 id="1-最长无重复字符子串"><a href="#1-最长无重复字符子串" class="headerlink" title="1. 最长无重复字符子串"></a>1. 最长无重复字符子串</h2><p>说明：给定一个字符串，找出不含重复字符的最长子串的长度。</p>
+<h1 id="算法-查找子串"><a href="#算法-查找子串" class="headerlink" title="算法-查找子串"></a>算法-查找子串</h1><h2 id="1-最长无重复字符子串"><a href="#1-最长无重复字符子串" class="headerlink" title="1. 最长无重复字符子串"></a>1. 最长无重复字符子串</h2><p>给定一个字符串，找出不含重复字符的最长子串的长度。</p>
 <blockquote>
-<p>例 1：</p>
-<p>“abcabcbb” 最长非重复子串为 “abc”，长度为 3。</p>
-<p>例 2：</p>
-<p>“” 最长非重复子串为 “”，长度为 0。</p>
+<p>示例：</p>
+<ul>
+<li>&quot;abcabcbb&quot; 最长非重复子串为 &quot;abc&quot;，长度为 3。</li>
+<li>&quot;&quot; 最长非重复子串为 &quot;&quot;，长度为 0。</li>
+</ul>
 </blockquote>
 <h3 id="1-1-双重循环暴力法"><a href="#1-1-双重循环暴力法" class="headerlink" title="1.1 双重循环暴力法"></a>1.1 双重循环暴力法</h3><p>遍历每一个字符，并以该字符为起点，向后再次遍历整个字符串，如果下一个字符是新字符则当前子串长度 + 1，否则跳出内层循环，并比较当前子串和记录的最大子串长度，如果当前子串更长，则更新最长子串的长度记录。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution_DoubleLoop</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (s == <span class="keyword">null</span> || s.length() &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> maxCount = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">char</span>[] charArray = s.toCharArray();</span><br><span class="line">        <span class="comment">// 外层循环遍历整个字符串</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> charIndex = <span class="number">0</span>; charIndex &lt; charArray.length; charIndex++) &#123;</span><br><span class="line">            <span class="keyword">int</span> maxSubCount = <span class="number">0</span>;</span><br><span class="line">            String maxSubStr = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="comment">// 内层循环从</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> subIndex = charIndex; subIndex &lt; charArray.length; subIndex++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (maxSubStr.contains(<span class="string">&quot;&quot;</span> + charArray[subIndex])) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    maxSubCount++;</span><br><span class="line">                    maxSubStr += charArray[subIndex];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (maxSubCount &gt; maxCount) &#123;</span><br><span class="line">                maxCount = maxSubCount;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxCount;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -383,7 +384,7 @@
 </li>
 </ul>
 <p><strong>注意：<code>left</code> 始终只会向右移动。</strong> 由于采用 Map 记录字符及对应下标，所以发现重复字符时，<code>left</code> 直接移动到窗口内子串的重复字符下一位，这就导致 <code>last left</code> 到 <code>new left</code> 中间的字符，在 Map 中的下标并没有更新也没有被移除，而下一个字符有可能命中这中间的字符，也即 <code>Map.contains(char) == true</code>，但实际上窗口已经不包括这些字符了，也即 <code>left</code> 指向的下标已经大于这些重复字符的下标，因此这种情况下即使 <code>Map.contains(char) == true</code>，也不应该视为字符重复，所以仅当 <code>Map.get(char) &gt;= left</code> 时，才应该更新 <code>left</code>。</p>
-<p>例如 “abba”，用 <code>[]</code> 表示滑动窗口，其包括的就是满足条件的子串；<code>left</code> 表示窗口左侧字符的下标；<code>max</code> 表示满足条件的最长子串长度：</p>
+<p>例如 &quot;abba&quot;，用 <code>[]</code> 表示滑动窗口，其包括的就是满足条件的子串；<code>left</code> 表示窗口左侧字符的下标；<code>max</code> 表示满足条件的最长子串长度：</p>
 <table>
 <thead>
 <tr>
@@ -432,7 +433,7 @@
 <tr>
 <td align="center">3</td>
 <td align="center"><code>ab[ba]</code></td>
-<td align="center">正确，尽管字符 “a” 重复，但不在窗口内（<code>Map(a) == 0 &lt; left == 2</code>），不更新 <code>left</code></td>
+<td align="center">正确，尽管字符 &quot;a&quot; 重复，但不在窗口内（<code>Map(a) == 0 &lt; left == 2</code>），不更新 <code>left</code></td>
 <td align="center">2</td>
 <td align="center">2</td>
 </tr>
@@ -440,12 +441,13 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution_SlidingWindow_Map</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 记录遍历过的字符及对应的下标，用于遇到重复字符时，直接移动窗口起始下标到子串重复位的下一位。</span></span><br><span class="line">        Map&lt;Character, Integer&gt; charMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="comment">// 表示当前有效子串的起始下标，配合最新字符下标可计算窗口范围（即子串长度）。</span></span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 最大窗口范围（即子串长度）。</span></span><br><span class="line">        <span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; s.length(); index++) &#123;</span><br><span class="line">            <span class="keyword">char</span> next = s.charAt(index);</span><br><span class="line">            <span class="comment">// 只有存在该字符「且记录的位置大于当前窗口起始坐标时」才移动窗口，否则例如 abba：</span></span><br><span class="line">            <span class="comment">//   - 当 index == 2，left = get(b) + 1 = 2，</span></span><br><span class="line">            <span class="comment">//   - 当 index == 3，left = get(a) + 1 = 1，显然不对，此时应该让 left 保持为 2。</span></span><br><span class="line">            <span class="keyword">if</span> (charMap.containsKey(next) &amp;&amp; charMap.get(next) &gt;= left) &#123;</span><br><span class="line">                left = charMap.get(next) + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                max = Math.max(max, (index - left + <span class="number">1</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 不论是否重复都需要记录，如果重复了就需要更新</span></span><br><span class="line">            charMap.put(next, index);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="2-最长回文子串"><a href="#2-最长回文子串" class="headerlink" title="2 最长回文子串"></a>2 最长回文子串</h2><p>说明：从给定的字符串中找出最长的回文子串，假定字符串一定不为空，即 <code>s.length() &gt;= 1</code>。</p>
+<h2 id="2-最长回文子串"><a href="#2-最长回文子串" class="headerlink" title="2 最长回文子串"></a>2 最长回文子串</h2><p>从给定的字符串中找出最长的回文子串，假定字符串一定不为空，即 <code>s.length() &gt;= 1</code>。</p>
 <blockquote>
-<p>例 1：</p>
-<p>输入 “babad”，输出 “bab” 或 “aba”</p>
-<p>例 2：</p>
-<p>输入 “cbbd”，输出 “bb”</p>
+<p>示例：</p>
+<ul>
+<li>输入 &quot;babad&quot;，输出 &quot;bab&quot; 或 &quot;aba&quot;</li>
+<li>输入 &quot;cbbd&quot;，输出 &quot;bb&quot;</li>
+</ul>
 </blockquote>
 <h3 id="2-1-中心扩散法"><a href="#2-1-中心扩散法" class="headerlink" title="2.1 中心扩散法"></a>2.1 中心扩散法</h3><p>遍历每个字符，比较「中心字符」向左和向右 n 个字符是否相等；</p>
 <ul>
@@ -473,88 +475,88 @@
 <td align="center"><code>[]acbbcd</code></td>
 <td align="center"><code>left = 0</code> <code>right = 0</code></td>
 <td align="center">初始化</td>
-<td align="center">“”</td>
-<td align="center">“”</td>
+<td align="center">&quot;&quot;</td>
+<td align="center">&quot;&quot;</td>
 </tr>
 <tr>
 <td align="center">0</td>
 <td align="center"><code>[a]cbbcd</code></td>
 <td align="center"><code>left = i - 1</code> <code>right = i + 1</code></td>
 <td align="center"><code>s[left] != s[right]</code> 扩散终止</td>
-<td align="center">“a”</td>
-<td align="center">“a”</td>
+<td align="center">&quot;a&quot;</td>
+<td align="center">&quot;a&quot;</td>
 </tr>
 <tr>
 <td align="center">1</td>
 <td align="center"><code>a[c]bbcd</code></td>
 <td align="center"><code>left = i - 1</code> <code>right = i + 1</code></td>
 <td align="center"><code>s[left] != s[right]</code> 扩散终止</td>
-<td align="center">“c”</td>
-<td align="center">“c”</td>
+<td align="center">&quot;c&quot;</td>
+<td align="center">&quot;c&quot;</td>
 </tr>
 <tr>
 <td align="center">2</td>
 <td align="center"><code>ac[b]bcd</code></td>
 <td align="center"><code>left = i - 1</code> <code>right = i + 1</code></td>
 <td align="center"><code>s[i] == s[right]</code> 需要向右合并中心</td>
-<td align="center">“b”</td>
-<td align="center">“b”</td>
+<td align="center">&quot;b&quot;</td>
+<td align="center">&quot;b&quot;</td>
 </tr>
 <tr>
 <td align="center"></td>
 <td align="center"><code>ac[bb]cd</code></td>
 <td align="center"><code>left = i - 1</code> <code>right++</code></td>
 <td align="center"><code>s[left] == s[right]</code> 可以向左右扩散</td>
-<td align="center">“bb”</td>
-<td align="center">“bb”</td>
+<td align="center">&quot;bb&quot;</td>
+<td align="center">&quot;bb&quot;</td>
 </tr>
 <tr>
 <td align="center"></td>
 <td align="center"><code>a[cbbc]d</code></td>
 <td align="center"><code>left--</code> <code>right++</code></td>
 <td align="center"><code>s[left] != s[right]</code> 扩散终止</td>
-<td align="center">“cbbc”</td>
-<td align="center">“cbbc”</td>
+<td align="center">&quot;cbbc&quot;</td>
+<td align="center">&quot;cbbc&quot;</td>
 </tr>
 <tr>
 <td align="center">3</td>
 <td align="center"><code>acb[b]cd</code></td>
 <td align="center"><code>left = i - 1</code> <code>right = i + 1</code></td>
 <td align="center"><code>s[i] == s[left]</code> 需要向左合并中心</td>
-<td align="center">“b”</td>
-<td align="center">“cbbc”</td>
+<td align="center">&quot;b&quot;</td>
+<td align="center">&quot;cbbc&quot;</td>
 </tr>
 <tr>
 <td align="center"></td>
 <td align="center"><code>ac[bb]cd</code></td>
 <td align="center"><code>left--</code> <code>right = i + 1</code></td>
 <td align="center"><code>s[left] == s[right]</code> 可以向左右扩散</td>
-<td align="center">“bb”</td>
-<td align="center">“cbbc”</td>
+<td align="center">&quot;bb&quot;</td>
+<td align="center">&quot;cbbc&quot;</td>
 </tr>
 <tr>
 <td align="center"></td>
 <td align="center"><code>a[cbbc]d</code></td>
 <td align="center"><code>left--</code> <code>right++</code></td>
 <td align="center"><code>s[left] != s[right]</code> 扩散终止</td>
-<td align="center">“cbbc”</td>
-<td align="center">“cbbc</td>
+<td align="center">&quot;cbbc&quot;</td>
+<td align="center">&quot;cbbc</td>
 </tr>
 <tr>
 <td align="center">4</td>
 <td align="center"><code>acbb[c]d</code></td>
 <td align="center"><code>left = i - 1</code> <code>right = i + 1</code></td>
 <td align="center"><code>s[left] != s[right]</code> 扩散终止</td>
-<td align="center">“c”</td>
-<td align="center">“cbbc”</td>
+<td align="center">&quot;c&quot;</td>
+<td align="center">&quot;cbbc&quot;</td>
 </tr>
 <tr>
 <td align="center">5</td>
 <td align="center"><code>acbbc[d]</code></td>
 <td align="center"><code>left = i - 1</code> <code>right = i + 1</code></td>
 <td align="center"><code>s[left] != s[right]</code> 扩散终止</td>
-<td align="center">“d”</td>
-<td align="center">“cbbc”</td>
+<td align="center">&quot;d&quot;</td>
+<td align="center">&quot;cbbc&quot;</td>
 </tr>
 </tbody></table>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution_CenterSpread</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 最长回文子串</span></span><br><span class="line">        String maxSub = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="comment">// 每一轮遍历中当前中心字符的回文子串</span></span><br><span class="line">        String sub = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="comment">// 每一轮遍历中当前中心字符的左侧下标</span></span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 每一轮遍历中当前中心字符的右侧下标</span></span><br><span class="line">        <span class="keyword">int</span> right = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">            left = i - <span class="number">1</span>;</span><br><span class="line">            right = i + <span class="number">1</span>;</span><br><span class="line">            <span class="comment">// 最长子串至少也是当前字符</span></span><br><span class="line">            sub = <span class="string">&quot;&quot;</span> + s.charAt(i);</span><br><span class="line">            <span class="comment">// 先向左寻找，与当前字符重复的字符都纳入「中心字符」，直到遇到第一个不重复的为止。</span></span><br><span class="line">            <span class="keyword">while</span> (left &gt;= <span class="number">0</span> &amp;&amp; s.charAt(left) == s.charAt(i)) &#123;</span><br><span class="line">                sub = s.charAt(left) + sub;</span><br><span class="line">                left--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 再向右寻找，与当前字符重复的字符都纳入「中心字符」，直到遇到第一个不重复的为止。</span></span><br><span class="line">            <span class="keyword">while</span> (right &lt; s.length() &amp;&amp; s.charAt(right) == s.charAt(i)) &#123;</span><br><span class="line">                sub = sub + s.charAt(right);</span><br><span class="line">                right++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 然后同时向两边扩散，如果两侧字符相等，则都纳入子串，直到遇到不相等的一对。</span></span><br><span class="line">            <span class="keyword">while</span> (left &gt;= <span class="number">0</span> &amp;&amp; right &lt; s.length() &amp;&amp; s.charAt(left) == s.charAt(right)) &#123;</span><br><span class="line">                sub = s.charAt(left) + sub + s.charAt(right);</span><br><span class="line">                left--;</span><br><span class="line">                right++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 如果当前「中心字符」的回文子串大于记录的最长子串，则更新记录。</span></span><br><span class="line">            <span class="keyword">if</span> (sub.length() &gt; maxSub.length()) &#123;</span><br><span class="line">                maxSub = sub;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxSub;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -577,6 +579,97 @@
 </li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution_DynamicProgramming</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 最长回文子串在原字符串的起始下标</span></span><br><span class="line">        <span class="keyword">int</span> maxSubLeft = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 最长回文子串的长度</span></span><br><span class="line">        <span class="keyword">int</span> maxSubLength = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 用一个二维数组 dp[left][right] 表示从 s[left]...s[right] 是否为回文子串，</span></span><br><span class="line">        <span class="comment">// dp[left][right] 初始化时默认值全为 false。</span></span><br><span class="line">        <span class="keyword">boolean</span> [][] dp = <span class="keyword">new</span> <span class="keyword">boolean</span>[s.length()][s.length()];</span><br><span class="line">        <span class="comment">// 因为 dp[left][right] 数组的定义，right 一定大于等于 left</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> right = <span class="number">0</span>; right &lt; s.length(); right++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> left = <span class="number">0</span>; left &lt;= right; left++) &#123;</span><br><span class="line">                <span class="comment">// 如果 s[left] == s[right]，分为三种情况</span></span><br><span class="line">                <span class="comment">// （1）left == right</span></span><br><span class="line">                <span class="comment">//     表示当前 1 个字符，则肯定是回文子串，dp[left][right] = true</span></span><br><span class="line">                <span class="comment">// （2）right - left = 1</span></span><br><span class="line">                <span class="comment">//     表示 2 个相邻重复字符，既然相等则肯定也是回文子串，dp[left][right] = true</span></span><br><span class="line">                <span class="comment">// （3）right - left &gt; 1</span></span><br><span class="line">                <span class="comment">//     表示子串至少包含 3 个字符，例如 aba 或 abba，则这个子串是否为回文子串，</span></span><br><span class="line">                <span class="comment">//     依赖于 s[left + 1]...s[right - 1] 是否为回文子串，</span></span><br><span class="line">                <span class="comment">//     即依赖于 dp[left + 1][right - 1] 是否为 true。</span></span><br><span class="line">                <span class="comment">// 以上情况（1）和情况（2），都能直接确定 dp[left][right] = true</span></span><br><span class="line">                <span class="keyword">if</span> (s.charAt(left) == s.charAt(right)) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (right - left &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">                        <span class="comment">// 对应情况（1）和情况（2）</span></span><br><span class="line">                        dp[left][right] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dp[left + <span class="number">1</span>][right - <span class="number">1</span>]) &#123;</span><br><span class="line">                        <span class="comment">// 对应情况（3）</span></span><br><span class="line">                        dp[left][right] = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// dp[left][right] 数组初始化时默认所有元素都是 false，</span></span><br><span class="line">                <span class="comment">// 所以如果 dp[left][right] == true，</span></span><br><span class="line">                <span class="comment">// 就表示上面的条件种判断了 s[left]...s[right] 为回文子串，</span></span><br><span class="line">                <span class="comment">// 则如果这个回文子串的长度大于记录的最大长度，就可以更新记录。</span></span><br><span class="line">                <span class="keyword">if</span> (dp[left][right] &amp;&amp; right - left + <span class="number">1</span> &gt; maxSubLength) &#123;</span><br><span class="line">                    maxSubLeft = left;</span><br><span class="line">                    maxSubLength = right - left + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// String#substring(startIndex, endIndex) 返回的是一个 [左闭, 右开) 区间</span></span><br><span class="line">        <span class="keyword">return</span> s.substring(maxSubLeft, maxSubLeft + maxSubLength);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-正则匹配"><a href="#3-正则匹配" class="headerlink" title="3. 正则匹配"></a>3. 正则匹配</h2><p>给定一串文本 <code>text</code> 和一串正则表达式 <code>regular</code>，判断表达式是否匹配（需匹配整串文本，而非部分字串）。</p>
+<ul>
+<li>文本仅包含小写字母；正则表达式仅包含小写字母、&#39;.&#39;、&#39;*&#39;；</li>
+<li>&#39;.&#39; 可以匹配任意单个字符；</li>
+<li>&#39;*&#39; 可以匹配零个或多个其前面的字符；</li>
+</ul>
+<blockquote>
+<p>示例：</p>
+<ul>
+<li>例 1：<code>text == &quot;aa&quot;, regular == &quot;a&quot;</code> 输出 false，<code>&quot;a&quot;</code> 无法匹配完整字符串 <code>&quot;aa&quot;</code>；</li>
+<li>例 2：<code>text == &quot;abb&quot;, regular == &quot;abc*b&quot;</code> 输出 true，<code>&quot;c*&quot;</code> 可以匹配零个 <code>&quot;c&quot;</code>；</li>
+<li>例 3：<code>text == &quot;abcde&quot;, regular == &quot;.*&quot;</code> 输出 true，<code>&quot;.*&quot;</code> 表示可以匹配任意数量个（<code>&quot;*&quot;</code>）任意字符（<code>&quot;.&quot;</code>）；</li>
+</ul>
+<p>原题链接：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/regular-expression-matching/" title="@LINK">正则表达式匹配</a></p>
+</blockquote>
+<h3 id="3-1-动态规划法"><a href="#3-1-动态规划法" class="headerlink" title="3.1 动态规划法"></a>3.1 动态规划法</h3><h4 id="3-1-1-分析匹配过程"><a href="#3-1-1-分析匹配过程" class="headerlink" title="3.1.1 分析匹配过程"></a>3.1.1 分析匹配过程</h4><p>动态规划法的核心思想即为：通过已获取到的信息决定下一步策略。分析该正则匹配可以发现其具有明显的「顺序匹配」特征，文本与正则表达式总是从左至右开始匹配的，因此前一步是否匹配决定了下一步能否匹配。例如假设 <code>text == &quot;abccd&quot;, regular == &quot;a*bd&quot;</code>，根据从左至右匹配的顺序有：</p>
+<ul>
+<li>第 1 步：<code>text[0] == &quot;a&quot;, regular[0] == &quot;a&quot;</code>，匹配；</li>
+<li>第 2 步：<code>text[1] == &quot;b&quot;, regular[1] == &quot;*&quot;</code>，判断通配符与前一字符作为整体 <code>regular[0~1] == &quot;a*&quot;</code> 匹配 <code>text[0]</code>；<ul>
+<li>因此如果此前所有部分（<code>text[0]</code> 与 <code>regular[0]</code>）均匹配，则截至当前部分都是匹配的；</li>
+</ul>
+</li>
+<li>第 3 步：<code>text[1] == &quot;b&quot;, regular[2] == &quot;b&quot;</code>，匹配；<ul>
+<li>因此如果此前所有部分（<code>text[0]</code> 与 <code>regular[0~1]</code>）均匹配，则截至当前部分都是匹配的；</li>
+</ul>
+</li>
+<li>第 4 步：<code>text[2] == c, regular[3] == &quot;d&quot;</code>，匹配失败，且不存在 <code>regular[4] == *</code> 无法组成 <code>&quot;d*&quot;</code>；</li>
+</ul>
+<p>观察上述过程可以发现，「截止到前 n 部分是否匹配」的结果由「第 (n - 1) 步是否匹配」与「第 n 步是否匹配」共同组成，这是一个不断迭代的过程。</p>
+<h4 id="3-1-2-抽象匹配问题"><a href="#3-1-2-抽象匹配问题" class="headerlink" title="3.1.2 抽象匹配问题"></a>3.1.2 抽象匹配问题</h4><p>假设迭代至某一步时目标需要匹配的文本串下标为 <code>i</code>、需要匹配的正则式下表为 <code>j</code>，用 <code>matchedLength[i+1][j+1]</code> 表示 <code>text[0~i]</code> 与 <code>regular[0~j]</code> 是否匹配，则原问题转变为如何判断 <code>matchedLength[n][m]</code>。</p>
+<blockquote>
+<p>特别提示：</p>
+<ul>
+<li><code>matchedLength</code> 记录的是对应 <strong>长度</strong> 的文本串与正则式是否匹配，因此当 text 与 regular 分别匹配到下标为 i 和 j 的字符时，对应长度则为 <code>n = i + 1</code> 及 <code>m = j + 1</code>，因此对应已匹配的长度则记录为 <code>matchedLength[n][m]</code>；</li>
+<li>反之，<code>matchedLength[i][j]</code> 记录的是「text 的前 i 个字符与 regular 的前 j 个字符是否匹配」，因此其记录的字符串范围为 <code>text[0~(i-1)]</code> 与 <code>regular[0~(j-1)]</code>；</li>
+<li>对于 <code>matchedLength[n][m]</code>，当 <code>n == 0</code> 或 <code>m == 0</code> 时则对应了 text 为空或 regular 为空的情况；</li>
+</ul>
+</blockquote>
+<p>因此当 <code>n == text.length(), m == regular.length()</code> 时，<code>matchedLength[n][m]</code> 即为判断完整文本串与完整正则式是否匹配了。</p>
+<h4 id="3-1-3-拆解匹配规则"><a href="#3-1-3-拆解匹配规则" class="headerlink" title="3.1.3 拆解匹配规则"></a>3.1.3 拆解匹配规则</h4><p>根据上文可知，对于匹配过程中的某一步，假设此时待匹配的字符分别为 <code>text[i]</code> 与 <code>regular[j]</code>，则推算的目标为：<code>matchedLength[i+1][j+1]</code>，此时可将推算拆解为以下规则：</p>
+<p>（0）已知定义</p>
+<p>当 text 为空时，regular 仅在以下条件时才可与之匹配：</p>
+<ul>
+<li>regular 也为空，此时即为：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// When: text == regular == empty</span></span><br><span class="line">matchedLength[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">true</span>,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>regular 不为空，但全部由通配体（即字符 + <code>&quot;*&quot;</code> 或 <code>&quot;.*&quot;</code>）组成，由于每一个通配体占 2 字符，换言之如果 regular 遍历到 <code>&quot;*&quot;</code> 时，则直接删去 2 字符，如果剩余的前面部分为空、或仍旧全部由通配体组成，则整串正则式也可以与空文本匹配：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// When: text == empty, regular[j] == &quot;*&quot;</span></span><br><span class="line">matchedLength[<span class="number">0</span>][j+<span class="number">1</span>] = matchedLength[<span class="number">0</span>][j-<span class="number">1</span>],</span><br></pre></td></tr></table></figure>
+
+<p>（1）字符匹配</p>
+<blockquote>
+<p>例如：<code>text = &quot;abcaa&quot;, regular = &quot;abc*&quot;</code>，当 <code>i == 1, j == 1</code> 时，<code>text[1] == regular[1] == &quot;b&quot;</code>。</p>
+</blockquote>
+<p>当字符匹配（<code>text[i] == regular[j] || regular[j] == &quot;.&quot;</code>）时，意味着如果该字符之前的部分（<code>text[0~(i-1)]</code> 与 <code>regular[0~(j-1)]</code>）可以匹配，则 <code>text[0~i]</code> 与 <code>regular[0~j]</code> 就能匹配，也即：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// When: text[i] == regular[j]</span></span><br><span class="line">matchedLength[i+<span class="number">1</span>][j+<span class="number">1</span>] = matchedLength[i][j],</span><br></pre></td></tr></table></figure>
+
+<p>（2）字符不匹配</p>
+<blockquote>
+<p>例如：<code>text = &quot;abcaa&quot;, regular = &quot;ac*bc&quot;</code>，当 <code>i == 1, j == 1</code> 时，<code>text[1] == &quot;b&quot;, regular[1] == &quot;c&quot;</code>。</p>
+</blockquote>
+<p>当字符不匹配（<code>text[i] != regular[j]</code>）时，<code>matchedLength[i+1][j+1] = false</code>。</p>
+<p>当然，如果后面跟随了通配符 <code>&quot;*&quot;</code> 则可以作为整体匹配 <strong>零次或多次</strong>，但因为匹配是从前往后的顺序，因此在下一轮匹配到 <code>&quot;*&quot;</code> 时再区分这种情况。</p>
+<p>（3）遇到通配符</p>
+<p>当遇到通配符时，其必须与前一个字符作为整体，可与字符匹配  <strong>零次或多次</strong>，因此分情况考虑：</p>
+<ul>
+<li>通配符前一位字符与文本仅匹配一次：例如 <code>text = &quot;abc&quot;, regular = &quot;abc*&quot;</code>，当 <code>&quot;c&quot;</code> 与 <code>&quot;c*&quot;</code> 相匹配时，意味着各自去掉这部分后，如果各自剩下的前面部分互相匹配，则整整串文本与整串正则就能匹配：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// When: regular[j] == &quot;*&quot; &amp;&amp; text[i] == regular[j - 1]</span></span><br><span class="line">matchedLength[i+<span class="number">1</span>][j+<span class="number">1</span>] = matchedLength[i][j-<span class="number">1</span>],</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通配符前一位字符与文本匹配多次（以 2 次为例）：例如 <code>text = &quot;abcc&quot;, regular = &quot;abc*&quot;</code>，当 <code>text[2] == text[3] == &quot;c&quot;</code> 与 <code>&quot;c*&quot;</code> 相匹配时，意味着如果去掉文本串中当前匹配的 <code>text[3]</code>，剩余的前面部分与正则相匹配（在这个小例中是必然的），则整串文本与整串正则就能匹配：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// When: regular[j] == &quot;*&quot; &amp;&amp; text[i-1] == text[i] == regular[j-1]</span></span><br><span class="line">matchedLength[i+<span class="number">1</span>][j+<span class="number">1</span>] = matchedLength[i][j+<span class="number">1</span>],</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通配符前一位字符与文本不匹配：例如 <code>text = &quot;ab&quot;, regular = &quot;abc*&quot;</code>，当 <code>&quot;c*&quot;</code> 作为整体被匹配零次时，意味着如果去掉正则中的这一部分，剩余前面的部分与文本相匹配，则整串文本与整串正则就能相匹配：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// When: regular[j] == <span class="string">&quot;*&quot;</span> &amp;&amp; text[i] != regular[j-1]</span><br><span class="line">matchedLength[i+1][j+1] = matchedLength[i+1][j-1],</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通配符前一位字符与文本能匹配但作为整体不匹配：例如 <code>text = &quot;ab&quot;, regula = &quot;abb*&quot;</code>，当 <code>&quot;b*&quot;</code> 作为整体被匹配零次时，同样意味着去掉正则中的这一部分，剩余前面的部分与文本相匹配则整串文本与整串正则就能相匹配：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// When: regular[j] == <span class="string">&quot;*&quot;</span> &amp;&amp; text[i] == regular[j-1] &amp;&amp; text[0~i] matched regular[0~(j-2)]</span><br><span class="line">matchedLength[i+1][j+1] = matchedLength[i+1][j-1],</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-4-代码实现"><a href="#3-1-4-代码实现" class="headerlink" title="3.1.4 代码实现"></a>3.1.4 代码实现</h4><p>经过上文的拆解，可以总结出代码实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RegularExpressMatcher</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isMatch</span><span class="params">(String text, String regular)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 尽管按照题意 text 与 regular 不会为空，但作为代码仍需对边界值保护。</span></span><br><span class="line">        <span class="keyword">if</span> (text == <span class="keyword">null</span> || text.length() &lt;= <span class="number">0</span> || regular == <span class="keyword">null</span> || regular.length() &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (regular.equals(<span class="string">&quot;.*&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> [][]matchedLength = <span class="keyword">new</span> <span class="keyword">boolean</span>[text.length() + <span class="number">1</span>][regular.length() + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 0. 已知定义：</span></span><br><span class="line">        <span class="comment">//   - 当 text 与 regular 均为空时，视作匹配；</span></span><br><span class="line">        matchedLength[<span class="number">0</span>][<span class="number">0</span>] = <span class="keyword">true</span>;</span><br><span class="line">        <span class="comment">//   - 否则仅当 regular 全部由通配体组成时才匹配；</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; regular.length(); j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (regular.charAt(j) == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">                matchedLength[<span class="number">0</span>][j + <span class="number">1</span>] = matchedLength[<span class="number">0</span>][j - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; text.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; regular.length(); j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (regular.charAt(j) == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (isCharMatched(text, i, regular, j - <span class="number">1</span>)) &#123;</span><br><span class="line">                        <span class="comment">// 1. 当遇到通配符、且其前一个字符与文本相同时，则可能匹配零次、一次、多次：</span></span><br><span class="line">                        <span class="comment">//   - 零次：&quot;ab&quot; 与 &quot;abb*&quot;，说明可以去掉正则部分</span></span><br><span class="line">                        <span class="comment">//   - 一次：&quot;ab&quot; 与 &quot;ab*&quot;，说明可以各自去掉文本与正则部分</span></span><br><span class="line">                        <span class="comment">//   - 多次：&quot;abbb&quot; 与 &quot;ab*&quot;，说明可以去掉一个文本部分</span></span><br><span class="line">                        matchedLength[i + <span class="number">1</span>][j + <span class="number">1</span>]</span><br><span class="line">                                = matchedLength[i + <span class="number">1</span>][j - <span class="number">1</span>] <span class="comment">// 零次</span></span><br><span class="line">                                || matchedLength[i][j - <span class="number">1</span>] <span class="comment">// 一次</span></span><br><span class="line">                                || matchedLength[i][j + <span class="number">1</span>]; <span class="comment">// 多次</span></span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="comment">// 2. 当遇到通配符、且前一个字符与文本不同时，则通配体匹配了零次，相当于去掉通配体：</span></span><br><span class="line">                        matchedLength[i + <span class="number">1</span>][j + <span class="number">1</span>] = matchedLength[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isCharMatched(text, i, regular, j)) &#123;</span><br><span class="line">                    <span class="comment">// 3. 当普通字符相同或为 &quot;.&quot; 时，则如果各自去掉字符后剩余的匹配，则整串匹配：</span></span><br><span class="line">                    matchedLength[i + <span class="number">1</span>][j + <span class="number">1</span>] = matchedLength[i][j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 最终需要知道的是整串文本（text[0~i]）与整串正则（regular[0~j]）是否匹配，</span></span><br><span class="line">        <span class="comment">// 因此返回的即为 matchedLength[n][m]，其中 n == i+1 == text.length(), m == j+1 == regular.length()。</span></span><br><span class="line">        <span class="keyword">return</span> matchedLength[text.length()][regular.length()];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isCharMatched</span><span class="params">(String text, <span class="keyword">int</span> txtIndex, String regular, <span class="keyword">int</span> regIndex)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (regular.charAt(regIndex) == <span class="string">&#x27;.&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (text.charAt(txtIndex) == regular.charAt(regIndex));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -726,8 +819,8 @@
   </button>
   <div class="post-reward">
       <div>
-        <img src="/images/reward.png" alt="LuisLiu 微信支付">
-        <span>微信支付</span>
+        <img src="/images/reward.png" alt="LuisLiu 微信">
+        <span>微信</span>
       </div>
 
   </div>
@@ -738,14 +831,14 @@
 <div class="post-copyright">
 <ul>
   <li class="post-copyright-author">
-      <strong>本文作者: </strong>LuisLiu
+      <strong>本文作者： </strong>LuisLiu
   </li>
   <li class="post-copyright-link">
-      <strong>本文链接:</strong>
-      <a href="https://luisliu.cn/post/algorithm/algorithm-substring/" title="算法-查找子串">https://luisliu.cn/post/algorithm/algorithm-substring/</a>
+      <strong>本文链接：</strong>
+      <a href="https://luisliu.cn/post/algorithm/algorithm-string/" title="算法-字符串问题">https://luisliu.cn/post/algorithm/algorithm-string/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明: </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
   </li>
 </ul>
 </div>
@@ -786,16 +879,16 @@
   <div class="languages">
     <label class="lang-select-label">
       <i class="fa fa-language"></i>
-      <span>English</span>
+      <span>简体中文</span>
       <i class="fa fa-angle-up" aria-hidden="true"></i>
     </label>
-    <select class="lang-select" data-canonical="" aria-label="Select language">
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
       
-        <option value="en" data-href="/post/algorithm/algorithm-substring/" selected="">
+        <option value="en" data-href="/post/algorithm/algorithm-string/" selected="">
           English
         </option>
       
-        <option value="zh-CN" data-href="/zh-CN/post/algorithm/algorithm-substring/" selected="">
+        <option value="zh-CN" data-href="/zh-CN/post/algorithm/algorithm-string/" selected="">
           简体中文
         </option>
       
@@ -816,15 +909,15 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-      <span>Site Symbols:</span>
-    <span title="Site Symbols">476k</span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">484k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-      <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">8:49</span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:57</span>
   </span>
 </div>
 
@@ -856,7 +949,7 @@
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 

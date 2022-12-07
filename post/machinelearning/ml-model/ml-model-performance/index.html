@@ -81,7 +81,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2022/10/30 - 21:28:05</p>
+      <p class="site-subtitle" itemprop="description">2022/12/07 - 20:29:06</p>
   </div>
 
   <div class="site-nav-right">
@@ -374,10 +374,10 @@
 <p>$<br>MSLE(y, \hat{y}) = \dfrac {1} {N} \sum^N_{i = 1} \left( \log (1 + y_i) - \log (1 + \hat{y_i}) \right)^2<br>$</p>
 <p>当 $y$ 呈指数增长时可以使用，如计数、一年的平均销量、价格等。$1 + y_i$ 与 $1 + \hat{y_i}$ 的目的是为了确保 $\log$ 计算有意义（当 $y_i / \hat{y_i} = 0$ 时，$\log 0$ 无意义）。</p>
 <p>（5）$R^2$ 分数（$R^2$ Score）：</p>
-<p>$<br>\begin{aligned}<br>&amp; SS_{res}(y, \hat{y}) = \dfrac {1} {N} \sum^N_{i = 1} (y_i - \hat{y_i})^2<br>\<br>&amp; SS_{tot}(y) = \dfrac {1} {N} \sum^N_{i = 1} (y_i - \bar{y})^2<br>\<br>&amp; R^2(y, \hat{y}) = 1 - \dfrac {SS_{res}(y, \hat{y})} {SS_{tot}(y)}<br>\end{aligned}<br>$</p>
+<p>$<br>\begin{aligned}<br>&amp; SS_{res}(y, \hat{y}) = \dfrac {1} {N} \sum^N_{i = 1} (y_i - \hat{y_i})^2<br>\\<br>&amp; SS_{tot}(y) = \dfrac {1} {N} \sum^N_{i = 1} (y_i - \bar{y})^2<br>\\<br>&amp; R^2(y, \hat{y}) = 1 - \dfrac {SS_{res}(y, \hat{y})} {SS_{tot}(y)}<br>\end{aligned}<br>$</p>
 <p>$R^2$ 分数既考虑了预测值与真实值之间的差异，又考虑了问题本身针织之间的差异，是 Scikit-Learn 线性回归模型的默认评价准则。当 $SS_{res} = 0$ 时，$R^2 = 1$ 为最佳分数，分数越低则模型性能越差，可能为负值。</p>
 <p>（6）已解释的访查分数（Explained variance socre）：</p>
-<p>$<br>explained_variance(y, \hat{y}) = 1 - \dfrac {Var(y - \hat{y})} {Var { y } }<br>$</p>
+<p>$<br>explained_variance(y, \hat{y}) = 1 - \dfrac {Var(y - \hat{y})} {Var \{ y \} }<br>$</p>
 <h3 id="1-2-Scikit-Learn中的评价指标"><a href="#1-2-Scikit-Learn中的评价指标" class="headerlink" title="1.2 Scikit-Learn中的评价指标"></a>1.2 Scikit-Learn中的评价指标</h3><p>Scikit-Learn 中有三种评价模型性能的方式，但基本都是通过上述 6 种计算方式实现的。</p>
 <p>（1）每个学习器 Estimator 自己的 <code>score</code> 方法，提供一个默认的评估方法（回归为 $R^2$ 分数）。</p>
 <p>（2）Metric：<code>sklearn.metrics</code> 模块实现了一些函数，用来评估预测误差。</p>
@@ -630,14 +630,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Site Symbols:</span>
-    <span title="Site Symbols">476k</span>
+    <span title="Site Symbols">484k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">8:49</span>
+    <span title="Site Read Time">8:57</span>
   </span>
 </div>
 

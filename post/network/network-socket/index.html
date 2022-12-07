@@ -78,7 +78,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2022/10/30 - 21:28:05</p>
+      <p class="site-subtitle" itemprop="description">2022/12/07 - 20:29:06</p>
   </div>
 
   <div class="site-nav-right">
@@ -350,14 +350,14 @@
     <div class="post-body" itemprop="articleBody">
         <span id="more"></span>
 
-<h1 id="Network-Socket"><a href="#Network-Socket" class="headerlink" title="Network-Socket"></a>Network-Socket</h1><h2 id="基于TCP的Socket"><a href="#基于TCP的Socket" class="headerlink" title="基于TCP的Socket"></a>基于TCP的Socket</h2><p>Socket socket = new Socket(String ip, int port); // 本地进程间通信使用 “localhost”<br>boolean isConnected = socket.isConnected();<br>BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));<br>writer.write(byte[] data);<br>writer.flush();<br>writer.close();</p>
+<h1 id="Network-Socket"><a href="#Network-Socket" class="headerlink" title="Network-Socket"></a>Network-Socket</h1><h2 id="基于TCP的Socket"><a href="#基于TCP的Socket" class="headerlink" title="基于TCP的Socket"></a>基于TCP的Socket</h2><p>Socket socket = new Socket(String ip, int port); // 本地进程间通信使用 &quot;localhost&quot;<br>boolean isConnected = socket.isConnected();<br>BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));<br>writer.write(byte[] data);<br>writer.flush();<br>writer.close();</p>
 <p>DataInputStream input = new DataInputStream(new BufferedInputStream(socked.getInputStream));<br>byte[] bytes = new byte[MAX_LENGTH_EACH_TIME];<br>while(input.read(bytes) != -1) {</p>
-<p>}<br>服务端：<br>ServerSocket serverSocket = new ServerSocket(int port);<br>Socket socket = ServerSocket.accept();<br>InputStream ……</p>
+<p>}<br>服务端：<br>ServerSocket serverSocket = new ServerSocket(int port);<br>Socket socket = ServerSocket.accept();<br>InputStream ......</p>
 <ul>
 <li>socket.accept()函数对应着TCP三次握手中哪一次握手，哪个函数代表连接建立完毕，四次挥手的过程？</li>
 </ul>
 <p>没有对应关系。accept()发生在三次握手之后。服务器监听请求连接，成功三次握手的连接会被存放到连接队列中，accept()方法只是从服务器的连接队列中取出了具体的一个连接实例。</p>
-<h2 id="基于UDP的Socket"><a href="#基于UDP的Socket" class="headerlink" title="基于UDP的Socket"></a>基于UDP的Socket</h2><p>// 发送<br>DatagramSocket socket = new DatagramSocket();<br>socket.connect(String ip, int port);<br>DatagramPacket  sendPacket = new DatagramPacket(byte[] data, int data.length, String ip, int port);<br>socket.send(sendPacket);<br>// 接收<br>while(socket.isConnect()) {<br>    byte[] data = new byte[MAX_LENGTH_EACH_TIME];<br>    DatagramPacket rcvPacket = new DatagramPacket(data, data.length);<br>    socket.receive(rcvPacket);<br>    rcvPacket.getData().length // 等效于 data.length，等于 MAX_LENGTH_EACH_TIME<br>    rcvPacket.getLength() // 实际接收的数据长度，最大 64k<br>    ……<br>}</p>
+<h2 id="基于UDP的Socket"><a href="#基于UDP的Socket" class="headerlink" title="基于UDP的Socket"></a>基于UDP的Socket</h2><p>// 发送<br>DatagramSocket socket = new DatagramSocket();<br>socket.connect(String ip, int port);<br>DatagramPacket  sendPacket = new DatagramPacket(byte[] data, int data.length, String ip, int port);<br>socket.send(sendPacket);<br>// 接收<br>while(socket.isConnect()) {<br>    byte[] data = new byte[MAX_LENGTH_EACH_TIME];<br>    DatagramPacket rcvPacket = new DatagramPacket(data, data.length);<br>    socket.receive(rcvPacket);<br>    rcvPacket.getData().length // 等效于 data.length，等于 MAX_LENGTH_EACH_TIME<br>    rcvPacket.getLength() // 实际接收的数据长度，最大 64k<br>    ......<br>}</p>
 <h2 id="Socket长连接"><a href="#Socket长连接" class="headerlink" title="Socket长连接"></a>Socket长连接</h2><p>isClosed()、isConnected()、isInputStreamShutdown()、isOutputStreamShutdown()都是本地判断，只是本地操作connect()或close()方法后保存的状态，无法判断服务端是否主动断开，OutputStream.write()在服务端关闭时也能照常发送不会报错。</p>
 <p>采用服务端心跳回复的机制，客户端发送心跳后，服务端需要回复心跳，并设置中断超时，超过几次心跳后仍然没有回复则主动断开连接。</p>
 
@@ -600,14 +600,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Site Symbols:</span>
-    <span title="Site Symbols">476k</span>
+    <span title="Site Symbols">484k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Site Read Time &asymp;</span>
-    <span title="Site Read Time">8:49</span>
+    <span title="Site Read Time">8:57</span>
   </span>
 </div>
 

@@ -81,7 +81,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2022/10/30 - 21:28:05</p>
+      <p class="site-subtitle" itemprop="description">2022/12/07 - 20:29:06</p>
   </div>
 
   <div class="site-nav-right">
@@ -335,7 +335,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>11k</span>
+      <span>12k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -446,73 +446,73 @@
 </tr>
 </thead>
 <tbody><tr>
-<td align="center">‘c’</td>
+<td align="center">&#39;c&#39;</td>
 <td align="center">char</td>
 <td align="center">character</td>
 <td align="center">1</td>
 </tr>
 <tr>
-<td align="center">‘b’</td>
+<td align="center">&#39;b&#39;</td>
 <td align="center">signed char</td>
 <td align="center">int</td>
 <td align="center">1</td>
 </tr>
 <tr>
-<td align="center">‘B’</td>
+<td align="center">&#39;B&#39;</td>
 <td align="center">unsigned char</td>
 <td align="center">int</td>
 <td align="center">1</td>
 </tr>
 <tr>
-<td align="center">‘u’</td>
+<td align="center">&#39;u&#39;</td>
 <td align="center">Py_UNICODE</td>
 <td align="center">Unicode character</td>
 <td align="center">2 (see note)</td>
 </tr>
 <tr>
-<td align="center">‘h’</td>
+<td align="center">&#39;h&#39;</td>
 <td align="center">signed short</td>
 <td align="center">int</td>
 <td align="center">2</td>
 </tr>
 <tr>
-<td align="center">‘H’</td>
+<td align="center">&#39;H&#39;</td>
 <td align="center">unsigned short</td>
 <td align="center">int</td>
 <td align="center">2</td>
 </tr>
 <tr>
-<td align="center">‘i’</td>
+<td align="center">&#39;i&#39;</td>
 <td align="center">signed int</td>
 <td align="center">int</td>
 <td align="center">2</td>
 </tr>
 <tr>
-<td align="center">‘I’</td>
+<td align="center">&#39;I&#39;</td>
 <td align="center">unsigned int</td>
 <td align="center">long</td>
 <td align="center">2</td>
 </tr>
 <tr>
-<td align="center">‘l’</td>
+<td align="center">&#39;l&#39;</td>
 <td align="center">signed long</td>
 <td align="center">int</td>
 <td align="center">4</td>
 </tr>
 <tr>
-<td align="center">‘L’</td>
+<td align="center">&#39;L&#39;</td>
 <td align="center">unsigned long</td>
 <td align="center">long</td>
 <td align="center">4</td>
 </tr>
 <tr>
-<td align="center">‘f’</td>
+<td align="center">&#39;f&#39;</td>
 <td align="center">float</td>
 <td align="center">float</td>
 <td align="center">4</td>
 </tr>
 <tr>
-<td align="center">‘d’</td>
+<td align="center">&#39;d&#39;</td>
 <td align="center">double</td>
 <td align="center">float</td>
 <td align="center">8</td>
@@ -523,7 +523,7 @@
 
 <h3 id="3-4-结果数据顺序问题"><a href="#3-4-结果数据顺序问题" class="headerlink" title="3.4 结果数据顺序问题"></a>3.4 结果数据顺序问题</h3><p>到这一步，已经可以将各个进程的编码结果存在 <code>list_data</code> 中，只需要使用 <code>pandas.concat(list_data, ignore_index = 0)</code> 就能把所有数据拼起来成为完整的编码后数据，但聪明的你一定又会想到，并发处理的返回顺序是不可预知的，直接按进程完成的顺序拼接很可能会改变原始样本数据的顺序：</p>
 <blockquote>
-<p>With return_df=False, a different ordering of the samples could lead into nasty surprises, because numpy.ndarray doesn’t preserve index -&gt; the training data would not be aligned with the labels anymore.</p>
+<p>With return_df=False, a different ordering of the samples could lead into nasty surprises, because numpy.ndarray doesn&#39;t preserve index -&gt; the training data would not be aligned with the labels anymore.</p>
 </blockquote>
 <p>因此还需要利用字典来存放当前数据块的索引位置与数据块的关系，最后主进程获取所有的字典数据，并按照键值顺序排序后再拼接：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">    self.hashing_parts = multiprocessing.Queue()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span>(<span class="params">self</span>):</span></span><br><span class="line">    ...</span><br><span class="line">    start = ...  <span class="comment"># 当前数据块起始下标</span></span><br><span class="line">    end = ...  <span class="comment"># 当前数据块结束下标</span></span><br><span class="line">    data = hashing()</span><br><span class="line">    part_index = <span class="built_in">int</span>(math.ceil(end_index / self.max_sample))</span><br><span class="line">    self.return_data.put(&#123;part_index: data&#125;&#125;)</span><br><span class="line"></span><br><span class="line">list_data = &#123;&#125;</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> hashing_parts.empty():</span><br><span class="line">    list_data.update(hashing_parts.get())  <span class="comment"># 取出所有的代码块（无序状态）</span></span><br><span class="line">sort_data = []</span><br><span class="line"><span class="keyword">for</span> part_index <span class="keyword">in</span> <span class="built_in">sorted</span>(list_data):  <span class="comment"># 将所有字典型数据块按照 key 排序后把 value 取出</span></span><br><span class="line">    sort_data.append(list_data[part_index])</span><br><span class="line">data = pandas.concat(sort_data, ignore_index=<span class="literal">True</span>)  <span class="comment"># 拼接数据</span></span><br></pre></td></tr></table></figure>
@@ -603,8 +603,8 @@
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chenyulancn/article/details/77836593" title="@LINK">python多进程共享变量Value使用tips</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27292549/article/details/78929296" title="@LINK">python中的multiprocessing在map函数中的加锁lock处理方式</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41935140/article/details/81153611" title="@LINK">使用进程池时遇到的坑…</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38765321/article/details/88376031" title="@LINK">TypeError: can’t pickle _thread.lock objects</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41935140/article/details/81153611" title="@LINK">使用进程池时遇到的坑...</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38765321/article/details/88376031" title="@LINK">TypeError: can&#39;t pickle _thread.lock objects</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/SuKiWX/p/8804974.html" title="@LINK">python中的GIL详解</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kaituorensheng/p/4445418.html" title="@LINK">Python多进程编程</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gengyi/p/8647950.html" title="@LINK">python学习笔记——multiprocessing 多进程组件-队列Queue</a></li>
@@ -617,7 +617,7 @@
 <li><a target="_blank" rel="noopener" href="http://breezedeus.github.io/2014/11/20/breezedeus-feature-hashing.html" title="@LINK">特征哈希（Feature Hashing）</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.datalearner.com/blog/1051537932880901" title="@LINK">数据特征处理之特征哈希（Feature Hashing）</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/laolu1573/article/details/79410187" title="@LINK">Feature hashing(特征哈希)</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/vim_wj/article/details/78300239" title="@LINK">github—-向开源框架提交pr的过程</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/vim_wj/article/details/78300239" title="@LINK">github----向开源框架提交pr的过程</a></li>
 </ul>
 
     </div>
@@ -862,14 +862,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">476k</span>
+    <span title="站点总字数">484k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:49</span>
+    <span title="站点阅读时长">8:57</span>
   </span>
 </div>
 

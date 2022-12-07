@@ -94,7 +94,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2022/10/30 - 21:28:05</p>
+      <p class="site-subtitle" itemprop="description">2022/12/07 - 20:29:06</p>
   </div>
 
   <div class="site-nav-right">
@@ -446,7 +446,7 @@
 <p>这个属性对应在源码 <code>next/layout/_third-party/comments/valine.swig</code> 中传递给了：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> guest = <span class="string">&#x27;&#123;&#123; theme.valine.guest_info &#125;&#125;&#x27;</span>;</span><br><span class="line">guest = guest.split(<span class="string">&#x27;,&#x27;</span>).filter(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> GUEST.indexOf(item) &gt; -<span class="number">1</span>;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="attr">meta</span>: guest,</span><br></pre></td></tr></table></figure>
 
-<p>这段代码的作用也就是从主体配置文件中获取 <code>guest_info</code> 属性，然后以 ‘,’ 分隔开，再从 <code>[&#39;nick&#39;, &#39;mail&#39;, &#39;link&#39;]</code> 中分别获取对应的字符串并组成数组，然后传给 <code>meta</code>。查看 Valine 官网资料可知，这个 <code>meta</code> 属性是 LeanCloud 存储评论的头部信息，这里定义几个属性，在 Valine 写入 LeanCloud 存储时，就会写入几个属性。</p>
+<p>这段代码的作用也就是从主体配置文件中获取 <code>guest_info</code> 属性，然后以 &#39;,&#39; 分隔开，再从 <code>[&#39;nick&#39;, &#39;mail&#39;, &#39;link&#39;]</code> 中分别获取对应的字符串并组成数组，然后传给 <code>meta</code>。查看 Valine 官网资料可知，这个 <code>meta</code> 属性是 LeanCloud 存储评论的头部信息，这里定义几个属性，在 Valine 写入 LeanCloud 存储时，就会写入几个属性。</p>
 <h4 id="3-1-1-直接修改写入属性"><a href="#3-1-1-直接修改写入属性" class="headerlink" title="3.1.1 直接修改写入属性"></a>3.1.1 直接修改写入属性</h4><p>如果希望输入框有几个属性，Valine 就固定向 LeanCloud 存储几个属性，则可以简单添加其他信息：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将 guest_info 重新赋值为 guest 遍历到的所有属性，否则默认只有上面 JS 中定义的 guest_info:[&#x27;nick&#x27;]</span></span><br><span class="line"><span class="attr">guest_info</span>: guest,</span><br><span class="line"><span class="attr">meta</span>: guest,</span><br></pre></td></tr></table></figure>
 
@@ -750,14 +750,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">476k</span>
+    <span title="站点总字数">484k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:49</span>
+    <span title="站点阅读时长">8:57</span>
   </span>
 </div>
 
