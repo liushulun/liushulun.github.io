@@ -78,7 +78,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2022/12/07 - 20:33:18</p>
+      <p class="site-subtitle" itemprop="description">2023/01/31 - 14:03:51</p>
   </div>
 
   <div class="site-nav-right">
@@ -480,8 +480,23 @@
 <h4 id="2-4-2-云服务器开启HTTPS"><a href="#2-4-2-云服务器开启HTTPS" class="headerlink" title="2.4.2 云服务器开启HTTPS"></a>2.4.2 云服务器开启HTTPS</h4><p>由于云服务器采用 Nginx 转发请求，因此需要将 SSL 证书下载并配置到 Nginx 中。配置 SSL 需要切换至 root 用户。</p>
 <p>（1）上传 SSL 证书至云服务器；</p>
 <p>从域名注册商下载已绑定的 SSL 证书并解压，找到 Nginx 下的两个证书，例如：<code>domain.crt</code> 和 <code>domain.key</code>，然后从本地上传到远端：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[luis@ssl]#</span><span class="bash"> scp ./domain.crt ubuntu@XXX.XXX.XXX.XXX:/home/ubuntu/domain.crt</span></span><br><span class="line"><span class="meta">[luis@ssl]#</span><span class="bash"> scp ./domain.key ubuntu@XXX.XXX.XXX.XXX:/home/ubuntu/domain.key</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 在本地终端执行以下代码：</span><br><span class="line"><span class="meta">[luis@ssl]#</span><span class="bash"> scp ./domain.crt ubuntu@XXX.XXX.XXX.XXX:/home/ubuntu/domain.crt</span></span><br><span class="line"><span class="meta">[luis@ssl]#</span><span class="bash"> scp ./domain.key ubuntu@XXX.XXX.XXX.XXX:/home/ubuntu/domain.key</span></span><br></pre></td></tr></table></figure>
 
+<p>注意，这一步命令可能会遇到报错 <code>Permission denied (publickey)</code>，则检查以下配置：</p>
+<ul>
+<li><p>检查目标路径的用户权限，例如服务器当前用户是 ubuntu，但 <code>/DemoDir</code> 这个目录可能是 root 用户权限，解决办法为：</p>
+<ul>
+<li>scp 命令改为指定 root 用户登录服务器，但通常服务器为了安全会禁用 root 用户的远端登录，因此不推荐。</li>
+<li>scp 目标路径临时选择一个 ubuntu 用户有权限的目录，然后登录到服务器后再移动到其他目录，此时可以自由切换 root 用户了。</li>
+</ul>
+</li>
+<li><p>检查服务器用户的 SSH 配置中是否绑定了本地公钥：</p>
+<ul>
+<li>查看服务器的 <code>~/.ssh/authorized_keys</code> 文件，是否包含本地 <code>~/.ssh/id_rsa.pub</code> 公钥内容。</li>
+<li>如果没有，则将本地 <code>id_rsa.pub</code> 公钥内容追加到服务器 <code>authorized_keys</code> 文件后（该文件可以包含多个公钥的内容）。</li>
+</ul>
+</li>
+</ul>
 <p>（2）将证书文件复制到云服务器中 Nginx 的默认配置路径：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> cp domain.crt /etc/nginx/domain.crt</span></span><br><span class="line"><span class="meta">root@/home/ubuntu/Projects#</span><span class="bash"> cp domain.key /etc/nginx/domain.key</span></span><br></pre></td></tr></table></figure>
 
@@ -744,7 +759,7 @@
 
 <div class="copyright">
   &copy; 2018 – 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -756,14 +771,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">484k</span>
+    <span title="站点总字数">485k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:57</span>
+    <span title="站点阅读时长">8:59</span>
   </span>
 </div>
 
