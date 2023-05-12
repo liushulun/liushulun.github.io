@@ -78,7 +78,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/01/31 - 14:03:51</p>
+      <p class="site-subtitle" itemprop="description">2023/05/12 - 17:08:40</p>
   </div>
 
   <div class="site-nav-right">
@@ -94,7 +94,7 @@
   <ul class="main-menu menu">
         
             
-  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>关于</a></li>
+  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li>
 
 
       
@@ -174,7 +174,7 @@
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
           <span class="site-state-item-count">83</span>
-          <span class="site-state-item-name">日志</span>
+          <span class="site-state-item-name">文章</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
@@ -329,7 +329,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>992</span>
+      <span>1.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -353,7 +353,7 @@
 <h1 id="iOS-CGAffineTransform"><a href="#iOS-CGAffineTransform" class="headerlink" title="iOS-CGAffineTransform"></a>iOS-CGAffineTransform</h1><p>scaleX = transform.a<br>scaleY = transform.d</p>
 <p>rotateX = transform.c<br>rotateY = transform.b</p>
 <p>translateX = transform.tx<br>translateY = transform.ty</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)scaleXFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.a * transform.a + transform.c * transform.c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)scaleYFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.b * transform.b + transform.d * transform.d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)rotateFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> atan2(transform.b, transform.d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)getScaleXFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.a * transform.a + transform.c * transform.c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getScaleYFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.b * transform.b + transform.d * transform.d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getRotateFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> atan2(transform.b, transform.d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getTranslateXFromTransform(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> transform.tx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getTranslateYFromTransform(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> transform.ty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如果一个 UIView 通过 CGAffineTransformScale 缩放，scale 比例为 0，会导致该 View 及其 Layer 无法获取 CGContext，如果尝试显示、或渲染这样的 View / Layer，会有如下错误日志：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Error&gt;: CGContextSaveGState: invalid context 0x0. If you want to see the backtrace, please <span class="built_in">set</span> CG_CONTEXT_SHOW_BACKTRACE environmental variable.</span><br></pre></td></tr></table></figure>
@@ -511,7 +511,7 @@
           <div class="reward-container">
   <div></div>
   <button>
-    全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub" ></i>&ensp;&ensp;支 持 一 下
+    支持一下
   </button>
   <div class="post-reward">
       <div>
@@ -534,7 +534,7 @@
       <a href="https://luisliu.cn/post/ios/ios-transform/" title="iOS-CGAffineTransform">https://luisliu.cn/post/ios/ios-transform/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+    <strong>版权声明： </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
   </li>
 </ul>
 </div>
@@ -605,15 +605,15 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-      <span>站点总字数：</span>
-    <span title="站点总字数">485k</span>
+      <span>全站总字数：</span>
+    <span title="全站总字数">485k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-      <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:59</span>
+      <span>全站总阅读时长 &asymp;</span>
+    <span title="全站总阅读时长">8:59</span>
   </span>
 </div>
 
