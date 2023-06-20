@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
-<meta name="generator" content="Hexo 5.4.0">
-
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
@@ -17,14 +15,15 @@
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
-  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="未完待续">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"menu_item":"fadeInDown","post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="未完待续">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LRU算法及其优化">
 <meta property="og:url" content="https://luisliu.cn/zh-CN/post/java/java-lru/index.html">
@@ -51,6 +50,10 @@
 
 
 
+
+
+
+
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -60,8 +63,8 @@
   <div class="headband"></div>
 
   <main class="main">
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="切换导航栏" role="button">
         <span class="toggle-line"></span>
@@ -77,11 +80,11 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/05/12 - 17:08:40</p>
+      <p class="site-subtitle" itemprop="description">2023/06/20 - 19:26:36</p>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
         <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
@@ -90,16 +93,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu">
-        
-            
-  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li>
-
-
-      
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -133,15 +127,9 @@
   </div>
 
 
-</div>
+</header>
         
   
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-
   <aside class="sidebar">
 
     <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
@@ -162,13 +150,13 @@
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="LuisLiu"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">LuisLiu</p>
   <div class="site-description" itemprop="description">Keep Learning</div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
@@ -188,46 +176,31 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author site-overview-item animated">
+  <div class="links-of-author animated">
       <span class="links-of-author-item">
-        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+        <a href="/" title="Home → &#x2F;" rel="noopener me"><i class="fa fa-home fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
       </span>
   </div>
-
-
 
 
         </div>
       </div>
     </div>
-  </aside>
-  <div class="sidebar-dimmer"></div>
-
-
-    </header>
 
     
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
+  </aside>
 
-  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
+    </div>
 
     <div class="main-inner post posts-expand">
 
@@ -245,12 +218,19 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="LuisLiu">
-      <meta itemprop="description" content="Keep Learning">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
     </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LRU算法及其优化 | LuisLiu">
+      <meta itemprop="description" content="未完待续">
+    </span>
+
+    
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           LRU算法及其优化
@@ -346,27 +326,6 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <span id="more"></span>
-
-<h1 id="LRU算法及其优化"><a href="#LRU算法及其优化" class="headerlink" title="LRU算法及其优化"></a>LRU算法及其优化</h1><p>LRU（Least Recently Used，最近最少使用）的本质是一个链表，新数据插入到链表头部，每当缓存命中，则将数据移到链表头部，当链表满了或者需要清理内存时，将链表尾部的数据丢弃。</p>
-<p>特点：当存在热点数据时，LRU 的效率很高，但偶发性的、周期性的批量操作会导致 LRU 命中率急剧下降，产生缓存污染的（将不常用的数据也存入缓存，降低了缓存效率）问题，且每次缓存命中时，都需要遍历链表，找到命中的数据块索引并移到头部。</p>
-<h2 id="1-LRU-K"><a href="#1-LRU-K" class="headerlink" title="1. LRU-K"></a>1. LRU-K</h2><p>为了改善 LRU 算法的缓存污染问题，额外维护一个队列用于记录所有缓存数据被访问的历史，只有当数据的访问次数打到 K 次，才存入缓存中。当数据被访问次数不到 K 次时，按照一定规则（FIFO、LRU 等）淘汰，当历史队列中的数据访问达到 K 次后，将其从队列中删除转移到缓存中，并按照时间顺序重新排列缓存数据，且缓存中的数据每次被访问后重新排序。当需要清理缓存时，淘汰缓存中排在末尾的数据，也即淘汰距离上次访问最久的数据。</p>
-<p>特点：LRU-K 降低了缓存污染带来的代价，命中率比 LRU 高，但由于其历史队列和缓存中的数据都具有优先级（可以即时排序也可以在需要淘汰数据时才排序），因此其算法复杂度和性能代价较高。尤其当有大量存入历史队列却还未存入缓存中的数据时，内存消耗较大。</p>
-<p>通常，LRU-2 是综合因素下的最优选择，LRU-3 或更高 K 值会提高命中率，但适应性较差，需要大量的数据访问才能冲洗历史队列表。</p>
-<h2 id="2-LRU-Two-Queues"><a href="#2-LRU-Two-Queues" class="headerlink" title="2. LRU-Two Queues"></a>2. LRU-Two Queues</h2><p>LRU-2Q 祛除了历史队列，而是直接使用两个缓存队列进行管理，其中一个缓存队列采用 FIFO 淘汰规则，另一个缓存队列采用 LRU 淘汰规则。一个新的数据首次被访问时，假如 FIFO 队列，当该数据再次被访问时，则转移到 LRU 队列中，LRU 队列中的数据再次被访问时，则移至 LRU 队列的头部，两个队列分别根据对应的淘汰规则按需淘汰数据。</p>
-<p>L特点：RU-2Q 的命中率高于 LRU，尽管需要两个队列，但两个队列的维护算法都比较简单。LRU-2Q 和 LRU-2 命中率、内存消耗都比较接近，不同处在于，LRU-2 中，数据首次被访问加入历史队列后，需要被访问 2 次才转移至缓存中，而 LRU-2Q 在数据首次被访问加入 FIFO 队列后，仅需再被访问 1 次即转移到缓存中。</p>
-<h2 id="3-LRU-Multi-Queues"><a href="#3-LRU-Multi-Queues" class="headerlink" title="3. LRU-Multi Queues"></a>3. LRU-Multi Queues</h2><p>LRU-MQ 拥有一个 LRU 历史队列 和 K 个 LRU 缓存队列，均采用 LRU 淘汰规则。当一个数据首次被访问时，加入到最低优先级的 LRU 缓存队列中，队列中的数据每次被访问则重新计算优先级并排序，当低优先级的队列中，当某个数据优先级达到下一级 LRU 缓存队列时，将其从当前 LRU 缓存队列转移到更高级的 LRU 缓存队列的头部。为避免高优先级的数据永不淘汰，当高优先级的 LRU 缓存队列中某个数据在指定时间内未被访问时，降低其优先级并转移到低优先级的 LRU 缓存队列的头部。所有 K 个 LRU 缓存队列中被淘汰的数据，均转移到 LRU 历史队列的头部，若 LRU 历史队列中的数据重新被访问，则重新计算优先级，并根据优先级转移到目标 LRU 缓存队列的头部，否则根据 LRU 算法直到被完全淘汰，</p>
-<p>LRU-MQ 进一步降低了缓存污染的问题，着重突出了“优先缓存访问次数多的数据”的思想，但由于具有多个队列，且每个队列都需要维护每个数据的访问时间，当 LRU-MQ 中队列数和数据量过多时，具有较高的复杂度。不过，尽管 LRU-MQ 的队列数量较多，但由于内存是有限的，因此所有的队列所占内存之和仍是受限的，因此多个短队列的长度之和与单个长队列的长度相差不大，其队列扫描性能仍然比较接近。</p>
-<h2 id="4-LRUCache"><a href="#4-LRUCache" class="headerlink" title="4. LRUCache"></a>4. LRUCache</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> LruCache&lt;String, Bitmap&gt; mLruCache = <span class="keyword">new</span> LruCache&lt;String, Bitmap&gt;(cacheSize) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//计算一个元素的缓存大小</span></span><br><span class="line">        <span class="keyword">return</span> value.getByteCount();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">addBitmap(String key, Bitmap bitmap) &#123;&#125;</span><br><span class="line">getBitmap(String key) &#123;&#125;</span><br><span class="line">removeBitmapFromMemory(String key) &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-
 
 <!-- 注释开始 ########################################
 
@@ -423,8 +382,26 @@
         }
     });
 </script>
+<span id="more"></span>
 
+<h1 id="LRU算法及其优化"><a href="#LRU算法及其优化" class="headerlink" title="LRU算法及其优化"></a>LRU算法及其优化</h1><p>LRU（Least Recently Used，最近最少使用）的本质是一个链表，新数据插入到链表头部，每当缓存命中，则将数据移到链表头部，当链表满了或者需要清理内存时，将链表尾部的数据丢弃。</p>
+<p>特点：当存在热点数据时，LRU 的效率很高，但偶发性的、周期性的批量操作会导致 LRU 命中率急剧下降，产生缓存污染的（将不常用的数据也存入缓存，降低了缓存效率）问题，且每次缓存命中时，都需要遍历链表，找到命中的数据块索引并移到头部。</p>
+<h2 id="1-LRU-K"><a href="#1-LRU-K" class="headerlink" title="1. LRU-K"></a>1. LRU-K</h2><p>为了改善 LRU 算法的缓存污染问题，额外维护一个队列用于记录所有缓存数据被访问的历史，只有当数据的访问次数打到 K 次，才存入缓存中。当数据被访问次数不到 K 次时，按照一定规则（FIFO、LRU 等）淘汰，当历史队列中的数据访问达到 K 次后，将其从队列中删除转移到缓存中，并按照时间顺序重新排列缓存数据，且缓存中的数据每次被访问后重新排序。当需要清理缓存时，淘汰缓存中排在末尾的数据，也即淘汰距离上次访问最久的数据。</p>
+<p>特点：LRU-K 降低了缓存污染带来的代价，命中率比 LRU 高，但由于其历史队列和缓存中的数据都具有优先级（可以即时排序也可以在需要淘汰数据时才排序），因此其算法复杂度和性能代价较高。尤其当有大量存入历史队列却还未存入缓存中的数据时，内存消耗较大。</p>
+<p>通常，LRU-2 是综合因素下的最优选择，LRU-3 或更高 K 值会提高命中率，但适应性较差，需要大量的数据访问才能冲洗历史队列表。</p>
+<h2 id="2-LRU-Two-Queues"><a href="#2-LRU-Two-Queues" class="headerlink" title="2. LRU-Two Queues"></a>2. LRU-Two Queues</h2><p>LRU-2Q 祛除了历史队列，而是直接使用两个缓存队列进行管理，其中一个缓存队列采用 FIFO 淘汰规则，另一个缓存队列采用 LRU 淘汰规则。一个新的数据首次被访问时，假如 FIFO 队列，当该数据再次被访问时，则转移到 LRU 队列中，LRU 队列中的数据再次被访问时，则移至 LRU 队列的头部，两个队列分别根据对应的淘汰规则按需淘汰数据。</p>
+<p>L特点：RU-2Q 的命中率高于 LRU，尽管需要两个队列，但两个队列的维护算法都比较简单。LRU-2Q 和 LRU-2 命中率、内存消耗都比较接近，不同处在于，LRU-2 中，数据首次被访问加入历史队列后，需要被访问 2 次才转移至缓存中，而 LRU-2Q 在数据首次被访问加入 FIFO 队列后，仅需再被访问 1 次即转移到缓存中。</p>
+<h2 id="3-LRU-Multi-Queues"><a href="#3-LRU-Multi-Queues" class="headerlink" title="3. LRU-Multi Queues"></a>3. LRU-Multi Queues</h2><p>LRU-MQ 拥有一个 LRU 历史队列 和 K 个 LRU 缓存队列，均采用 LRU 淘汰规则。当一个数据首次被访问时，加入到最低优先级的 LRU 缓存队列中，队列中的数据每次被访问则重新计算优先级并排序，当低优先级的队列中，当某个数据优先级达到下一级 LRU 缓存队列时，将其从当前 LRU 缓存队列转移到更高级的 LRU 缓存队列的头部。为避免高优先级的数据永不淘汰，当高优先级的 LRU 缓存队列中某个数据在指定时间内未被访问时，降低其优先级并转移到低优先级的 LRU 缓存队列的头部。所有 K 个 LRU 缓存队列中被淘汰的数据，均转移到 LRU 历史队列的头部，若 LRU 历史队列中的数据重新被访问，则重新计算优先级，并根据优先级转移到目标 LRU 缓存队列的头部，否则根据 LRU 算法直到被完全淘汰，</p>
+<p>LRU-MQ 进一步降低了缓存污染的问题，着重突出了“优先缓存访问次数多的数据”的思想，但由于具有多个队列，且每个队列都需要维护每个数据的访问时间，当 LRU-MQ 中队列数和数据量过多时，具有较高的复杂度。不过，尽管 LRU-MQ 的队列数量较多，但由于内存是有限的，因此所有的队列所占内存之和仍是受限的，因此多个短队列的长度之和与单个长队列的长度相差不大，其队列扫描性能仍然比较接近。</p>
+<h2 id="4-LRUCache"><a href="#4-LRUCache" class="headerlink" title="4. LRUCache"></a>4. LRUCache</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> LruCache&lt;String, Bitmap&gt; mLruCache = <span class="keyword">new</span> LruCache&lt;String, Bitmap&gt;(cacheSize) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//计算一个元素的缓存大小</span></span><br><span class="line">        <span class="keyword">return</span> value.getByteCount();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">addBitmap(String key, Bitmap bitmap) &#123;&#125;</span><br><span class="line">getBitmap(String key) &#123;&#125;</span><br><span class="line">removeBitmapFromMemory(String key) &#123;&#125;</span><br></pre></td></tr></table></figure>
 
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
 
 <!-- 注释开始 ########################################
 
@@ -501,7 +478,7 @@
 ######################################## 注释结束 -->
 
           <div class="reward-container">
-  <div></div>
+  <div>reward.comment</div>
   <button>
     支持一下
   </button>
@@ -526,7 +503,7 @@
       <a href="https://luisliu.cn/post/java/java-lru/" title="LRU算法及其优化">https://luisliu.cn/post/java/java-lru/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明： </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+      <strong>版权声明： </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
   </li>
 </ul>
 </div>
@@ -613,15 +590,29 @@
   </footer>
 
   
-  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="GitHub主页" aria-label="GitHub主页" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
 
   
-<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
 <script src="/js/third-party/search/local-search.js"></script>
+
 
 
 
@@ -629,14 +620,15 @@
 
   <script src="/js/third-party/pace.js"></script>
 
-  
-
-
-
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
@@ -652,15 +644,34 @@
         border-bottom: none;
     }
 </style>
-<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
-    <span class="fa fa-arrow-down"> Down</span>
-</div>
 
+<!-- 直接将点击事件写在 CSS 中，则没有动画效果：
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    <span>Down</span>
+</div>
+-->
+
+<!-- 将 CSS 和点击事件分开实现 -->
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    <span>Down</span>
+</div>
 <script>
     $(function() {
+        const scrollToBottom = document.querySelector('.scrollToBottom');
+        /* 内联写法：
         $('.scrollToBottom').click(function(){
-            
-            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+            $('html,body').animate({scrollTop:document.body.scrollHeight}, 500);
+        });
+        */
+        scrollToBottom && scrollToBottom.addEventListener('click', () => {
+            window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: document.scrollingElement.scrollHeight
+            });
         });
     })
 </script>
