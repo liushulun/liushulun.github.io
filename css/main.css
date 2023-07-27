@@ -3187,9 +3187,6 @@ header.header {
   border-bottom: none;
   cursor: text;
 }
-.post-description::before {
-  content: "简介：";
-}
 .post-topnav {
   border-top: none;
   border-bottom: 1px solid var(--custom-color-theme);

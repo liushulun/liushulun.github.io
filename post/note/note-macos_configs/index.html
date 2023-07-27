@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"menu_item":"fadeInDown","post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Configs and commands in MacOS.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MacOS Configs">
+<meta property="og:url" content="https://luisliu.cn/post/note/note-macos_configs/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="Configs and commands in MacOS.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-31T16:00:00.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Note">
+<meta property="article:tag" content="MacOS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/post/note/note-macos_configs/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/note/note-macos_configs/","path":"post/note/note-macos_configs/","title":"MacOS Configs"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MacOS Configs | LuisLiu</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2023/07/27 - 14:04:38</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">85</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">156</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Catalogue
+        </li>
+        <li class="sidebar-nav-overview">
+          Site
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MacOS-Configs"><span class="nav-text">MacOS Configs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-System"><span class="nav-text">1. System</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Drivers"><span class="nav-text">1.1 Drivers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Extensions"><span class="nav-text">1.2 Extensions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Startup"><span class="nav-text">1.3 Startup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-Update"><span class="nav-text">1.4 Update</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-Dock"><span class="nav-text">1.5 Dock</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-Launchpad"><span class="nav-text">1.6 Launchpad</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-Keyboard"><span class="nav-text">1.7 Keyboard</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Application"><span class="nav-text">2. Application</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Finder"><span class="nav-text">2.1 Finder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-DS-Store-Files"><span class="nav-text">2.2 DS_Store Files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-XCode"><span class="nav-text">2.3 XCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Common"><span class="nav-text">3. Common</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Shell-Configs"><span class="nav-text">3.1 Shell Configs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Functional-Commands"><span class="nav-text">3.2 Functional Commands</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Issues"><span class="nav-text">4. Issues</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-App-Damaged"><span class="nav-text">4.1 App Damaged</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Reinstall-MacOS"><span class="nav-text">4.2 Reinstall MacOS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Unsupported-Apps"><span class="nav-text">4.3 Unsupported Apps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Environment"><span class="nav-text">5. Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Develop"><span class="nav-text">5.1 Develop</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">85</span>
+          <span class="site-state-item-name">Posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">Categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">156</span>
+        <span class="site-state-item-name">Tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;" rel="noopener me"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/note/note-macos_configs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MacOS Configs | LuisLiu">
+      <meta itemprop="description" content="Configs and commands in MacOS.">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MacOS Configs
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted:</span>
+
+      <time title="Created:: 2018-08-01 00:00:00" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">2018-08-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">Categories:</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Note/" itemprop="url" rel="index"><span itemprop="name">Note</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+
+
+<!-- 注释开始 #############################################
+
+  <script>
+    function post_nav(post) {
+      const theme = hexo.theme.config;
+      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
+      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
+      const next = theme.post_navigation === 'right' ? post.next : post.prev;
+      const left = prev ? `
+        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
+          <i class="fa fa-chevron-left"></i> ${prev.title}
+        </a>` : '';
+      const right = next ? `
+        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
+          ${next.title} <i class="fa fa-chevron-right"></i>
+        </a>` : '';
+      return `
+        <div class="post-nav">
+          <div class="post-nav-item">${left}</div>
+          <div class="post-nav-item">${right}</div>
+        </div>`;
+    }
+  </script>
+  
+  <div style="position: absolute; top: -20px;">post_nav(post)</div>
+
+############################################# 注释结束 -->
+
+
+<!-- 注释开始 #############################################
+  
+  <div style="position: fixed; width: 100%;">
+    
+      <div class="post-tags">
+          <a href="/tags/Note/" rel="tag"><i class="fa fa-tag"></i> Note</a>
+          <a href="/tags/MacOS/" rel="tag"><i class="fa fa-tag"></i> MacOS</a>
+      </div>
+  </div>
+############################################# 注释结束 -->
+
+    <span class="post-meta-item" title="Symbols">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Symbols: </span>
+      <span>6.2k</span>
+    </span>
+    <span class="post-meta-item" title="Duration">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Duration &asymp;</span>
+      <span>7 mins.</span>
+    </span>
+</div>
+
+            <div class="post-description">Configs and commands in MacOS.</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+<!-- 注释开始 ########################################
+
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+######################################## 注释结束 -->
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    var OriginTitle = document.title;
+    var titleTime;
+    var titleTime2;
+    var titleTime3;
+    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
+    blankTitle = blankTitle + blankTitle + blankTitle;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = OriginTitle;
+            clearTimeout(titleTime);
+            clearTimeout(titleTime2);
+            clearTimeout(titleTime3);
+        }
+        else {
+            document.title = "Welcome";
+            titleTime = setTimeout(function () {
+                document.title = "Back";
+                titleTime2 = setTimeout(function () {
+                    document.title = "Welcome Back !";
+                    titleTime3 = setTimeout(function () {
+                        document.title = OriginTitle;
+                    }, 500);
+                }, 300);
+            }, 300);
+        }
+    });
+</script>
+<span id="more"></span>
+
+<h1 id="MacOS-Configs"><a href="#MacOS-Configs" class="headerlink" title="MacOS Configs"></a>MacOS Configs</h1><h2 id="1-System"><a href="#1-System" class="headerlink" title="1. System"></a>1. System</h2><h3 id="1-1-Drivers"><a href="#1-1-Drivers" class="headerlink" title="1.1 Drivers"></a>1.1 Drivers</h3><p>(1) Drivers installation directory:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Library/Extensions</span><br></pre></td></tr></table></figure>
+
+<p>Driver uninstallers should be found in that directory, or they can be uninstalled by removing the extensions files.</p>
+<h3 id="1-2-Extensions"><a href="#1-2-Extensions" class="headerlink" title="1.2 Extensions"></a>1.2 Extensions</h3><p>(1) Extensions cache directory:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/System/Library/Extensions</span><br></pre></td></tr></table></figure>
+
+<p>To reset the extensions cache, execute the command <code>sudo kextcache --prune-staging</code> in this directory:</p>
+<h3 id="1-3-Startup"><a href="#1-3-Startup" class="headerlink" title="1.3 Startup"></a>1.3 Startup</h3><p>(1) Startup automatically</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Prevent startup by keyboard and trackpad:</span></span><br><span class="line">sudo nvram AutoBoot=%00</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Enable startup by keyboard and trackpad:</span></span><br><span class="line">sudo nvram AutoBoot=%03</span><br></pre></td></tr></table></figure>
+
+<p>(2) Startup sound</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Enable startup sound:</span></span><br><span class="line">sudo nvram BootAudio=%01</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Disable startup sound:</span></span><br><span class="line">sudo nvram BootAudio=%00</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Startup sound can be controlled in <code>System Settings - Sound</code> on MacOS 10.15 (Catalina) and above.</p>
+</blockquote>
+<h3 id="1-4-Update"><a href="#1-4-Update" class="headerlink" title="1.4 Update"></a>1.4 Update</h3><p>(1) Check and download:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> List all available full installers:</span></span><br><span class="line">softwareupdate --list-full-installers</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Download full installer <span class="keyword">for</span> version &#123;xx.yy.zz&#125;:</span></span><br><span class="line">softwareupdate --fetch-full-installer --full-installer-version &#123;xx.yy.zz&#125;</span><br></pre></td></tr></table></figure>
+
+<p>(2) Ignore and reset:</p>
+<ul>
+<li>Ignore update and notification:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Ignore update:</span></span><br><span class="line">sudo softwareupdate --ignore &quot;macOS Big Sur&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Dismiss red-dot:</span></span><br><span class="line">defaults write com.apple.systempreferences AttentionPrefBundleIDs 0</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Restart Dock process:</span></span><br><span class="line">killall Dock</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Reset update notification:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Reset ignored update:</span></span><br><span class="line">sudo softwareupdate --reset-ignored</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Reset red-dot:</span></span><br><span class="line">defaults delete com.apple.systempreferences AttentionPrefBundleIDs</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Restart Dock process:</span></span><br><span class="line">killall Dock</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-Dock"><a href="#1-5-Dock" class="headerlink" title="1.5 Dock"></a>1.5 Dock</h3><p>(1) Dock behavior</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Remove delay time of showing and hiding dock by cursor:</span></span><br><span class="line">defaults write com.apple.Dock autohide-delay -float 0 &amp;&amp; killall Dock</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Reset delay time of showing and hiding dock to default:</span></span><br><span class="line">defaults delete com.apple.Dock autohide-delay &amp;&amp; killall Dock</span><br></pre></td></tr></table></figure>
+
+<p>(2) Dock bar size</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Set customized size <span class="keyword">for</span> dock bar:</span></span><br><span class="line">defaults write com.apple.dock tilesize -integer 48 &amp;&amp; killall Dock</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Get current size of dock bar:</span></span><br><span class="line">defaults read com.apple.dock tilesize &amp;&amp; killall Dock</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Set size of dock bar to default(48):</span></span><br><span class="line">defaults delete com.apple.dock tilesize &amp;&amp; killall Dock</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-6-Launchpad"><a href="#1-6-Launchpad" class="headerlink" title="1.6 Launchpad"></a>1.6 Launchpad</h3><p>(1) Launchpad layout</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Show 8 items per row <span class="keyword">in</span> Launchpad:</span></span><br><span class="line">defaults write com.apple.dock springboard-rows -int 8 &amp;&amp; killall Dock</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Show 5 items per column <span class="keyword">in</span> Launchpad:</span></span><br><span class="line">defaults write com.apple.dock springboard-columns -int 5 &amp;&amp; killall Dock</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Reset Launchpad layout:</span></span><br><span class="line">defaults write com.apple.dock ResetLaunchPad -bool TRUE &amp;&amp; killall Dock</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-7-Keyboard"><a href="#1-7-Keyboard" class="headerlink" title="1.7 Keyboard"></a>1.7 Keyboard</h3><p>(1) Switch keyboard long-press behavior:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Enable repeat input by long-press:</span></span><br><span class="line">defaults write -g ApplePressAndHoldEnabled -bool false</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Disable repeat input by long-press:</span></span><br><span class="line">defaults write -g ApplePressAndHoldEnabled -bool true</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-Application"><a href="#2-Application" class="headerlink" title="2. Application"></a>2. Application</h2><h3 id="2-1-Finder"><a href="#2-1-Finder" class="headerlink" title="2.1 Finder"></a>2.1 Finder</h3><p>(1) Finder tab title style</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Display the full path of current file or directory <span class="keyword">in</span> Finder tab:</span></span><br><span class="line">defaults write com.apple.finder _FXShowPosixPathInTitle -bool TRUE; killall Finder</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Restore title style of tab <span class="keyword">in</span> Finder:</span></span><br><span class="line">defaults delete com.apple.finder _FXShowPosixPathInTitle; killall Finder</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-DS-Store-Files"><a href="#2-2-DS-Store-Files" class="headerlink" title="2.2 DS_Store Files"></a>2.2 DS_Store Files</h3><blockquote>
+<p>.DS_Store files are hidden on MacOS, used to record and describe the property of folders, such as folder icon or background (similar to desktop.ini files on Windows).</p>
+</blockquote>
+<p>(1) Switch the .DS_Store file generating behavior:</p>
+<ul>
+<li>Execute the command below:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Disable generating .DS_Store files:</span></span><br><span class="line">defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool TRUE</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Reset to <span class="built_in">enable</span> generating .DS_Store files:</span></span><br><span class="line">defaults delete com.apple.desktopservices DSDontWriteNetworkStores</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Reboot MacOS.</li>
+</ul>
+<p>(2) Remove existing .DS_Store files manually:</p>
+<ul>
+<li>Specific a type of <code>Sort By</code> in Finder, then execute the command below to remove all existing .DS_Store files:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Find and delete .DS_Store under current directory recursively:</span></span><br><span class="line">find . -name &#x27;*.DS_Store&#x27; -type f -delete</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> [Warging] Find and delete .DS_Store Files under root directory recursively by super user:</span></span><br><span class="line">sudo find / -name &quot;.DS_Store&quot; -depth -exec rm &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-XCode"><a href="#2-3-XCode" class="headerlink" title="2.3 XCode"></a>2.3 XCode</h3><p>(1) Build time:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defaults write com.apple.dt.Xcode ShowBuildOperationDuration YES</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-Common"><a href="#3-Common" class="headerlink" title="3. Common"></a>3. Common</h3><h3 id="3-1-Shell-Configs"><a href="#3-1-Shell-Configs" class="headerlink" title="3.1 Shell Configs"></a>3.1 Shell Configs</h3><p>(1) Change command title in shell:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ---------- Shell Configs</span></span><br><span class="line">PS1=&quot;[%n@%1~]%# &quot;</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## PS1=&quot;%n@%m %1~ %# &quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-Functional-Commands"><a href="#3-2-Functional-Commands" class="headerlink" title="3.2 Functional Commands"></a>3.2 Functional Commands</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ---------- Functions</span></span><br><span class="line">findFile() &#123;</span><br><span class="line">    # Input file name (example.txt) as &#123;$1&#125;:</span><br><span class="line">    grep -r ./ -e &quot;$1&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">digHost() &#123;</span><br><span class="line">    # Input host name (example.com) as &#123;$1&#125;:</span><br><span class="line">    dig $1 +nostats +nocomments +nocmd</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">logPower() &#123;</span><br><span class="line">    sudo powermetrics | grep &#x27;Combined Power (CPU + GPU + ANE): &#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Issues"><a href="#4-Issues" class="headerlink" title="4. Issues"></a>4. Issues</h2><h3 id="4-1-App-Damaged"><a href="#4-1-App-Damaged" class="headerlink" title="4.1 App Damaged"></a>4.1 App Damaged</h3><p>If opening an App causes a warning <code>&#123;App&#125; is damaged and can&#39;t be opened</code>, execute the command below:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo xattr -d com.apple.quarantine /Applications/xxxx.app</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-Reinstall-MacOS"><a href="#4-2-Reinstall-MacOS" class="headerlink" title="4.2 Reinstall MacOS"></a>4.2 Reinstall MacOS</h3><p>On Mac with Apple-Silicon, erasing the disk makes MacOS continually rebooting. Remove by <code>Find</code> or <code>Find My Mac</code> and then reboot Mac will force reinstalling a MacOS from network.</p>
+<h3 id="4-3-Unsupported-Apps"><a href="#4-3-Unsupported-Apps" class="headerlink" title="4.3 Unsupported Apps"></a>4.3 Unsupported Apps</h3><p>Use the Application <code>CrossOver</code> to run Windows App on MacOS.</p>
+<hr>
+<h2 id="5-Environment"><a href="#5-Environment" class="headerlink" title="5. Environment"></a>5. Environment</h2><h3 id="5-1-Develop"><a href="#5-1-Develop" class="headerlink" title="5.1 Develop"></a>5.1 Develop</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> ---------- Global</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## export http_proxy=http://127.0.0.1:&lt;port&gt;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## export https_proxy=http://127.0.0.1:&lt;port&gt;</span></span></span><br><span class="line">export DEVELOP_HOME=/Applications/Develop</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- Java</span></span><br><span class="line">export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home</span><br><span class="line">export JAVA_SYSTEM=/usr/bin/java</span><br><span class="line">export PATH=$&#123;PATH&#125;:$&#123;JAVA_HOME&#125;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- Maven</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## export MAVEN_HOME=$&#123;DEVELOP_HOME&#125;/Maven-3.6.3/bin</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## export PATH=$&#123;PATH&#125;:$&#123;MAVEN_HOME&#125;</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- FFMPEG</span></span><br><span class="line">export FFMPEG_HOME=$&#123;DEVELOP_HOME&#125;/FFmpeg</span><br><span class="line">export PATH=$&#123;PATH&#125;:$&#123;FFMPEG_HOME&#125;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- Android Paths</span></span><br><span class="line">export ANDROID_SDK_HOME=$&#123;DEVELOP_HOME&#125;/AndroidSDK</span><br><span class="line">export ANDROID_TOOLS=$&#123;ANDROID_SDK_HOME&#125;/tools</span><br><span class="line">export ANDROID_PLATFORM_TOOLS=$&#123;ANDROID_SDK_HOME&#125;/platform-tools</span><br><span class="line">export ANDROID_NDK_HOME=$&#123;ANDROID_SDK_HOME&#125;/ndk/android-ndk-r16b/build</span><br><span class="line">export PATH=$&#123;PATH&#125;:$&#123;ANDROID_TOOLS&#125;:$&#123;ANDROID_PLATFORM_TOOLS&#125;:$&#123;ANDROID_NDK_HOME&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## export APKTOOLS=$&#123;DEVELOP_HOME&#125;/APKTools</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## export DEXTOJAR=$&#123;DEVELOP_HOME&#125;/dex2jar</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## export PATH=$&#123;PATH&#125;:$&#123;APKTOOLS&#125;:$&#123;DEXTOJAR&#125;</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- Android Alias</span></span><br><span class="line">alias showActivity=&#x27;adb shell dumpsys activity activities&#x27;</span><br><span class="line">alias showRunningActivity=&quot;adb shell dumpsys activity activities | sed -En -e &#x27;/Running activities/,/Run #0/p&#x27;&quot;</span><br><span class="line">alias showCrash=&#x27;adb shell dumpsys dropbox&#x27;</span><br><span class="line">alias clearMavenLocal=&#x27;rm -rf ~/.m2/repository/com&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------- Android Function</span></span><br><span class="line">adbScheme() &#123;</span><br><span class="line">    # Input scheme (demo://example?key1=value1) as &#123;$1&#125;:</span><br><span class="line">    adb -d shell am start -a android.intent.action.VIEW -d &quot;$1&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+          <div class="reward-container">
+  <div> </div>
+  <button>
+    支持一下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/reward.png" alt="LuisLiu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://luisliu.cn/post/note/note-macos_configs/" title="MacOS Configs">https://luisliu.cn/post/note/note-macos_configs/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All posts are written by Luis and licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a>, please get authorized before any references.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Note/" rel="tag"><i class="fa fa-tag"></i> Note</a>
+              <a href="/tags/MacOS/" rel="tag"><i class="fa fa-tag"></i> MacOS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/note/note-work_record/" rel="prev" title="面试记录">
+                  <i class="fa fa-chevron-left"></i> 面试记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/hexodiy/hexodiy-solutions/" rel="next" title="Hexo-问题及方案">
+                  Hexo-问题及方案 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>English</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="Select language">
+      
+        <option value="en" data-href="/post/note/note-macos_configs/" selected="">
+          English
+        </option>
+      
+        <option value="zh-CN" data-href="/zh-CN/post/note/note-macos_configs/" selected="">
+          简体中文
+        </option>
+      
+    </select>
+  </div>
+
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Symbols: </span>
+    <span title="Symbols">497k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Duration &asymp;</span>
+    <span title="Duration">9:12</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+
+<!-- 直接将点击事件写在 CSS 中，则没有动画效果：
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    <span>Down</span>
+</div>
+-->
+
+<!-- 将 CSS 和点击事件分开实现 -->
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    <span>Down</span>
+</div>
+<script>
+    $(function() {
+        const scrollToBottom = document.querySelector('.scrollToBottom');
+        /* 内联写法：
+        $('.scrollToBottom').click(function(){
+            $('html,body').animate({scrollTop:document.body.scrollHeight}, 500);
+        });
+        */
+        scrollToBottom && scrollToBottom.addEventListener('click', () => {
+            window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: document.scrollingElement.scrollHeight
+            });
+        });
+    })
+</script>
+
+<a id='postBottom'></a>
+</body>
+</html>

@@ -23,12 +23,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.17.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"menu_item":"fadeInDown","post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="未完待续。">
+    <meta name="description" content="（1）Transform 的定义；（2）Transform 的逆运算（从一个 Transform 中获取各个变换元素）；（3）使用 Transform 的注意事项。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS-CGAffineTransform">
 <meta property="og:url" content="https://luisliu.cn/zh-CN/post/ios/ios-transform/index.html">
 <meta property="og:site_name" content="LuisLiu">
-<meta property="og:description" content="未完待续。">
+<meta property="og:description" content="（1）Transform 的定义；（2）Transform 的逆运算（从一个 Transform 中获取各个变换元素）；（3）使用 Transform 的注意事项。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-06-26T01:55:05.000Z">
 <meta property="article:author" content="LuisLiu">
@@ -81,7 +81,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/06/25 - 12:37:42</p>
+      <p class="site-subtitle" itemprop="description">2023/07/27 - 14:04:38</p>
   </div>
 
   <div class="site-nav-right">
@@ -94,7 +94,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">85</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">156</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS-CGAffineTransform"><span class="nav-text">iOS-CGAffineTransform</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS-CGAffineTransform"><span class="nav-text">iOS-CGAffineTransform</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Transform%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">1. Transform的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Transform%E7%9A%84%E9%80%86%E8%BF%90%E7%AE%97"><span class="nav-text">2. Transform的逆运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8Transform%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-text">3. 使用Transform的注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -161,7 +161,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">83</span>
+          <span class="site-state-item-count">85</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -172,7 +172,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-count">156</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -228,7 +228,7 @@
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
       <meta itemprop="name" content="iOS-CGAffineTransform | LuisLiu">
-      <meta itemprop="description" content="未完待续。">
+      <meta itemprop="description" content="（1）Transform 的定义；（2）Transform 的逆运算（从一个 Transform 中获取各个变换元素）；（3）使用 Transform 的注意事项。">
     </span>
 
     
@@ -309,7 +309,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
+      <span>1.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -320,7 +320,7 @@
     </span>
 </div>
 
-            <div class="post-description">未完待续。</div>
+            <div class="post-description">（1）Transform 的定义；（2）Transform 的逆运算（从一个 Transform 中获取各个变换元素）；（3）使用 Transform 的注意事项。</div>
         </div>
       </header>
 
@@ -386,12 +386,14 @@
 </script>
 <span id="more"></span>
 
-<h1 id="iOS-CGAffineTransform"><a href="#iOS-CGAffineTransform" class="headerlink" title="iOS-CGAffineTransform"></a>iOS-CGAffineTransform</h1><p>scaleX = transform.a<br>scaleY = transform.d</p>
+<h1 id="iOS-CGAffineTransform"><a href="#iOS-CGAffineTransform" class="headerlink" title="iOS-CGAffineTransform"></a>iOS-CGAffineTransform</h1><h2 id="1-Transform的定义"><a href="#1-Transform的定义" class="headerlink" title="1. Transform的定义"></a>1. Transform的定义</h2><p>scaleX = transform.a<br>scaleY = transform.d</p>
 <p>rotateX = transform.c<br>rotateY = transform.b</p>
 <p>translateX = transform.tx<br>translateY = transform.ty</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)getScaleXFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.a * transform.a + transform.c * transform.c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getScaleYFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.b * transform.b + transform.d * transform.d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getRotateFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> atan2(transform.b, transform.d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getTranslateXFromTransform(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> transform.tx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getTranslateYFromTransform(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> transform.ty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="2-Transform的逆运算"><a href="#2-Transform的逆运算" class="headerlink" title="2. Transform的逆运算"></a>2. Transform的逆运算</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)getScaleXFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.a * transform.a + transform.c * transform.c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getScaleYFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> sqrt(transform.b * transform.b + transform.d * transform.d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getRotateFromTransform:(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> atan2(transform.b, transform.d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getTranslateXFromTransform(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> transform.tx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)getTranslateYFromTransform(<span class="built_in">CGAffineTransform</span>)transform &#123;</span><br><span class="line">    <span class="keyword">return</span> transform.ty;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果一个 UIView 通过 CGAffineTransformScale 缩放，scale 比例为 0，会导致该 View 及其 Layer 无法获取 CGContext，如果尝试显示、或渲染这样的 View / Layer，会有如下错误日志：</p>
+<hr>
+<h2 id="3-使用Transform的注意事项"><a href="#3-使用Transform的注意事项" class="headerlink" title="3. 使用Transform的注意事项"></a>3. 使用Transform的注意事项</h2><p>如果一个 UIView 通过 CGAffineTransformScale 缩放，scale 比例为 0，会导致该 View 及其 Layer 无法获取 CGContext，如果尝试显示、或渲染这样的 View / Layer，会有如下错误日志：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Error&gt;: CGContextSaveGState: invalid context 0x0. If you want to see the backtrace, please <span class="built_in">set</span> CG_CONTEXT_SHOW_BACKTRACE environmental variable.</span><br></pre></td></tr></table></figure>
 
 <hr>
@@ -456,8 +458,8 @@
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/post/ios/ios-transition_bug/" rel="next" title="iOS-ViewController转场动画可能改变View尺寸">
-                  iOS-ViewController转场动画可能改变View尺寸 <i class="fa fa-chevron-right"></i>
+                <a href="/post/ios/ios-transition_bug/" rel="next" title="iOS-UIViewController转场动画导致的异常">
+                  iOS-UIViewController转场动画导致的异常 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -509,14 +511,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>全站总字数：</span>
-    <span title="全站总字数">485k</span>
+    <span title="全站总字数">497k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>全站总阅读时长 &asymp;</span>
-    <span title="全站总阅读时长">8:59</span>
+    <span title="全站总阅读时长">9:12</span>
   </span>
 </div>
 
