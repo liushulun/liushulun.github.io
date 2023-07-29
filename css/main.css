@@ -3244,7 +3244,7 @@ div.post-toc li.nav-item a:hover {
   border-bottom: 1px var(--custom-color-theme) solid;
   transition-property: none;
 }
-div.post-body ::selection {
+div ::selection {
   background: var(--custom-color-theme);
 }
 div.post-body strong {
