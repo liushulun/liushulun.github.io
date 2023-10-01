@@ -56,6 +56,58 @@
 
 
 
+
+<script>
+    function findNodeByClassNames(node, classNameList, isChild) {
+        if (node == null) {
+            return null;
+        }
+        if (classNameList == null || classNameList.length <= 0) {
+            return node;
+        }
+        var isClassMatched = true;
+        for (var i = 0; i < classNameList.length; i++) {
+            if (!node.classList.contains(classNameList[i])) {
+                isClassMatched = false;
+                break;
+            }
+        }
+        if (isClassMatched) {
+            return node;
+        }
+        if (isChild) {
+            const children = node.children;
+            if (children == null || children.length <= 0) {
+                return null;
+            }
+            for (var i = 0; i < children.length; i++) {
+                const foundNode = findNodeByClassNames(children[i], classNameList, true);
+                if (foundNode != null) {
+                    return foundNode;
+                }
+            }
+        } else {
+            const foundNode = findNodeByClassNames(node.parentNode, classNameList, false);
+            if (foundNode != null) {
+                return foundNode;
+            }
+        }
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const allPostBlocks = document.getElementsByClassName(['post-block']); // 只查找 post-block 而不查找 animated, fadeInDown 这种可能会变的
+        if (allPostBlocks == null || allPostBlocks.length <= 0) {
+            return;
+        }
+
+        const postMainInner = findNodeByClassNames(allPostBlocks[0], ['main-inner', 'index', 'posts-expand'], false);
+        const firstPostHeader = findNodeByClassNames(allPostBlocks[0], ['post-header'], true); // 仅当第一个文章是无标题的时候，才去除其间距，其他无标题文章仍保持原始样式
+        if (postMainInner != null && firstPostHeader == null) {
+            allPostBlocks[0].style.padding = '0px';
+        }
+    });
+</script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -82,7 +134,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/09/28 - 17:30:50</p>
+      <p class="site-subtitle" itemprop="description">2023/10/02 - 00:04:20</p>
   </div>
 
   <div class="site-nav-right">
@@ -95,7 +147,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">147</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">81</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">146</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -168,12 +220,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">147</span>
+        <span class="site-state-item-count">146</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -193,6 +245,189 @@
       </span>
   </div>
 
+
+
+<script>
+    const TAG_SIDEBAR = '[Hexo-Next](customhead.njk)';
+
+    const WELCOME_SHOW_INTERVAL = 20;
+    const WELCOME_SHOW_STAY = 3000;
+    const WELCOME_HIDE_INTERVAL = 10;
+    const WELCOME_HIDE_STAY = 750;
+    const WELCOME_CURSOR_INTERVAL = 500;
+
+    const ANIM_TEXT = [`Welcome!`,
+                       `Feel free.`,
+                       `Keep learning.`,
+                       `Good luck!`,
+                       `Nice to meet you.`,
+                       `Contact me for any help.`,
+                       `Does anything interest you?`,
+                       `It's open to any suggestion!`,
+                       ];
+    var currentAnimText = ANIM_TEXT[0];
+
+    function genRandom(minVal, maxVal) {
+        switch (arguments.length) {
+            case 1: {
+                return parseInt(Math.random() * minVal, 10); // parseInt 约等于 floor 都是向下取整，第二个参数表示 10 进制
+            }
+            case 2: {
+                return parseInt((Math.random() * (maxVal - minVal)) + minVal, 10);
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
+    function startTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        showTextAnim(textNode);
+    }
+
+    function startCursorAnim(cursorNode) {
+        if (cursorNode == null) {
+            return;
+        }
+        setTimeout(function() {
+            if (cursorNode.style.color == 'transparent') {
+                cursorNode.style.color = '#999999';
+            } else {
+                cursorNode.style.color   = 'transparent';
+            }
+            startCursorAnim(cursorNode);
+        }, WELCOME_CURSOR_INTERVAL);
+    }
+
+    function showTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength < currentAnimText.length) {
+            const nextChar = currentAnimText[showingLength];
+            textNode.innerHTML += nextChar;
+            if (nextChar.trim().length <= 0) {
+                showTextAnim(textNode);
+                return;
+            }
+            setTimeout(function() {
+                showTextAnim(textNode);
+            }, WELCOME_SHOW_INTERVAL);
+        } else {
+            setTimeout(function() {
+                hideTextAnim(textNode);
+            }, WELCOME_SHOW_STAY);
+        }
+    }
+
+    function hideTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength > 0) {
+            textNode.innerHTML = textNode.innerHTML.slice(0, -1);
+            setTimeout(function() {
+                hideTextAnim(textNode);
+            }, WELCOME_HIDE_INTERVAL);
+        } else {
+            // 所有文字都隐藏后，重新随机选择一个文案。
+            // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
+            for (var i = 0; i < 3; i++) {
+                let randomTextIndex = genRandom(ANIM_TEXT.length);
+                let randomText = ANIM_TEXT[randomTextIndex];
+                if (randomText.trim().length <= 0) {
+                    continue;
+                }
+                if (currentAnimText !== randomText) {
+                    currentAnimText = randomText;
+                    break;
+                }
+            }
+            setTimeout(function() {
+                showTextAnim(textNode);
+            }, WELCOME_HIDE_STAY);
+        }
+    }
+
+
+    // 创建 Observer，用于监听指定节点及其子节点的所有变化。
+    const observer = new MutationObserver(function() {
+        // 找到所有符合 SiteAuthor（包含头像、名称、描述）特征的节点（<div class="site-author">）：
+        const allFoundParents = document.getElementsByClassName('site-author');
+        if (allFoundParents.length <= 0) {
+            // Do nothing, keep observing.
+            return;
+        }
+
+        // 确保找到的 SiteAuthor 是 Sidebar 内的元素：
+        var parentNode = null;
+        for (var i = 0; i < allFoundParents.length; i++) {
+            const eachNode = allFoundParents[i];
+            if (eachNode.parentNode != null && eachNode.parentNode.classList.contains('site-overview-wrap') && eachNode.parentNode.classList.contains('sidebar-panel')) {
+                parentNode = eachNode;
+                break;
+            }
+        }
+        if (parentNode == null) {
+            return;
+        }
+
+        observer.disconnect();
+
+        // 遍历 SiteAuthor 的子元素，找到 SiteDescription 元素：
+        var anchorNode = null;
+        for (var i = 0; i < parentNode.children.length; i++) {
+            const eachNode = parentNode.children[i];
+            if (eachNode.classList.contains('site-description')) {
+                anchorNode = eachNode;
+                break;
+            }
+        }
+        if (anchorNode == null) {
+            return;
+        }
+
+        // 清空 SiteDescription 元素：
+        while (anchorNode.children.length > 0) {
+            anchorNode.children[0].remove();
+        }
+        anchorNode.innerHTML = null;
+        anchorNode.innerText = null;
+
+        //
+        const containerDiv = document.createElement('div');
+        containerDiv.setAttribute('id', "containerDiv");
+        containerDiv.setAttribute('style', "padding:5px 0px; margin:0px; text-align:center; display:flex; justify-content:center; line-height:1; font-size:1.0em!important; min-height:1.0em!important;");
+        //parent.insertBefore(containerDiv, parent.firstChild);
+        anchorNode.insertBefore(containerDiv, anchorNode.firstChild);
+        //
+        const textDiv = document.createElement('div');
+        textDiv.setAttribute('style', "padding:0px; margin:0px;");
+        startTextAnim(textDiv);
+        containerDiv.appendChild(textDiv);
+        //
+        const cursorDiv = document.createElement('div');
+        cursorDiv.setAttribute('style', "padding:0px; margin:0px;");
+        cursorDiv.innerHTML = '|';
+        startCursorAnim(cursorDiv);
+        containerDiv.appendChild(cursorDiv);
+    });
+    observer.observe(document, {
+        childList: true,
+        subtree: true
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 所有 DOM(Document Object Model) 加载完成后，不论 Observer 是否监听到，都需要取消监听。
+        console.log(TAG_SIDEBAR + ' Document Object Model has loaded, stop observer.');
+        observer.disconnect();
+    });
+</script>
 
         </div>
       </div>
@@ -259,50 +494,13 @@
   
 
 
-
-
-
-
-<!-- 注释开始 #############################################
-
-  <script>
-    function post_nav(post) {
-      const theme = hexo.theme.config;
-      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
-      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
-      const next = theme.post_navigation === 'right' ? post.next : post.prev;
-      const left = prev ? `
-        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
-          <i class="fa fa-chevron-left"></i> ${prev.title}
-        </a>` : '';
-      const right = next ? `
-        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
-          ${next.title} <i class="fa fa-chevron-right"></i>
-        </a>` : '';
-      return `
-        <div class="post-nav">
-          <div class="post-nav-item">${left}</div>
-          <div class="post-nav-item">${right}</div>
-        </div>`;
-    }
-  </script>
-  
-  <div style="position: absolute; top: -20px;">post_nav(post)</div>
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-  
-  <div style="position: fixed; width: 100%;">
-    
-      <div class="post-tags">
-          <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
-          <a href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/" rel="tag"><i class="fa fa-tag"></i> 四大组件</a>
-          <a href="/tags/ContentProvider/" rel="tag"><i class="fa fa-tag"></i> ContentProvider</a>
-      </div>
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 四大组件</a>
+      <a href="/tags/ContentProvider/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> ContentProvider</a>
   </div>
-############################################# 注释结束 -->
+
 
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
@@ -595,7 +793,7 @@
     <span>Down</span>
 </div>
 <script>
-    $(function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const scrollToBottom = document.querySelector('.scrollToBottom');
         /* 内联写法：
         $('.scrollToBottom').click(function(){
@@ -610,7 +808,7 @@
             scrollTop: document.scrollingElement.scrollHeight
             });
         });
-    })
+    });
 </script>
 
 <a id='postBottom'></a>

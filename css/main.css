@@ -3167,6 +3167,10 @@ header.header {
  * 正文内容区域
  * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
  */
+.post-sticky-flag {
+  margin-right: 20px;
+  color: var(--custom-color-theme);
+}
 .post-button .btn {
   border: none;
   transition-property: none;
@@ -3239,9 +3243,6 @@ div.post-body strong {
   color: var(--custom-color-theme);
   font-weight: bold;
 }
-div.main-inner.posts-expand:not(div.index) article.post-content div.post-body a:not(.headerlink) {
-  border-bottom: 2px var(--custom-color-theme) solid;
-}
 div.main-inner.posts-expand:not(div.index) article.post-content div.post-body a:not(.fancybox):not(.headerlink)::before {
 /*
      * 使用 FontAwesome 需要用 CDN 或者下载字体文件，通过 font-family 属性引入字体，
@@ -3271,9 +3272,6 @@ div.main-inner.posts-expand:not(div.index) article.post-content div.post-body a.
 }
 .post-tags a:not(:last-child) {
   margin-right: 10px;
-}
-.post-tags a .fa {
-  color: var(--custom-color-theme);
 }
 .highlight {
   background: var(--custom-color-background-block) !important;
@@ -3310,11 +3308,16 @@ td {
 }
 th {
   font-weight: 900;
+  padding-top: 10px;
   padding-bottom: 10px;
   border-width: 2px;
   color: var(--custom-color-font-dark);
   background: var(--custom-color-background-mid);
   text-align: center !important;
+}
+th:empty {
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 td {
   border-bottom-width: 1px;

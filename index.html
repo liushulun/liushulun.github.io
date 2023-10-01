@@ -59,6 +59,58 @@
 
 
 
+
+<script>
+    function findNodeByClassNames(node, classNameList, isChild) {
+        if (node == null) {
+            return null;
+        }
+        if (classNameList == null || classNameList.length <= 0) {
+            return node;
+        }
+        var isClassMatched = true;
+        for (var i = 0; i < classNameList.length; i++) {
+            if (!node.classList.contains(classNameList[i])) {
+                isClassMatched = false;
+                break;
+            }
+        }
+        if (isClassMatched) {
+            return node;
+        }
+        if (isChild) {
+            const children = node.children;
+            if (children == null || children.length <= 0) {
+                return null;
+            }
+            for (var i = 0; i < children.length; i++) {
+                const foundNode = findNodeByClassNames(children[i], classNameList, true);
+                if (foundNode != null) {
+                    return foundNode;
+                }
+            }
+        } else {
+            const foundNode = findNodeByClassNames(node.parentNode, classNameList, false);
+            if (foundNode != null) {
+                return foundNode;
+            }
+        }
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const allPostBlocks = document.getElementsByClassName(['post-block']); // 只查找 post-block 而不查找 animated, fadeInDown 这种可能会变的
+        if (allPostBlocks == null || allPostBlocks.length <= 0) {
+            return;
+        }
+
+        const postMainInner = findNodeByClassNames(allPostBlocks[0], ['main-inner', 'index', 'posts-expand'], false);
+        const firstPostHeader = findNodeByClassNames(allPostBlocks[0], ['post-header'], true); // 仅当第一个文章是无标题的时候，才去除其间距，其他无标题文章仍保持原始样式
+        if (postMainInner != null && firstPostHeader == null) {
+            allPostBlocks[0].style.padding = '0px';
+        }
+    });
+</script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -85,7 +137,7 @@
       <h1 class="site-title">LuisLiu</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/09/28 - 17:30:50</p>
+      <p class="site-subtitle" itemprop="description">2023/10/02 - 00:04:20</p>
   </div>
 
   <div class="site-nav-right">
@@ -98,7 +150,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">81</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">13</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">147</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">81</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">146</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -170,12 +222,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">Categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">147</span>
+        <span class="site-state-item-count">146</span>
         <span class="site-state-item-name">Tags</span></a>
       </div>
   </nav>
@@ -195,6 +247,189 @@
       </span>
   </div>
 
+
+
+<script>
+    const TAG_SIDEBAR = '[Hexo-Next](customhead.njk)';
+
+    const WELCOME_SHOW_INTERVAL = 20;
+    const WELCOME_SHOW_STAY = 3000;
+    const WELCOME_HIDE_INTERVAL = 10;
+    const WELCOME_HIDE_STAY = 750;
+    const WELCOME_CURSOR_INTERVAL = 500;
+
+    const ANIM_TEXT = [`Welcome!`,
+                       `Feel free.`,
+                       `Keep learning.`,
+                       `Good luck!`,
+                       `Nice to meet you.`,
+                       `Contact me for any help.`,
+                       `Does anything interest you?`,
+                       `It's open to any suggestion!`,
+                       ];
+    var currentAnimText = ANIM_TEXT[0];
+
+    function genRandom(minVal, maxVal) {
+        switch (arguments.length) {
+            case 1: {
+                return parseInt(Math.random() * minVal, 10); // parseInt 约等于 floor 都是向下取整，第二个参数表示 10 进制
+            }
+            case 2: {
+                return parseInt((Math.random() * (maxVal - minVal)) + minVal, 10);
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
+    function startTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        showTextAnim(textNode);
+    }
+
+    function startCursorAnim(cursorNode) {
+        if (cursorNode == null) {
+            return;
+        }
+        setTimeout(function() {
+            if (cursorNode.style.color == 'transparent') {
+                cursorNode.style.color = '#999999';
+            } else {
+                cursorNode.style.color   = 'transparent';
+            }
+            startCursorAnim(cursorNode);
+        }, WELCOME_CURSOR_INTERVAL);
+    }
+
+    function showTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength < currentAnimText.length) {
+            const nextChar = currentAnimText[showingLength];
+            textNode.innerHTML += nextChar;
+            if (nextChar.trim().length <= 0) {
+                showTextAnim(textNode);
+                return;
+            }
+            setTimeout(function() {
+                showTextAnim(textNode);
+            }, WELCOME_SHOW_INTERVAL);
+        } else {
+            setTimeout(function() {
+                hideTextAnim(textNode);
+            }, WELCOME_SHOW_STAY);
+        }
+    }
+
+    function hideTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength > 0) {
+            textNode.innerHTML = textNode.innerHTML.slice(0, -1);
+            setTimeout(function() {
+                hideTextAnim(textNode);
+            }, WELCOME_HIDE_INTERVAL);
+        } else {
+            // 所有文字都隐藏后，重新随机选择一个文案。
+            // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
+            for (var i = 0; i < 3; i++) {
+                let randomTextIndex = genRandom(ANIM_TEXT.length);
+                let randomText = ANIM_TEXT[randomTextIndex];
+                if (randomText.trim().length <= 0) {
+                    continue;
+                }
+                if (currentAnimText !== randomText) {
+                    currentAnimText = randomText;
+                    break;
+                }
+            }
+            setTimeout(function() {
+                showTextAnim(textNode);
+            }, WELCOME_HIDE_STAY);
+        }
+    }
+
+
+    // 创建 Observer，用于监听指定节点及其子节点的所有变化。
+    const observer = new MutationObserver(function() {
+        // 找到所有符合 SiteAuthor（包含头像、名称、描述）特征的节点（<div class="site-author">）：
+        const allFoundParents = document.getElementsByClassName('site-author');
+        if (allFoundParents.length <= 0) {
+            // Do nothing, keep observing.
+            return;
+        }
+
+        // 确保找到的 SiteAuthor 是 Sidebar 内的元素：
+        var parentNode = null;
+        for (var i = 0; i < allFoundParents.length; i++) {
+            const eachNode = allFoundParents[i];
+            if (eachNode.parentNode != null && eachNode.parentNode.classList.contains('site-overview-wrap') && eachNode.parentNode.classList.contains('sidebar-panel')) {
+                parentNode = eachNode;
+                break;
+            }
+        }
+        if (parentNode == null) {
+            return;
+        }
+
+        observer.disconnect();
+
+        // 遍历 SiteAuthor 的子元素，找到 SiteDescription 元素：
+        var anchorNode = null;
+        for (var i = 0; i < parentNode.children.length; i++) {
+            const eachNode = parentNode.children[i];
+            if (eachNode.classList.contains('site-description')) {
+                anchorNode = eachNode;
+                break;
+            }
+        }
+        if (anchorNode == null) {
+            return;
+        }
+
+        // 清空 SiteDescription 元素：
+        while (anchorNode.children.length > 0) {
+            anchorNode.children[0].remove();
+        }
+        anchorNode.innerHTML = null;
+        anchorNode.innerText = null;
+
+        //
+        const containerDiv = document.createElement('div');
+        containerDiv.setAttribute('id', "containerDiv");
+        containerDiv.setAttribute('style', "padding:5px 0px; margin:0px; text-align:center; display:flex; justify-content:center; line-height:1; font-size:1.0em!important; min-height:1.0em!important;");
+        //parent.insertBefore(containerDiv, parent.firstChild);
+        anchorNode.insertBefore(containerDiv, anchorNode.firstChild);
+        //
+        const textDiv = document.createElement('div');
+        textDiv.setAttribute('style', "padding:0px; margin:0px;");
+        startTextAnim(textDiv);
+        containerDiv.appendChild(textDiv);
+        //
+        const cursorDiv = document.createElement('div');
+        cursorDiv.setAttribute('style', "padding:0px; margin:0px;");
+        cursorDiv.innerHTML = '|';
+        startCursorAnim(cursorDiv);
+        containerDiv.appendChild(cursorDiv);
+    });
+    observer.observe(document, {
+        childList: true,
+        subtree: true
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 所有 DOM(Document Object Model) 加载完成后，不论 Observer 是否监听到，都需要取消监听。
+        console.log(TAG_SIDEBAR + ' Document Object Model has loaded, stop observer.');
+        observer.disconnect();
+    });
+</script>
 
         </div>
       </div>
@@ -237,10 +472,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <center>
-
-<p><font size=5><a href="/about/" title="@LINK"><strong>Welcome</strong></a></font></p>
-</center>
+          <ul style="text-align:center; display:flex; padding:0px; margin:0px;">
+    <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/" style="margin:5px 15px; font-weight:bold;">Welcome</a></li>
+    <li style="display:inline-block; flex:1; list-style:none;"><a href="/post/note/note-develop_configs/" style="margin:5px 15px; font-weight:bold;">Develop Configs</a></li>
+    <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/tools/" style="margin:5px 15px; font-weight:bold;">Tools</a></li>
+</ul>
 
       
     </div>
@@ -311,17 +547,13 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/iOS/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> iOS</a>
+      <a href="/tags/UIScrollView/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> UIScrollView</a>
+      <a href="/tags/Paging/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Paging</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -424,17 +656,14 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/iOS/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> iOS</a>
+      <a href="/tags/iPad/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> iPad</a>
+      <a href="/tags/Portrait/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Portrait</a>
+      <a href="/tags/%E7%AB%96%E5%B1%8F/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 竖屏</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -537,17 +766,12 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/iOS/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> iOS</a>
+      <a href="/tags/CGAffineTransform/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> CGAffineTransform</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -650,17 +874,14 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/Router/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Router</a>
+      <a href="/tags/ARouter/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> ARouter</a>
+      <a href="/tags/%E8%B7%AF%E7%94%B1/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 路由</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -763,17 +984,13 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Gradle/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Gradle</a>
+      <a href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 插件</a>
+      <a href="/tags/Transform/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Transform</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -876,17 +1093,13 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Plugin/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Plugin</a>
+      <a href="/tags/Gradle/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Gradle</a>
+      <a href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 插件</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -989,17 +1202,14 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Annotation/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Annotation</a>
+      <a href="/tags/%E6%B3%A8%E8%A7%A3/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 注解</a>
+      <a href="/tags/Processor/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Processor</a>
+      <a href="/tags/APT/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> APT</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1102,17 +1312,11 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/RTMP/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> RTMP</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1215,17 +1419,16 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/%E6%B8%B2%E6%9F%93/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 渲染</a>
+      <a href="/tags/%E7%BB%98%E5%88%B6/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 绘制</a>
+      <a href="/tags/VSync/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> VSync</a>
+      <a href="/tags/Surface/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Surface</a>
+      <a href="/tags/Texture/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Texture</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1328,17 +1531,12 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/%E8%A7%A6%E6%91%B8%E4%BA%8B%E4%BB%B6/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 触摸事件</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1441,17 +1639,16 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Linux/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Linux</a>
+      <a href="/tags/IO/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> IO</a>
+      <a href="/tags/%E5%90%8C%E6%AD%A5/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 同步</a>
+      <a href="/tags/%E5%BC%82%E6%AD%A5/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 异步</a>
+      <a href="/tags/%E9%98%BB%E5%A1%9E/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 阻塞</a>
+      <a href="/tags/%E9%9D%9E%E9%98%BB%E5%A1%9E/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 非阻塞</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1554,17 +1751,12 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/Binder/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Binder</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1667,17 +1859,15 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/Window/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Window</a>
+      <a href="/tags/PhoneWindow/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> PhoneWindow</a>
+      <a href="/tags/WindowManager/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> WindowManager</a>
+      <a href="/tags/ViewRootImpl/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> ViewRootImpl</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1780,17 +1970,13 @@
   
 
 
+  <div class="post-tags" style="font-size:1em;">
+    <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/%E5%AD%90%E7%BA%BF%E7%A8%8B/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 子线程</a>
+      <a href="/tags/UI%E7%BA%BF%E7%A8%8B/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> UI线程</a>
+  </div>
 
-
-
-
-<!-- 注释开始 #############################################
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="Symbols">
       <span class="post-meta-item-icon">
@@ -1966,7 +2152,7 @@
     <span>Down</span>
 </div>
 <script>
-    $(function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const scrollToBottom = document.querySelector('.scrollToBottom');
         /* 内联写法：
         $('.scrollToBottom').click(function(){
@@ -1981,7 +2167,7 @@
             scrollTop: document.scrollingElement.scrollHeight
             });
         });
-    })
+    });
 </script>
 
 <a id='postBottom'></a>
