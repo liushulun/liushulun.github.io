@@ -61,57 +61,6 @@
 
 
 
-<script>
-    function findNodeByClassNames(node, classNameList, isChild) {
-        if (node == null) {
-            return null;
-        }
-        if (classNameList == null || classNameList.length <= 0) {
-            return node;
-        }
-        var isClassMatched = true;
-        for (var i = 0; i < classNameList.length; i++) {
-            if (!node.classList.contains(classNameList[i])) {
-                isClassMatched = false;
-                break;
-            }
-        }
-        if (isClassMatched) {
-            return node;
-        }
-        if (isChild) {
-            const children = node.children;
-            if (children == null || children.length <= 0) {
-                return null;
-            }
-            for (var i = 0; i < children.length; i++) {
-                const foundNode = findNodeByClassNames(children[i], classNameList, true);
-                if (foundNode != null) {
-                    return foundNode;
-                }
-            }
-        } else {
-            const foundNode = findNodeByClassNames(node.parentNode, classNameList, false);
-            if (foundNode != null) {
-                return foundNode;
-            }
-        }
-        return null;
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const allPostBlocks = document.getElementsByClassName(['post-block']); // 只查找 post-block 而不查找 animated, fadeInDown 这种可能会变的
-        if (allPostBlocks == null || allPostBlocks.length <= 0) {
-            return;
-        }
-
-        const postMainInner = findNodeByClassNames(allPostBlocks[0], ['main-inner', 'index', 'posts-expand'], false);
-        const firstPostHeader = findNodeByClassNames(allPostBlocks[0], ['post-header'], true); // 仅当第一个文章是无标题的时候，才去除其间距，其他无标题文章仍保持原始样式
-        if (postMainInner != null && firstPostHeader == null) {
-            allPostBlocks[0].style.padding = '0px';
-        }
-    });
-</script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -138,7 +87,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/10/02 - 00:04:20</p>
+      <p class="site-subtitle" itemprop="description">2023/10/07 - 14:17:23</p>
   </div>
 
   <div class="site-nav-right">
@@ -531,9 +480,9 @@
     });
 </script>
 <ul style="text-align:center; display:flex; padding:0px; margin:0px;">
-    <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/" style="margin:5px 15px; font-weight:bold;">Welcome</a></li>
-    <li style="display:inline-block; flex:1; list-style:none;"><a href="/post/note/note-develop_configs/" style="margin:5px 15px; font-weight:bold;">Develop Configs</a></li>
-    <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/tools/" style="margin:5px 15px; font-weight:bold;">Tools</a></li>
+    <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/" style="margin:5px 15px; font-weight:bold; border-bottom:none!important;">Welcome</a></li>
+    <li style="display:inline-block; flex:1; list-style:none;"><a href="/post/note/note-develop_configs/" style="margin:5px 15px; font-weight:bold; border-bottom:none!important;">Develop Configs</a></li>
+    <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/tools/" style="margin:5px 15px; font-weight:bold; border-bottom:none!important;">Tools</a></li>
 </ul>
 
     </div>

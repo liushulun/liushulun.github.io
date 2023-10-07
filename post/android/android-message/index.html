@@ -32,8 +32,8 @@
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-03-13T09:41:52.000Z">
 <meta property="article:author" content="LuisLiu">
-<meta property="article:tag" content="源码">
 <meta property="article:tag" content="Android">
+<meta property="article:tag" content="源码">
 <meta property="article:tag" content="Message">
 <meta property="article:tag" content="消息">
 <meta name="twitter:card" content="summary">
@@ -58,57 +58,6 @@
 
 
 
-<script>
-    function findNodeByClassNames(node, classNameList, isChild) {
-        if (node == null) {
-            return null;
-        }
-        if (classNameList == null || classNameList.length <= 0) {
-            return node;
-        }
-        var isClassMatched = true;
-        for (var i = 0; i < classNameList.length; i++) {
-            if (!node.classList.contains(classNameList[i])) {
-                isClassMatched = false;
-                break;
-            }
-        }
-        if (isClassMatched) {
-            return node;
-        }
-        if (isChild) {
-            const children = node.children;
-            if (children == null || children.length <= 0) {
-                return null;
-            }
-            for (var i = 0; i < children.length; i++) {
-                const foundNode = findNodeByClassNames(children[i], classNameList, true);
-                if (foundNode != null) {
-                    return foundNode;
-                }
-            }
-        } else {
-            const foundNode = findNodeByClassNames(node.parentNode, classNameList, false);
-            if (foundNode != null) {
-                return foundNode;
-            }
-        }
-        return null;
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const allPostBlocks = document.getElementsByClassName(['post-block']); // 只查找 post-block 而不查找 animated, fadeInDown 这种可能会变的
-        if (allPostBlocks == null || allPostBlocks.length <= 0) {
-            return;
-        }
-
-        const postMainInner = findNodeByClassNames(allPostBlocks[0], ['main-inner', 'index', 'posts-expand'], false);
-        const firstPostHeader = findNodeByClassNames(allPostBlocks[0], ['post-header'], true); // 仅当第一个文章是无标题的时候，才去除其间距，其他无标题文章仍保持原始样式
-        if (postMainInner != null && firstPostHeader == null) {
-            allPostBlocks[0].style.padding = '0px';
-        }
-    });
-</script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -135,7 +84,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/10/02 - 00:04:20</p>
+      <p class="site-subtitle" itemprop="description">2023/10/07 - 14:17:23</p>
   </div>
 
   <div class="site-nav-right">
@@ -497,8 +446,8 @@
 
   <div class="post-tags" style="font-size:1em;">
     <span style="margin:0 0.5em;">|</span>
-      <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 源码</a>
       <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 源码</a>
       <a href="/tags/Message/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Message</a>
       <a href="/tags/%E6%B6%88%E6%81%AF/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 消息</a>
   </div>
@@ -665,8 +614,8 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag"><i class="fa fa-tag"></i> 源码</a>
               <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag"><i class="fa fa-tag"></i> 源码</a>
               <a href="/tags/Message/" rel="tag"><i class="fa fa-tag"></i> Message</a>
               <a href="/tags/%E6%B6%88%E6%81%AF/" rel="tag"><i class="fa fa-tag"></i> 消息</a>
           </div>

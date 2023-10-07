@@ -60,57 +60,6 @@
 
 
 
-<script>
-    function findNodeByClassNames(node, classNameList, isChild) {
-        if (node == null) {
-            return null;
-        }
-        if (classNameList == null || classNameList.length <= 0) {
-            return node;
-        }
-        var isClassMatched = true;
-        for (var i = 0; i < classNameList.length; i++) {
-            if (!node.classList.contains(classNameList[i])) {
-                isClassMatched = false;
-                break;
-            }
-        }
-        if (isClassMatched) {
-            return node;
-        }
-        if (isChild) {
-            const children = node.children;
-            if (children == null || children.length <= 0) {
-                return null;
-            }
-            for (var i = 0; i < children.length; i++) {
-                const foundNode = findNodeByClassNames(children[i], classNameList, true);
-                if (foundNode != null) {
-                    return foundNode;
-                }
-            }
-        } else {
-            const foundNode = findNodeByClassNames(node.parentNode, classNameList, false);
-            if (foundNode != null) {
-                return foundNode;
-            }
-        }
-        return null;
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const allPostBlocks = document.getElementsByClassName(['post-block']); // 只查找 post-block 而不查找 animated, fadeInDown 这种可能会变的
-        if (allPostBlocks == null || allPostBlocks.length <= 0) {
-            return;
-        }
-
-        const postMainInner = findNodeByClassNames(allPostBlocks[0], ['main-inner', 'index', 'posts-expand'], false);
-        const firstPostHeader = findNodeByClassNames(allPostBlocks[0], ['post-header'], true); // 仅当第一个文章是无标题的时候，才去除其间距，其他无标题文章仍保持原始样式
-        if (postMainInner != null && firstPostHeader == null) {
-            allPostBlocks[0].style.padding = '0px';
-        }
-    });
-</script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -137,7 +86,7 @@
       <h1 class="site-title">LuisLiu</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/10/02 - 00:04:20</p>
+      <p class="site-subtitle" itemprop="description">2023/10/07 - 14:17:23</p>
   </div>
 
   <div class="site-nav-right">
@@ -712,8 +661,8 @@
 
   <div class="post-tags" style="font-size:1em;">
     <span style="margin:0 0.5em;">|</span>
-      <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 热更新</a>
       <a href="/tags/Android/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Android</a>
+      <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 热更新</a>
   </div>
 
 
@@ -1039,11 +988,11 @@
 
   <div class="post-tags" style="font-size:1em;">
     <span style="margin:0 0.5em;">|</span>
+      <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 热更新</a>
       <a href="/tags/Java/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> Java</a>
       <a href="/tags/ClassLoader/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> ClassLoader</a>
       <a href="/tags/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 类加载机制</a>
       <a href="/tags/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%89%98/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 双亲委托</a>
-      <a href="/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 热更新</a>
       <a href="/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/" rel="tag" style="font-size:1em;"><i class="fa fa-tag"></i> 热修复</a>
   </div>
 
