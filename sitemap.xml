@@ -16,6 +16,13 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/post/algorithm/algorithm-find_from_series/</loc>
+    
+    <lastmod>2020-01-20</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/post/algorithm/algorithm-find_pictures/</loc>
     
     <lastmod>2020-03-01</lastmod>
@@ -30,9 +37,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/algorithm/algorithm-find_from_series/</loc>
+    <loc>https://luisliu.cn/post/algorithm/algorithm-sum_of_numbers/</loc>
     
-    <lastmod>2020-01-20</lastmod>
+    <lastmod>2020-01-24</lastmod>
     
   </url>
   
@@ -40,13 +47,6 @@
     <loc>https://luisliu.cn/post/algorithm/algorithm-string/</loc>
     
     <lastmod>2020-01-26</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/algorithm/algorithm-sum_of_numbers/</loc>
-    
-    <lastmod>2020-01-24</lastmod>
     
   </url>
   
@@ -65,16 +65,16 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/hexodiy/hexodiy-init/</loc>
+    <loc>https://luisliu.cn/post/hexodiy/hexodiy-solutions/</loc>
     
-    <lastmod>2018-07-20</lastmod>
+    <lastmod>2018-07-24</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/hexodiy/hexodiy-solutions/</loc>
+    <loc>https://luisliu.cn/post/hexodiy/hexodiy-init/</loc>
     
-    <lastmod>2018-07-24</lastmod>
+    <lastmod>2018-07-20</lastmod>
     
   </url>
   
@@ -86,16 +86,23 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/linux/linux-io_block/</loc>
+    <loc>https://luisliu.cn/post/ios/ios-ipad_keep_portrait/</loc>
     
-    <lastmod>2021-04-03</lastmod>
+    <lastmod>2022-06-26</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/linux/linux-process/</loc>
+    <loc>https://luisliu.cn/post/ios/ios-transform/</loc>
     
-    <lastmod>2019-12-26</lastmod>
+    <lastmod>2022-06-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/ios/ios-uiscrollview_paging/</loc>
+    
+    <lastmod>2023-04-17</lastmod>
     
   </url>
   
@@ -114,30 +121,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/android/android-apk_protect/</loc>
-    
-    <lastmod>2020-02-12</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/android/android-activity_startup/</loc>
-    
-    <lastmod>2020-09-20</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/post/android/android-architecture/</loc>
     
     <lastmod>2020-01-02</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/android/android-broadcast/</loc>
-    
-    <lastmod>2020-03-26</lastmod>
     
   </url>
   
@@ -149,9 +135,37 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/post/android/android-compile_apt/</loc>
+    
+    <lastmod>2021-06-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/android/android-activity_startup/</loc>
+    
+    <lastmod>2020-09-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/android/android-apk_protect/</loc>
+    
+    <lastmod>2020-02-12</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/post/android/android-build_install/</loc>
     
     <lastmod>2020-02-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/android/android-broadcast/</loc>
+    
+    <lastmod>2020-03-26</lastmod>
     
   </url>
   
@@ -163,9 +177,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/android/android-compile_apt/</loc>
+    <loc>https://luisliu.cn/post/android/android-design_pattern/</loc>
     
-    <lastmod>2021-06-26</lastmod>
+    <lastmod>2020-01-03</lastmod>
     
   </url>
   
@@ -184,9 +198,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/android/android-design_pattern/</loc>
+    <loc>https://luisliu.cn/post/android/android-handler/</loc>
     
-    <lastmod>2020-01-03</lastmod>
+    <lastmod>2020-03-14</lastmod>
     
   </url>
   
@@ -198,9 +212,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/android/android-handler/</loc>
+    <loc>https://luisliu.cn/post/android/android-itc/</loc>
     
-    <lastmod>2020-03-14</lastmod>
+    <lastmod>2020-02-01</lastmod>
     
   </url>
   
@@ -208,13 +222,6 @@
     <loc>https://luisliu.cn/post/android/android-hotfix/</loc>
     
     <lastmod>2020-02-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/android/android-itc/</loc>
-    
-    <lastmod>2020-02-01</lastmod>
     
   </url>
   
@@ -233,9 +240,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/android/android-messenger/</loc>
+    <loc>https://luisliu.cn/post/android/android-messagequeue/</loc>
     
-    <lastmod>2020-03-22</lastmod>
+    <lastmod>2020-03-15</lastmod>
     
   </url>
   
@@ -247,13 +254,6 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/android/android-messagequeue/</loc>
-    
-    <lastmod>2020-03-15</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/post/android/android-multidex/</loc>
     
     <lastmod>2020-02-09</lastmod>
@@ -261,9 +261,30 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/post/android/android-messenger/</loc>
+    
+    <lastmod>2020-03-22</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/post/android/android-oom/</loc>
     
     <lastmod>2020-02-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/android/android-render/</loc>
+    
+    <lastmod>2021-05-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/android/android-router/</loc>
+    
+    <lastmod>2021-07-25</lastmod>
     
   </url>
   
@@ -289,16 +310,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/android/android-router/</loc>
+    <loc>https://luisliu.cn/post/android/android-window/</loc>
     
-    <lastmod>2021-07-25</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/android/android-render/</loc>
-    
-    <lastmod>2021-05-15</lastmod>
+    <lastmod>2021-02-21</lastmod>
     
   </url>
   
@@ -310,30 +324,16 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/ios/ios-ipad_keep_portrait/</loc>
+    <loc>https://luisliu.cn/post/linux/linux-process/</loc>
     
-    <lastmod>2022-06-26</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/android/android-window/</loc>
-    
-    <lastmod>2021-02-21</lastmod>
+    <lastmod>2019-12-26</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/ios/ios-transform/</loc>
+    <loc>https://luisliu.cn/post/linux/linux-io_block/</loc>
     
-    <lastmod>2022-06-26</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/ios/ios-uiscrollview_paging/</loc>
-    
-    <lastmod>2023-04-17</lastmod>
+    <lastmod>2021-04-03</lastmod>
     
   </url>
   
@@ -352,13 +352,6 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/java/java-gc/</loc>
-    
-    <lastmod>2020-02-21</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/post/java/java-hashmap/</loc>
     
     <lastmod>2020-03-09</lastmod>
@@ -369,6 +362,27 @@
     <loc>https://luisliu.cn/post/java/java-hashcode/</loc>
     
     <lastmod>2020-01-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/java/java-reference/</loc>
+    
+    <lastmod>2020-01-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/java/java-gc/</loc>
+    
+    <lastmod>2020-02-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/java/java-jvm_memory/</loc>
+    
+    <lastmod>2020-02-20</lastmod>
     
   </url>
   
@@ -387,37 +401,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/java/java-jvm_memory/</loc>
-    
-    <lastmod>2020-02-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/java/java-reference/</loc>
-    
-    <lastmod>2020-01-04</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/post/java/java-standard/</loc>
     
     <lastmod>2020-01-15</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/java/java-string/</loc>
-    
-    <lastmod>2020-01-13</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/java/java-thread/</loc>
-    
-    <lastmod>2020-01-31</lastmod>
     
   </url>
   
@@ -429,23 +415,23 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/post/java/java-thread/</loc>
+    
+    <lastmod>2020-01-31</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/java/java-string/</loc>
+    
+    <lastmod>2020-01-13</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/post/machinelearning/ml-introduction/</loc>
     
     <lastmod>2019-01-01</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/others/others-interviews/</loc>
-    
-    <lastmod>2018-08-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/network/network-http_https/</loc>
-    
-    <lastmod>2020-01-09</lastmod>
     
   </url>
   
@@ -457,6 +443,13 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/post/network/network-http_https/</loc>
+    
+    <lastmod>2020-01-09</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/post/network/network-socket/</loc>
     
     <lastmod>2020-01-10</lastmod>
@@ -464,16 +457,16 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/network/network-tcp_udp/</loc>
+    <loc>https://luisliu.cn/post/note/note-develop_configs/</loc>
     
-    <lastmod>2020-01-07</lastmod>
+    <lastmod>2018-07-19</lastmod>
     
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/note/note-develop_configs/</loc>
+    <loc>https://luisliu.cn/post/network/network-tcp_udp/</loc>
     
-    <lastmod>2018-07-19</lastmod>
+    <lastmod>2020-01-07</lastmod>
     
   </url>
   
@@ -492,9 +485,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/python/python-hashingencoder_optimization/</loc>
+    <loc>https://luisliu.cn/post/others/others-interviews/</loc>
     
-    <lastmod>2019-06-20</lastmod>
+    <lastmod>2018-08-31</lastmod>
     
   </url>
   
@@ -506,30 +499,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/machinelearning/ml-linear/ml-linear-introduction/</loc>
+    <loc>https://luisliu.cn/post/python/python-hashingencoder_optimization/</loc>
     
-    <lastmod>2019-01-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/machinelearning/ml-linear/ml-linear-loss-regular/</loc>
-    
-    <lastmod>2019-01-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/machinelearning/ml-linear/ml-linear-solutions/</loc>
-    
-    <lastmod>2019-01-13</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/post/machinelearning/ml-logistic/ml-logistic-multiclassify/</loc>
-    
-    <lastmod>2019-02-09</lastmod>
+    <lastmod>2019-06-20</lastmod>
     
   </url>
   
@@ -555,9 +527,9 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/post/machinelearning/ml-model/ml-model-performance/</loc>
+    <loc>https://luisliu.cn/post/machinelearning/ml-logistic/ml-logistic-multiclassify/</loc>
     
-    <lastmod>2019-02-17</lastmod>
+    <lastmod>2019-02-09</lastmod>
     
   </url>
   
@@ -565,6 +537,48 @@
     <loc>https://luisliu.cn/post/machinelearning/ml-model/ml-model-selection/</loc>
     
     <lastmod>2019-02-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/machinelearning/ml-linear/ml-linear-loss-regular/</loc>
+    
+    <lastmod>2019-01-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/machinelearning/ml-linear/ml-linear-introduction/</loc>
+    
+    <lastmod>2019-01-06</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/machinelearning/ml-model/ml-model-performance/</loc>
+    
+    <lastmod>2019-02-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/post/machinelearning/ml-linear/ml-linear-solutions/</loc>
+    
+    <lastmod>2019-01-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/404/index.html</loc>
+    
+    <lastmod>2017-12-31</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/about/index.html</loc>
+    
+    <lastmod>2017-12-31</lastmod>
     
   </url>
   
@@ -584,20 +598,6 @@
   
   <url>
     <loc>https://luisliu.cn/about/stars/index.html</loc>
-    
-    <lastmod>2017-12-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/404/index.html</loc>
-    
-    <lastmod>2017-12-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/about/index.html</loc>
     
     <lastmod>2017-12-31</lastmod>
     
@@ -690,70 +690,49 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/Linux/</loc>
+    <loc>https://luisliu.cn/tags/iOS/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/IO/</loc>
+    <loc>https://luisliu.cn/tags/iPad/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E5%90%8C%E6%AD%A5/</loc>
+    <loc>https://luisliu.cn/tags/Portrait/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E5%BC%82%E6%AD%A5/</loc>
+    <loc>https://luisliu.cn/tags/%E7%AB%96%E5%B1%8F/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E9%98%BB%E5%A1%9E/</loc>
+    <loc>https://luisliu.cn/tags/CGAffineTransform/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E9%9D%9E%E9%98%BB%E5%A1%9E/</loc>
+    <loc>https://luisliu.cn/tags/UIScrollView/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/Process/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Daemon/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E8%BF%9B%E7%A8%8B/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%AE%88%E6%8A%A4/</loc>
+    <loc>https://luisliu.cn/tags/Paging/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -816,34 +795,6 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E5%8F%8D%E7%BC%96%E8%AF%91/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E6%B7%B7%E6%B7%86/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%8A%A0%E5%9B%BA/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/tags/%E6%9E%B6%E6%9E%84/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -872,63 +823,7 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/Broadcast/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Receiver/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/tags/Binder/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E7%BC%96%E8%AF%91/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E6%89%93%E5%8C%85/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%AE%89%E8%A3%85/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Plugin/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Gradle/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E6%8F%92%E4%BB%B6/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -963,14 +858,84 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/Transform/</loc>
+    <loc>https://luisliu.cn/tags/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/ContentProvider/</loc>
+    <loc>https://luisliu.cn/tags/%E5%8F%8D%E7%BC%96%E8%AF%91/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E6%B7%B7%E6%B7%86/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%8A%A0%E5%9B%BA/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E7%BC%96%E8%AF%91/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E6%89%93%E5%8C%85/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Broadcast/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Receiver/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Plugin/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Gradle/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E6%8F%92%E4%BB%B6/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -984,14 +949,14 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/FFMPEG/</loc>
+    <loc>https://luisliu.cn/tags/Transform/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/SO%E5%BA%93/</loc>
+    <loc>https://luisliu.cn/tags/ContentProvider/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1012,6 +977,20 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/tags/FFMPEG/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/SO%E5%BA%93/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/tags/%E7%83%AD%E6%9B%B4%E6%96%B0/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -1020,27 +999,6 @@
   
   <url>
     <loc>https://luisliu.cn/tags/Looper/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Messenger/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Message/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E6%B6%88%E6%81%AF/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1061,6 +1019,20 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/tags/Message/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E6%B6%88%E6%81%AF/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/tags/MultiDex/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -1068,7 +1040,70 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/tags/Messenger/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/tags/OOM/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E6%B8%B2%E6%9F%93/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E7%BB%98%E5%88%B6/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/VSync/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Surface/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Texture/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Router/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/ARouter/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E8%B7%AF%E7%94%B1/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1117,104 +1152,6 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/Router/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/ARouter/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E8%B7%AF%E7%94%B1/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E6%B8%B2%E6%9F%93/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E7%BB%98%E5%88%B6/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/VSync/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Surface/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Texture/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%AD%90%E7%BA%BF%E7%A8%8B/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/UI%E7%BA%BF%E7%A8%8B/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/iOS/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/iPad/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/Portrait/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E7%AB%96%E5%B1%8F/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/tags/Window/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -1243,21 +1180,84 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/CGAffineTransform/</loc>
+    <loc>https://luisliu.cn/tags/%E5%AD%90%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/UIScrollView/</loc>
+    <loc>https://luisliu.cn/tags/UI%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/Paging/</loc>
+    <loc>https://luisliu.cn/tags/Linux/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Process/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/Daemon/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E8%BF%9B%E7%A8%8B/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%AE%88%E6%8A%A4/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/IO/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%90%8C%E6%AD%A5/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%BC%82%E6%AD%A5/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E9%98%BB%E5%A1%9E/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E9%9D%9E%E9%98%BB%E5%A1%9E/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1306,20 +1306,6 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/GC/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/tags/HashMap/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -1335,41 +1321,6 @@
   
   <url>
     <loc>https://luisliu.cn/tags/Equals/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%90%8C%E6%AD%A5%E9%94%81/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/LRU/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/JVM%E5%86%85%E5%AD%98%E5%8C%BA/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1411,7 +1362,49 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/String/</loc>
+    <loc>https://luisliu.cn/tags/GC/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/JVM%E5%86%85%E5%AD%98%E5%8C%BA/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%90%8C%E6%AD%A5%E9%94%81/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/LRU/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1419,6 +1412,13 @@
   
   <url>
     <loc>https://luisliu.cn/tags/ThreadLocal/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/String/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1453,6 +1453,13 @@
   </url>
   
   <url>
+    <loc>https://luisliu.cn/tags/RTMP/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://luisliu.cn/tags/Network/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -1481,28 +1488,7 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/RTMP/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/tags/Socket/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/TCP/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/UDP/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1517,6 +1503,20 @@
   
   <url>
     <loc>https://luisliu.cn/tags/Develop/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/TCP/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/UDP/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1565,34 +1565,6 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/SKLearn/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/HashingEncoder/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%93%88%E5%B8%8C%E7%BC%96%E7%A0%81/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://luisliu.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/tags/Python/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -1621,7 +1593,28 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</loc>
+    <loc>https://luisliu.cn/tags/SKLearn/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/HashingEncoder/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%93%88%E5%B8%8C%E7%BC%96%E7%A0%81/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1635,14 +1628,21 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/</loc>
+    <loc>https://luisliu.cn/tags/%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/tags/%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81/</loc>
+    <loc>https://luisliu.cn/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1665,7 +1665,7 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/categories/Linux/</loc>
+    <loc>https://luisliu.cn/categories/iOS/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1679,7 +1679,7 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/categories/iOS/</loc>
+    <loc>https://luisliu.cn/categories/Linux/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1700,13 +1700,6 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/categories/Others/</loc>
-    <lastmod>2023-10-07</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://luisliu.cn/categories/Network/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
@@ -1721,14 +1714,14 @@
   </url>
   
   <url>
-    <loc>https://luisliu.cn/categories/Python/</loc>
+    <loc>https://luisliu.cn/categories/Others/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://luisliu.cn/categories/MachineLearning/LinearRegression/</loc>
+    <loc>https://luisliu.cn/categories/Python/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1743,6 +1736,13 @@
   
   <url>
     <loc>https://luisliu.cn/categories/MachineLearning/Model/</loc>
+    <lastmod>2023-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://luisliu.cn/categories/MachineLearning/LinearRegression/</loc>
     <lastmod>2023-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
