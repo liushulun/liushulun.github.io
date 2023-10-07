@@ -3245,14 +3245,20 @@ div.post-body strong {
 }
 div.main-inner.posts-expand:not(div.index) article.post-content div.post-body a:not(.fancybox):not(.headerlink)::before {
 /*
-     * 使用 FontAwesome 需要用 CDN 或者下载字体文件，通过 font-family 属性引入字体，
-     * 然后在 HTML 的 <head> 标签中使用：
-     *     <link href="cdn_or_file_path/css/font-awesome.min.css" rel="stylesheet">
-     * 通过 FontAwesome 查询字符对应的编码（类似 Unicode）填入 content，
+     * 通过 FontAwesome 查询字符对应的编码（本质上 FontAwesome 是 Unicode 字符表的一种渲染字体）填入 content，
+     * FontAwesome 符号表：https://fontawesome.com/icons
      * Unicode 字符表可参考：https://blog.csdn.net/hherima/article/details/9045861。
      *
-     * 导入 NexT 内置的 FontAwesome 字体：
-     *     font-family: 'Font Awesome 5 Free';
+     * 1. 导入预定义的字体：
+     *     1.1 在 HTML 的 '<head>' 标签中声明字体的链接或本地文件路径：
+     *         <link href="{CDN_OR_FILE_PATH}/css/font-awesome.min.css" rel="stylesheet">
+     *     1.2 在 CSS 中使用 'font-family' 属性导入：
+     *         font-family: 'Font Awesome 5 Free';
+     * 2. 动态导入字体：
+     *     2.1 在 CSS 中声明导入字体：
+     *         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css');
+     *     2.2 在 CSS 中使用 'font-family' 属性导入：
+     *         font-family: "Font Awesome 5 Free";
      */
   font-family: 'Font Awesome 5 Free';
   content: "\F0C1";
@@ -3262,16 +3268,6 @@ div.main-inner.posts-expand:not(div.index) article.post-content div.post-body a:
 div.main-inner.posts-expand:not(div.index) article.post-content div.post-body a.headerlink::before {
   font-family: 'Font Awesome 5 Free';
   content: "\F0C1";
-}
-.post-tags {
-  margin-top: 0px;
-}
-.post-tags a {
-  font-size: 0.8125em;
-  border-bottom: none;
-}
-.post-tags a:not(:last-child) {
-  margin-right: 10px;
 }
 .highlight {
   background: var(--custom-color-background-block) !important;
