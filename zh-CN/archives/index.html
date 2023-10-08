@@ -86,7 +86,7 @@
       <h1 class="site-title">LuisLiu</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/10/07 - 19:51:06</p>
+      <p class="site-subtitle" itemprop="description">2023/10/09 - 04:18:12</p>
   </div>
 
   <div class="site-nav-right">
@@ -199,27 +199,21 @@
 
 
 <script>
-    const TAG_SIDEBAR = '[Hexo-Next](customhead.njk)';
-
-    const WELCOME_SHOW_INTERVAL = 20;
-    const WELCOME_SHOW_STAY = 3000;
-    const WELCOME_HIDE_INTERVAL = 10;
-    const WELCOME_HIDE_STAY = 750;
-    const WELCOME_CURSOR_INTERVAL = 500;
+    const ANIM_TEXT_SHOW_INTERVAL = 30;
+    const ANIM_TEXT_SHOW_STAY = 5000;
+    const ANIM_TEXT_HIDE_INTERVAL = 10;
+    const ANIM_TEXT_HIDE_STAY = 750;
+    const ANIM_CURSOR_INTERVAL = 500;
 
     const ANIM_TEXT = [`Welcome!`,
                        `Feel free.`,
                        `Keep learning!`,
                        `Good luck!`,
                        `Nice to meet you.`,
-                       `Contact me for any help.`,
                        `Does anything interest you?`,
-                       `I'm open to any suggestions!`,
-                       `Maybe we can exchange friend-link!`,
+                       `Let's exchange the friend-link!`,
                        `Comment will be available soon.`,
                        `Can't wait to chat with you!`,
-                       `I'm stucked in here, help me out!`,
-                       `Am I Luis? Or maybe... his mind?`,
                        ];
     var currentAnimText = ANIM_TEXT[0];
 
@@ -255,7 +249,7 @@
                 cursorNode.style.color   = 'transparent';
             }
             startCursorAnim(cursorNode);
-        }, WELCOME_CURSOR_INTERVAL);
+        }, ANIM_CURSOR_INTERVAL);
     }
 
     function showTextAnim(textNode) {
@@ -272,11 +266,11 @@
             }
             setTimeout(function() {
                 showTextAnim(textNode);
-            }, WELCOME_SHOW_INTERVAL);
+            }, ANIM_TEXT_SHOW_INTERVAL);
         } else {
             setTimeout(function() {
                 hideTextAnim(textNode);
-            }, WELCOME_SHOW_STAY);
+            }, ANIM_TEXT_SHOW_STAY);
         }
     }
 
@@ -289,7 +283,7 @@
             textNode.innerHTML = textNode.innerHTML.slice(0, -1);
             setTimeout(function() {
                 hideTextAnim(textNode);
-            }, WELCOME_HIDE_INTERVAL);
+            }, ANIM_TEXT_HIDE_INTERVAL);
         } else {
             // 所有文字都隐藏后，重新随机选择一个文案。
             // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
@@ -306,7 +300,7 @@
             }
             setTimeout(function() {
                 showTextAnim(textNode);
-            }, WELCOME_HIDE_STAY);
+            }, ANIM_TEXT_HIDE_STAY);
         }
     }
 
@@ -380,7 +374,6 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         // 所有 DOM(Document Object Model) 加载完成后，不论 Observer 是否监听到，都需要取消监听。
-        console.log(TAG_SIDEBAR + ' Document Object Model has loaded, stop observer.');
         observer.disconnect();
     });
 </script>
@@ -1070,7 +1063,7 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>全站总字数：</span>
-    <span title="全站总字数">500k</span>
+    <span title="全站总字数">499k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
