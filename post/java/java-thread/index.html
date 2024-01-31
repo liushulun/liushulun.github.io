@@ -81,7 +81,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/01/31 - 15:16:46</p>
+      <p class="site-subtitle" itemprop="description">2024/01/31 - 15:49:05</p>
   </div>
 
   <div class="site-nav-right">
@@ -146,7 +146,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-Thread"><span class="nav-text">Java-Thread</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Thread%E7%AE%80%E4%BB%8B"><span class="nav-text">1. Thread简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Java%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B"><span class="nav-text">1.1 Java中的线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Java%E5%AE%88%E6%8A%A4%E7%BA%BF%E7%A8%8B"><span class="nav-text">1.2 Java守护线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-text">2. 线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0"><span class="nav-text">2.1 线程池关键参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-Thread"><span class="nav-text">Java-Thread</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Thread%E7%AE%80%E4%BB%8B"><span class="nav-text">1. Thread简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Java%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B"><span class="nav-text">1.1 Java中的线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Java%E5%AE%88%E6%8A%A4%E7%BA%BF%E7%A8%8B"><span class="nav-text">1.2 Java守护线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-text">2. 线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0"><span class="nav-text">2.1 线程池关键参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="nav-text">2.2 线程池参数设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -455,7 +455,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Symbols: </span>
-      <span>2.6k</span>
+      <span>3k</span>
     </span>
     <span class="post-meta-item" title="Duration">
       <span class="post-meta-item-icon">
@@ -593,6 +593,15 @@
 </ul>
 </li>
 </ul>
+<h3 id="2-2-线程池参数设置"><a href="#2-2-线程池参数设置" class="headerlink" title="2.2 线程池参数设置"></a>2.2 线程池参数设置</h3><ul>
+<li><p>CPU 密集型任务：由于每个线程执行期间都大概率会占用完整的 CPU 时间片，因此通常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// processorNum 是指 CPU 的逻辑核心数而非物理核心数；</span></span><br><span class="line"><span class="comment">// 此外还需根据具体情况调整，例如预留 1 ~ 2 个核心给主业务。</span></span><br><span class="line">corePoolSize = processorNum;</span><br><span class="line">maximumPoolSize = (corePoolSize + <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>IO 密集型任务：由于每个线程执行期间大概率只会占用很少的 CPU 时间片，因此通常：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DEFAULT_CORE_SIZE 需要根据不同平台调整，对于主流 Android 平台可以设置为 16（经验值）。</span></span><br><span class="line">corePoolSize = Math.min(DEFAULT_CORE_SIZE, (<span class="number">2</span> * processorNum));</span><br><span class="line">maximumPoolSize = (<span class="number">2</span> * corePoolSize + <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
 <hr>
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Thread.html" title="@LINK">Oracle-Thread</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/65102625/daemon-and-non-daemon-threads-in-java" title="@LINK">Daemon And Non-Daemon Threads In Java</a></p>
 
@@ -707,7 +716,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>Duration &asymp;</span>
-    <span title="Duration">9:22</span>
+    <span title="Duration">9:23</span>
   </span>
 </div>
 
