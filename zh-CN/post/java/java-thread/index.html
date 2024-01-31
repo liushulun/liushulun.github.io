@@ -81,7 +81,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/01/30 - 00:43:44</p>
+      <p class="site-subtitle" itemprop="description">2024/01/31 - 15:16:46</p>
   </div>
 
   <div class="site-nav-right">
@@ -558,54 +558,39 @@
 <hr>
 <h2 id="2-线程池"><a href="#2-线程池" class="headerlink" title="2. 线程池"></a>2. 线程池</h2><p>线程池底层是通过 HashSet 维护的，可以确保不会出现一个线程的多个实例，并且集合无序，可以保持高效率。多余的任务用一个阻塞队列来管理，阻塞队列满了才会激活非核心线程。</p>
 <h3 id="2-1-线程池关键参数"><a href="#2-1-线程池关键参数" class="headerlink" title="2.1 线程池关键参数"></a>2.1 线程池关键参数</h3><ul>
-<li><p><code>corePoolSize</code> 线程池核心线程大小</p>
-<p>线程池中会维护一个最小的线程数量，即使这些线程处理空闲状态，他们也不会被销毁，除非设置了 <code>allowCoreThreadTimeOut</code>。这里的最小线程数量即是 <code>corePoolSize</code>。</p>
+<li><p><code>corePoolSize</code> 核心线程数：线程池中会维护一个最小的线程数量，即使这些线程处理空闲状态，他们也不会被销毁，除非设置了 <code>allowCoreThreadTimeOut</code>。这里的最小线程数量即是 <code>corePoolSize</code>。</p>
 </li>
-<li><p><code>maximumPoolSize</code> 线程池最大线程数量</p>
-<p>一个任务被提交到线程池后，首先会缓存到工作队列中，如果工作队列满了则会创建一个新线程，然后从工作队列中的取出一个任务交由新线程来处理，而将刚提交的任务放入工作队列。线程池不会无限制的去创建新线程，它会有一个最大线程数量的限制，这个数量即由 <code>maximunPoolSize</code> 来指定。</p>
+<li><p><code>maximumPoolSize</code> 最大线程数：一个任务被提交到线程池后，首先会缓存到工作队列中，如果工作队列满了则会创建一个新线程，然后从工作队列中的取出一个任务交由新线程来处理，而将刚提交的任务放入工作队列。线程池不会无限制的去创建新线程，它会有一个最大线程数量的限制，这个数量即由 <code>maximunPoolSize</code> 来指定。</p>
 </li>
-<li><p><code>keepAliveTime</code> 空闲线程存活时间</p>
-<p>一个线程如果处于空闲状态，并且当前的线程数量大于 <code>corePoolSize</code> ，那么在指定时间后，这个空闲线程会被销毁，这里的指定时间由 <code>keepAliveTime</code> 来设定。</p>
+<li><p><code>keepAliveTime</code> 空闲线程存活时间：一个线程如果处于空闲状态，并且当前的线程数量大于 <code>corePoolSize</code> ，那么在指定时间后，这个空闲线程会被销毁，这里的指定时间由 <code>keepAliveTime</code> 来设定。</p>
 </li>
-<li><p><code>unit</code> 空间线程存活时间单位</p>
-<p><code>keepAliveTime</code> 的计量单位。</p>
+<li><p><code>unit</code> 空闲线程存活时间的单位：<code>keepAliveTime</code> 的计量单位。</p>
 </li>
-<li><p><code>workQueue</code> 工作队列</p>
-<p>新任务被提交后，会先进入到此工作队列中，任务调度时再从队列中取出任务。JDK 中提供了四种工作队列：</p>
-<ol>
-<li><p><code>ArrayBlockingQueue</code></p>
-<p> 基于数组的有界阻塞队列，按 FIFO 排序。新任务进来后，会放到该队列的队尾，有界的数组可以防止资源耗尽问题。当线程池中线程数量达到 <code>corePoolSize</code> 后，再有新任务进来，则会将任务放入该队列的队尾，等待被调度。如果队列已经是满的，则创建一个新线程，如果线程数量已经达到 <code>maxPoolSize</code>，则会执行拒绝策略。</p>
+<li><p><code>workQueue</code> 线程管理队列：新任务被提交后，会先进入到此工作队列中，任务调度时再从队列中取出任务。JDK 中提供了四种工作队列：</p>
+<ul>
+<li><p><code>ArrayBlockingQueue</code>：基于数组的有界阻塞队列；按 FIFO 排序。新任务进来后，会放到该队列的队尾，有界的数组可以防止资源耗尽问题。当线程池中线程数量达到 <code>corePoolSize</code> 后，再有新任务进来，则会将任务放入该队列的队尾，等待被调度。如果队列已经是满的，则创建一个新线程，如果线程数量已经达到 <code>maxPoolSize</code>，则会执行拒绝策略。</p>
 </li>
-<li><p><code>LinkedBlockingQuene</code></p>
-<p> 基于链表的无界阻塞队列（其实最大容量为 <code>Interger.MAX</code>），按照 FIFO 排序。由于该队列的近似无界性，当线程池中线程数量达到 <code>corePoolSize</code> 后，再有新任务进来，会一直存入该队列，而不会去创建新线程直到 <code>maxPoolSize</code> ，因此使用该工作队列时，参数 <code>maxPoolSize</code> 其实是不起作用的。</p>
+<li><p><code>LinkedBlockingQuene</code>：基于链表的无界阻塞队列（其实最大容量为 <code>Interger.MAX</code>）；按照 FIFO 排序。由于该队列的近似无界性，当线程池中线程数量达到 <code>corePoolSize</code> 后，再有新任务进来，会一直存入该队列，而不会去创建新线程直到 <code>maxPoolSize</code> ，因此使用该工作队列时，参数 <code>maxPoolSize</code> 其实是不起作用的。</p>
 </li>
-<li><p><code>SynchronousQuene</code></p>
-<p> 一个不缓存任务的阻塞队列，生产者放入一个任务必须等到消费者取出这个任务。也就是说新任务进来时，不会缓存，而是直接被调度执行该任务，如果没有可用线程，则创建新线程，如果线程数量达到 <code>maxPoolSize</code>，则执行拒绝策略。</p>
+<li><p><code>SynchronousQuene</code>：一个不缓存任务的阻塞队列，生产者放入一个任务必须等到消费者取出这个任务。也就是说新任务进来时，不会缓存，而是直接被调度执行该任务，如果没有可用线程，则创建新线程，如果线程数量达到 <code>maxPoolSize</code>，则执行拒绝策略。</p>
 </li>
-<li><p><code>PriorityBlockingQueue</code></p>
-<p> 具有优先级的无界阻塞队列，优先级通过参数Comparator实现。</p>
+<li><p><code>PriorityBlockingQueue</code>：具有优先级的无界阻塞队列，优先级通过参数Comparator实现。</p>
 </li>
-</ol>
+</ul>
 </li>
-<li><p><code>threadFactory</code> 线程工厂</p>
-<p>创建一个新线程时使用的工厂，可以用来设定线程名、是否为 <code>Daemon 线程</code> 等等</p>
+<li><p><code>threadFactory</code> 线程工厂：创建一个新线程时使用的工厂，可以用来设定线程名、是否为 <code>Daemon 线程</code> 等等</p>
 </li>
-<li><p><code>handler 拒绝策略</code></p>
-<p>当工作队列中的任务已到达最大限制，并且线程池中的线程数量也达到最大限制，这时如果有新任务提交进来，该如何处理呢。这里的拒绝策略，就是解决这个问题的，JDK 中提供了 4 种拒绝策略：</p>
-<ol>
-<li><p><code>CallerRunsPolicy</code></p>
-<p> 该策略下，在调用者线程中直接执行被拒绝任务的 <code>run()</code> 方法，除非线程池已经 Shutdown，则直接抛弃任务。</p>
+<li><p><code>handler</code> 拒绝策略：当工作队列中的任务已到达最大限制，并且线程池中的线程数量也达到最大限制，这时如果有新任务提交进来，该如何处理呢。这里的拒绝策略，就是解决这个问题的，JDK 中提供了 4 种拒绝策略：</p>
+<ul>
+<li><p><code>CallerRunsPolicy</code>：该策略下，在调用者线程中直接执行被拒绝任务的 <code>run()</code> 方法，除非线程池已经 Shutdown，则直接抛弃任务。</p>
 </li>
-<li><p><code>AbortPolicy</code></p>
-<p> 该策略下，直接丢弃任务，并抛出 <code>RejectedExecutionException</code> 异常。</p>
+<li><p><code>AbortPolicy</code>：该策略下，直接丢弃任务，并抛出 <code>RejectedExecutionException</code> 异常。</p>
 </li>
-<li><p><code>DiscardPolicy</code></p>
-<p> 该策略下，直接丢弃任务，什么都不做。</p>
+<li><p><code>DiscardPolicy</code>：该策略下，直接丢弃任务，什么都不做。</p>
 </li>
-<li><p><code>DiscardOldestPolicy</code></p>
-<p> 该策略下，抛弃进入队列最早的那个任务，然后尝试把这次拒绝的任务放入队列。</p>
+<li><p><code>DiscardOldestPolicy</code>：该策略下，抛弃进入队列最早的那个任务，然后尝试把这次拒绝的任务放入队列。</p>
 </li>
-</ol>
+</ul>
 </li>
 </ul>
 <hr>
@@ -715,14 +700,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>全站总字数：</span>
-    <span title="全站总字数">505k</span>
+    <span title="全站总字数">506k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>全站总阅读时长 &asymp;</span>
-    <span title="全站总阅读时长">9:21</span>
+    <span title="全站总阅读时长">9:22</span>
   </span>
 </div>
 
