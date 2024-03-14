@@ -83,7 +83,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/02/28 - 15:13:35</p>
+      <p class="site-subtitle" itemprop="description">2024/03/14 - 17:48:25</p>
   </div>
 
   <div class="site-nav-right">
@@ -641,7 +641,7 @@
 
 <p><code>Child</code> 在继承 <code>Base</code> 时「显式」地为 <code>Base</code> 的泛型 <code>T</code> 指定了 <code>String</code> 类型，因此实例对象 <code>child</code> 将丢失 <code>Child</code> 自身声明的泛型 <code>Integer</code>，但会保留父类 <code>Base</code> 的泛型 <code>String。</code></p>
 <p>（3）匿名内部类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Bypass&lt;Float&gt; bypass_b;</span><br><span class="line">bypass_b = <span class="keyword">new</span> Bypass() &#123; ... &#125;;           <span class="comment">// ❌ 编译报错</span></span><br><span class="line">bypass_b = <span class="keyword">new</span> Bypass&lt;Float&gt;() &#123; ... &#125;; <span class="comment">// ✅ 编译通过</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Bypass&lt;Float&gt; bypass_b;</span><br><span class="line">bypass_b = <span class="keyword">new</span> Bypass() &#123; ... &#125;;        <span class="comment">// ❌ 编译报错</span></span><br><span class="line">bypass_b = <span class="keyword">new</span> Bypass&lt;Float&gt;() &#123; ... &#125;; <span class="comment">// ✅ 编译通过</span></span><br></pre></td></tr></table></figure>
 
 <p>匿名内部类也是一种特殊的子类实现，因此等同于为泛型指定了实际类型。创建匿名内部类时，编译器会要求「显式」声明泛型信息（即等号右侧的泛型类型不能省略），此时的 <code>bypass_b</code> 是 <code>Bypass</code> 的匿名子类对象，因此此处的 <code>Bypass</code> 实际上是父类，并且编译器强制要求将泛型 <code>Float</code> 传递给 <code>Bypass</code>，因此 <code>bypass_b</code> 保留了父类 <code>Bypass</code> 上的泛型信息。</p>
 <p>（4）泛型嵌套：</p>
