@@ -1499,7 +1499,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #f4ffaf;
+    background: #fffaff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -3182,7 +3182,13 @@ header.header {
   border-radius: var(--custom-radius-light) !important;
 }
 .back-to-top.back-to-top-on {
-  bottom: 200px;
+  bottom: 102px;
+}
+.scrollToBottom.back-to-top.back-to-top-on {
+  bottom: 66px !important;
+}
+.toggle.sidebar-toggle {
+  bottom: 30px;
 }
 /**
  * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

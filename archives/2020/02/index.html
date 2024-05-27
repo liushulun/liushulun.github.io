@@ -59,23 +59,6 @@
 
 
 
-<script>
-    Pace.options.eventLag = false;
-    document.addEventListener("readystatechange", () => {
-        if (document.readyState === "interactive") {
-            // Do fancy stuff like not pace.js related stuff (animations etc).
-        } else if (document.readyState === "complete") {
-            // Force all animation to finish.
-            Pace.stop();
-            // Hide pace elements.
-            //document
-            //    .querySelector("#pace-content")
-            //    .classList.replace("opacity-0", "opacity-100");
-        }
-    });
-</script>
-
-
 
 
 
@@ -145,6 +128,29 @@
     }
 </script>
 
+
+
+
+<script>
+    Pace.options.eventLag = false;
+    document.addEventListener("readystatechange", () => {
+        if (document.readyState === "interactive") {
+            // Do fancy stuff like not pace.js related stuff (animations etc).
+        } else if (document.readyState === "complete") {
+            // Force all animation to finish.
+            Pace.stop();
+            // Hide pace elements.
+            //document
+            //    .querySelector("#pace-content")
+            //    .classList.replace("opacity-0", "opacity-100");
+        }
+    });
+</script>
+
+
+
+
+
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -171,7 +177,7 @@
       <h1 class="site-title">LuisLiu</h1>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/05/27 - 22:18:57</p>
+      <p class="site-subtitle" itemprop="description">2024/05/28 - 00:35:26</p>
   </div>
 
   <div class="site-nav-right">
@@ -775,9 +781,10 @@
 
 
 
-<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;">
+
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 61px;">
     <i class="fa fa-arrow-down fa-lg"></i>
-    <span>Down</span>
+    
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
