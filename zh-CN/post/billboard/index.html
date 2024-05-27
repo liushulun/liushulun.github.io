@@ -178,7 +178,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/05/28 - 00:35:26</p>
+      <p class="site-subtitle" itemprop="description">2024/05/28 - 00:47:39</p>
   </div>
 
   <div class="site-nav-right">
@@ -514,6 +514,8 @@
     <div class="post-body" itemprop="articleBody">
 
 
+
+
     <script>
         function insertHeaderNavigation() {
             const postHeaderDiv = document.querySelectorAll('.post-header')[0];
@@ -525,7 +527,9 @@
                 return;
             }
 
-            // 不知道为什么，直接获取 "" 会导致 post.njk 渲染失败，但是又能直接读属性。。。
+            // 不知道为什么，直接获取 post.next 会导致 post.njk 渲染失败，但是又能直接读属性。。。
+            
+            
             const isNextPostAtRight = ("right" === 'right');
             var leftPostTitle, leftPostPath, rightPostTitle, rightPostPath;
             if (isNextPostAtRight) {
@@ -553,7 +557,7 @@
             // 反转 style-margin 样式：
             headerNavDiv.style.marginTop = "0";
             // headerNavDiv.style.marginBottom = "1em";
-            headerNavDiv.style.marginBottom = "40px";
+            headerNavDiv.style.marginBottom = "60px";
             // 反转 style-padding 样式：
             headerNavDiv.style.padding = "0 5px 10px";
             postHeaderDiv.insertBefore(headerNavDiv, postHeaderDiv.firstChild);
@@ -600,7 +604,6 @@
 
         insertHeaderNavigation();
     </script>
-
 <ul style="text-align:center; display:flex; padding:0px; margin:0px; font-size:1.5em;">
     <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/" style="margin:5px 15px; font-weight:bold; border-bottom:none!important;">Welcome</a></li>
 </ul>

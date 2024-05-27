@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/assets/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"reverse":true},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":false,"async":true,"transition":{"menu_item":null,"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":null,"sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="（1）Looper 简介；（2）Looper 的初始化和实例化；（3）Looper 工作原理总结；（4）Looper 常见问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Looper">
+<meta property="og:url" content="https://luisliu.cn/post/android/android-looper/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）Looper 简介；（2）Looper 的初始化和实例化；（3）Looper 工作原理总结；（4）Looper 常见问题。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-02-07T01:12:37.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="源码">
+<meta property="article:tag" content="Looper">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/post/android/android-looper/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://luisliu.cn/post/android/android-looper/","path":"post/android/android-looper/","title":"Android-Looper"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android-Looper | LuisLiu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    const ORIGINAL_TITLE = document.title;
+    const WELCOME_TITLE = "Welcome Back!";
+    const ANIM_TAB_TITLE_HALF_SPACE_CHAR = "\u2002";
+    const ANIM_TAB_TITLE_FULL_SPACE_CHAR = "\u3000";
+    const ANIM_TAB_TITLE_SHOW_INTERVAL = 50;
+    const ANIM_TAB_TITLE_SHOW_STAY = 500;
+    const timerSet = new Set();
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            clearTimerSet();
+
+            // $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            var faviconLink = document.querySelectorAll('[rel="icon"]');
+            if (faviconLink != null) {
+                faviconLink.href = "/images/favicon-32x32-next.png";
+            }
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = ORIGINAL_TITLE;
+        } else {
+            document.title = "";
+            showTabTitleAnim(WELCOME_TITLE);
+        }
+    });
+
+    function showTabTitleAnim(titleText) {
+        if (titleText == ORIGINAL_TITLE) {
+            clearTimerSet();
+            document.title = ORIGINAL_TITLE;
+            return;
+        }
+        const showingLength = (document.title == null) ? 0 : document.title.length;
+        if (showingLength >= titleText.length) {
+            var timer = setTimeout(function() {
+                clearTimerSet();
+                document.title = ORIGINAL_TITLE;
+            }, ANIM_TAB_TITLE_SHOW_STAY);
+            timerSet.add(timer);
+        } else {
+            const nextChar = titleText[showingLength];
+            if (nextChar.trim().length <= 0) {
+                // document.title 无法以空格结尾（会被自动删除），导致死循环一直追加空格，必须用专门的空白字符替代。
+                document.title += ANIM_TAB_TITLE_HALF_SPACE_CHAR;
+                showTabTitleAnim(titleText);
+                return;
+            }
+            document.title += nextChar;
+            var timer = setTimeout(function() {
+                timerSet.delete(timer);
+                showTabTitleAnim(titleText);
+            }, ANIM_TAB_TITLE_SHOW_INTERVAL);
+            timerSet.add(timer);
+        }
+    }
+
+    function clearTimerSet() {
+        timerSet.forEach(function(value, key, set) {
+            clearTimeout(value);
+        });
+        timerSet.clear();
+    }
+</script>
+
+
+
+
+<script>
+    Pace.options.eventLag = false;
+    document.addEventListener("readystatechange", () => {
+        if (document.readyState === "interactive") {
+            // Do fancy stuff like not pace.js related stuff (animations etc).
+        } else if (document.readyState === "complete") {
+            // Force all animation to finish.
+            Pace.stop();
+            // Hide pace elements.
+            //document
+            //    .querySelector("#pace-content")
+            //    .classList.replace("opacity-0", "opacity-100");
+        }
+    });
+</script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2024/05/28 - 00:47:39</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>About</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">82</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">153</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Catalogue
+        </li>
+        <li class="sidebar-nav-overview">
+          Site
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Looper"><span class="nav-text">Android-Looper</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Looper%E7%AE%80%E4%BB%8B"><span class="nav-text">1. Looper简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Looper%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="nav-text">2. Looper初始化和实例化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Looper%E6%80%BB%E7%BB%93"><span class="nav-text">3. Looper总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/assets/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">Posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">Categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-name">Tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;" rel="noopener me"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+<script>
+    const ANIM_SIDEBAR_TEXT_SHOW_INTERVAL = 30;
+    const ANIM_SIDEBAR_TEXT_SHOW_STAY = 5000;
+    const ANIM_SIDEBAR_TEXT_HIDE_INTERVAL = 15;
+    const ANIM_SIDEBAR_TEXT_HIDE_STAY = 1000;
+    const ANIM_SIDEBAR_CURSOR_INTERVAL = 500;
+
+    const ANIM_SIDEBAR_TEXT_SET = [`Welcome!`,
+                       `Feel free.`,
+                       `Keep learning!`,
+                       `Good luck!`,
+                       `Nice to meet you.`,
+                       `Does anything interest you?`,
+                       `Let's exchange the friend-link!`,
+                       `Comment will be available soon.`,
+                       `Can't wait to chat with you!`,
+                       ];
+    var currentAnimText = ANIM_SIDEBAR_TEXT_SET[0];
+
+    function genRandomSidebarText(minVal, maxVal) {
+        switch (arguments.length) {
+            case 1: {
+                return parseInt(Math.random() * minVal, 10); // parseInt 约等于 floor 都是向下取整，第二个参数表示 10 进制
+            }
+            case 2: {
+                return parseInt((Math.random() * (maxVal - minVal)) + minVal, 10);
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
+    function startSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        showSidebarTextAnim(textNode);
+    }
+
+    function startSidebarTextCursorAnim(cursorNode) {
+        if (cursorNode == null) {
+            return;
+        }
+        setTimeout(function() {
+            if (cursorNode.style.color == 'transparent') {
+                cursorNode.style.color = '#999999';
+            } else {
+                cursorNode.style.color   = 'transparent';
+            }
+            startSidebarTextCursorAnim(cursorNode);
+        }, ANIM_SIDEBAR_CURSOR_INTERVAL);
+    }
+
+    function showSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength < currentAnimText.length) {
+            const nextChar = currentAnimText[showingLength];
+            textNode.innerHTML += nextChar;
+            if (nextChar.trim().length <= 0) {
+                showSidebarTextAnim(textNode);
+                return;
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_INTERVAL);
+        } else {
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_STAY);
+        }
+    }
+
+    function hideSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength > 0) {
+            textNode.innerHTML = textNode.innerHTML.slice(0, -1);
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_INTERVAL);
+        } else {
+            // 所有文字都隐藏后，重新随机选择一个文案。
+            // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
+            for (var i = 0; i < 3; i++) {
+                let randomTextIndex = genRandomSidebarText(ANIM_SIDEBAR_TEXT_SET.length);
+                let randomText = ANIM_SIDEBAR_TEXT_SET[randomTextIndex];
+                if (randomText.trim().length <= 0) {
+                    continue;
+                }
+                if (currentAnimText !== randomText) {
+                    currentAnimText = randomText;
+                    break;
+                }
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_STAY);
+        }
+    }
+
+
+    // 创建 Observer，用于监听指定节点及其子节点的所有变化。
+    const siteAuthorObserver = new MutationObserver(function() {
+        // 找到所有符合 SiteAuthor（包含头像、名称、描述）特征的节点（<div class="site-author">）：
+        const allFoundParents = document.getElementsByClassName('site-author');
+        if (allFoundParents.length <= 0) {
+            // Do nothing, keep observing.
+            return;
+        }
+
+        // 确保找到的 SiteAuthor 是 Sidebar 内的元素：
+        var parentNode = null;
+        for (var i = 0; i < allFoundParents.length; i++) {
+            const eachNode = allFoundParents[i];
+            if (eachNode.parentNode != null && eachNode.parentNode.classList.contains('site-overview-wrap') && eachNode.parentNode.classList.contains('sidebar-panel')) {
+                parentNode = eachNode;
+                break;
+            }
+        }
+        if (parentNode == null) {
+            return;
+        }
+
+        siteAuthorObserver.disconnect();
+
+        // 遍历 SiteAuthor 的子元素，找到 SiteDescription 元素：
+        var anchorNode = null;
+        for (var i = 0; i < parentNode.children.length; i++) {
+            const eachNode = parentNode.children[i];
+            if (eachNode.classList.contains('site-description')) {
+                anchorNode = eachNode;
+                break;
+            }
+        }
+        if (anchorNode == null) {
+            return;
+        }
+
+        // 清空 SiteDescription 元素：
+        while (anchorNode.children.length > 0) {
+            anchorNode.children[0].remove();
+        }
+        anchorNode.innerHTML = null;
+        anchorNode.innerText = null;
+
+        //
+        const containerDiv = document.createElement('div');
+        containerDiv.setAttribute('id', "containerDiv");
+        containerDiv.setAttribute('style', "padding:5px 0px; margin:0px; text-align:center; display:flex; justify-content:center; line-height:1; font-size:1.0em!important; min-height:1.0em!important;");
+        //parent.insertBefore(containerDiv, parent.firstChild);
+        anchorNode.insertBefore(containerDiv, anchorNode.firstChild);
+        //
+        const textDiv = document.createElement('div');
+        textDiv.setAttribute('style', "padding:0px; margin:0px;");
+        startSidebarTextAnim(textDiv);
+        containerDiv.appendChild(textDiv);
+        //
+        const cursorDiv = document.createElement('div');
+        cursorDiv.setAttribute('style', "padding:0px; margin:0px;");
+        cursorDiv.innerHTML = '|';
+        startSidebarTextCursorAnim(cursorDiv);
+        containerDiv.appendChild(cursorDiv);
+    });
+    siteAuthorObserver.observe(document, {
+        childList: true,
+        subtree: true
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 所有 DOM(Document Object Model) 加载完成后，不论 siteAuthorObserver 是否监听到，都需要取消监听。
+        siteAuthorObserver.disconnect();
+    });
+</script>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/android/android-looper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android-Looper | LuisLiu">
+      <meta itemprop="description" content="（1）Looper 简介；（2）Looper 的初始化和实例化；（3）Looper 工作原理总结；（4）Looper 常见问题。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-Looper
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted:</span>
+
+      <time title="Created:: 2021-02-07 09:12:37" itemprop="dateCreated datePublished" datetime="2021-02-07T09:12:37+08:00">2021-02-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">Categories:</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="far fa-tags"></i>
+    </span>
+    <span class="post-meta-item-text">Tags:</span>
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/Android/" itemprop="url" rel="tag"><span itemprop="name">Android</span></a>
+      </span>
+        , 
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/%E6%BA%90%E7%A0%81/" itemprop="url" rel="tag"><span itemprop="name">源码</span></a>
+      </span>
+        , 
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/Looper/" itemprop="url" rel="tag"><span itemprop="name">Looper</span></a>
+      </span>
+  </span>
+
+
+    <span class="post-meta-item" title="Symbols">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Symbols: </span>
+      <span>8k</span>
+    </span>
+    <span class="post-meta-item" title="Duration">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Duration &asymp;</span>
+      <span>9 mins.</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）Looper 简介；（2）Looper 的初始化和实例化；（3）Looper 工作原理总结；（4）Looper 常见问题。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+
+
+
+    <script>
+        function insertHeaderNavigation() {
+            const postHeaderDiv = document.querySelectorAll('.post-header')[0];
+            if (postHeaderDiv == null) {
+                return;
+            }
+            const isNavigationEnabled = "right";
+            if (!isNavigationEnabled) {
+                return;
+            }
+
+            // 不知道为什么，直接获取 post.next 会导致 post.njk 渲染失败，但是又能直接读属性。。。
+            
+            
+            const isNextPostAtRight = ("right" === 'right');
+            var leftPostTitle, leftPostPath, rightPostTitle, rightPostPath;
+            if (isNextPostAtRight) {
+                leftPostTitle = "Android-Service";
+                leftPostPath = "post/android/android-service/";
+                rightPostTitle = "Android-MessageQueue";
+                rightPostPath = "post/android/android-messagequeue/";
+            } else {
+                leftPostTitle = "Android-MessageQueue";
+                leftPostPath = "post/android/android-messagequeue/";
+                rightPostTitle = "Android-Service";
+                rightPostPath = "post/android/android-service/";
+            }
+            const leftPostRelatedUrl = "/" + leftPostPath;
+            const rightPostRelatedUrl = "/" + rightPostPath;
+            if ((leftPostPath == null || leftPostPath.length <= 0) && (rightPostPath == null || rightPostPath.length <= 0)) {
+                return;
+            }
+
+            var headerNavDiv = document.createElement('div');
+            headerNavDiv.className = 'post-nav';
+            // 反转 style-border 样式：
+            headerNavDiv.style.borderTop = "none";
+            headerNavDiv.style.borderBottom = "1px solid #eee";
+            // 反转 style-margin 样式：
+            headerNavDiv.style.marginTop = "0";
+            // headerNavDiv.style.marginBottom = "1em";
+            headerNavDiv.style.marginBottom = "60px";
+            // 反转 style-padding 样式：
+            headerNavDiv.style.padding = "0 5px 10px";
+            postHeaderDiv.insertBefore(headerNavDiv, postHeaderDiv.firstChild);
+
+            if (leftPostPath != null && leftPostPath.length > 0) {
+                var headerNavLeftDiv = document.createElement('div');
+                headerNavLeftDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavLeftDiv);
+
+                var headerNavLeftLink = document.createElement('a');
+                headerNavLeftLink.title = leftPostTitle;
+                headerNavLeftLink.href = leftPostRelatedUrl;
+                headerNavLeftLink.rel = "prev";
+                headerNavLeftLink.style.textAlign = "left";
+                headerNavLeftDiv.append(headerNavLeftLink);
+
+                var headerNavLeftIcon = document.createElement('i');
+                headerNavLeftIcon.className = 'fa fa-angle-left';
+                headerNavLeftLink.append(headerNavLeftIcon);
+
+                var headerNavLeftTitleNode = document.createTextNode(leftPostTitle);
+                headerNavLeftLink.append(headerNavLeftTitleNode);
+            }
+            if (rightPostPath != null && rightPostPath.length > 0) {
+                var headerNavRightDiv = document.createElement('div');
+                headerNavRightDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavRightDiv);
+
+                var headerNavRightLink = document.createElement('a');
+                headerNavRightLink.title = rightPostTitle;
+                headerNavRightLink.href = rightPostRelatedUrl;
+                headerNavRightLink.rel = "next";
+                headerNavRightLink.style.textAlign = "right";
+                headerNavRightDiv.append(headerNavRightLink);
+
+                var headerNavRightTitleNode = document.createTextNode(rightPostTitle);
+                headerNavRightLink.append(headerNavRightTitleNode);
+
+                var headerNavRightIcon = document.createElement('i');
+                headerNavRightIcon.className = 'fa fa-angle-right';
+                headerNavRightLink.append(headerNavRightIcon);
+            }
+        }
+
+        insertHeaderNavigation();
+    </script>
+<span id="more"></span>
+
+<h1 id="Android-Looper"><a href="#Android-Looper" class="headerlink" title="Android-Looper"></a>Android-Looper</h1><p>前言：本文是针对 Looper 内部的一些分析，但涉及到的知识还可能出现在以下文章中，建议都参考一遍：</p>
+<ul>
+<li><a href="/post/java/java-threadlocal/java-threadlocal/" title="@LINK">Java——ThreadLocal</a></li>
+<li><a href="/post/android/android-message/android-message/" title="@LINK">Android——Message</a></li>
+<li><a href="/post/android/android-messagequeue/android-messagequeue/" title="@LINK">Android——MessageQueue</a></li>
+<li><a href="/post/android/android-looper/android-looper/" title="@LINK">Android——Looper</a></li>
+<li><a href="/post/android/android-handler/android-handler/" title="@LINK">Android——Handler</a></li>
+</ul>
+<hr>
+<h2 id="1-Looper简介"><a href="#1-Looper简介" class="headerlink" title="1. Looper简介"></a>1. Looper简介</h2><p>首先看一下源码中对 Looper 的注释说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Class used to run a message loop for a thread.  Threads by default do</span></span><br><span class="line"><span class="comment">  * not have a message loop associated with them; to create one, call</span></span><br><span class="line"><span class="comment">  * &#123;<span class="doctag">@link</span> #prepare&#125; in the thread that is to run the loop, and then</span></span><br><span class="line"><span class="comment">  * &#123;<span class="doctag">@link</span> #loop&#125; to have it process messages until the loop is stopped.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * &lt;p&gt;Most interaction with a message loop is through the</span></span><br><span class="line"><span class="comment">  * &#123;<span class="doctag">@link</span> Handler&#125; class.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * &lt;p&gt;This is a typical example of the implementation of a Looper thread,</span></span><br><span class="line"><span class="comment">  * using the separation of &#123;<span class="doctag">@link</span> #prepare&#125; and &#123;<span class="doctag">@link</span> #loop&#125; to create an</span></span><br><span class="line"><span class="comment">  * initial Handler to communicate with the Looper.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * &lt;pre&gt;</span></span><br><span class="line"><span class="comment">  *  class LooperThread extends Thread &#123;</span></span><br><span class="line"><span class="comment">  *      public Handler mHandler;</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  *      public void run() &#123;</span></span><br><span class="line"><span class="comment">  *          Looper.prepare();</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  *          mHandler = new Handler() &#123;</span></span><br><span class="line"><span class="comment">  *              public void handleMessage(Message msg) &#123;</span></span><br><span class="line"><span class="comment">  *                  // process incoming messages here</span></span><br><span class="line"><span class="comment">  *              &#125;</span></span><br><span class="line"><span class="comment">  *          &#125;;</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  *          Looper.loop();</span></span><br><span class="line"><span class="comment">  *      &#125;</span></span><br><span class="line"><span class="comment">  *  &#125;&lt;/pre&gt;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Looper</span> </span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * API Implementation Note:</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * This class contains the code required to set up and manage an event loop</span></span><br><span class="line"><span class="comment">     * based on MessageQueue.  APIs that affect the state of the queue should be</span></span><br><span class="line"><span class="comment">     * defined on MessageQueue or Handler rather than on Looper itself.  For example,</span></span><br><span class="line"><span class="comment">     * idle handlers and sync barriers are defined on the queue whereas preparing the</span></span><br><span class="line"><span class="comment">     * thread, looping, and quitting are defined on the looper.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大致翻译：</p>
+<p>（1）Looper 被 Thread 用于运行一个消息循环。一个线程默认不具有与之关联的消息循环（消息队列），如果想要为线程创建一个消息队列，在该线程中调用 <code>Looper.prepare()</code>，然后再调用 <code>Looper.loop()</code> 来启动消息处理循环，该循环将一直运行直到被终止。</p>
+<p>（2）大多数情况下，和消息循环的交互是通过 <code>Handler</code> 完成的。</p>
+<p>（3）以下代码是实现一个具有消息循环的线程的典型方式，通过分别调用 <code>prepare()</code> 和 <code>loop()</code> 来创建一个初始化的 <code>Handler</code> 并用于和 <code>Looper</code> 交互：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LooperThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> Handler mHandler;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Looper.prepare();</span><br><span class="line">        mHandler = <span class="keyword">new</span> Handler() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">                <span class="comment">// process incoming messages here</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        Looper.loop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（4）Looper 类中包含某些代码，是需要通过 MessageQueue 来设置和管理事件循环的。影响消息队列的状态的 API 应该在 MessageQueue 或 Handler 中而不是在 Looper 本身定义，例如 <code>Idle Handler</code> 和同步障栅是在消息队列中定义的，而 Thread 的前期准备、消息循环、退出则是在 Looper 中完成的。</p>
+<p>以上内容可能涉及到 Handler 或 Message 的内容，可以通过系列对应的文章查阅。</p>
+<hr>
+<h2 id="2-Looper初始化和实例化"><a href="#2-Looper初始化和实例化" class="headerlink" title="2. Looper初始化和实例化"></a>2. Looper初始化和实例化</h2><p>Looper 类光是从名字就能看出来作用，通过之前对 Handler 的源码分析可以知道，Handler 构造时，可以手动传入一个 Looper 对象和处理消息的回调 Callback，用来与 Handler 绑定，此时这个 Handler 则会用来处理该 Looper 的消息队列中的消息，并且与该 Looper 处在同一线程，而默认构造方法则最终都调用了以下构造方法，并且内部给 Looper 传入了一个 <code>null</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Use the &#123;<span class="doctag">@link</span> Looper&#125; for the current thread with the specified callback interface</span></span><br><span class="line"><span class="comment">  * and set whether the handler should be asynchronous.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * Handlers are synchronous by default unless this constructor is used to make</span></span><br><span class="line"><span class="comment">  * one that is strictly asynchronous.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * Asynchronous messages represent interrupts or events that do not require global ordering</span></span><br><span class="line"><span class="comment">  * with respect to synchronous messages.  Asynchronous messages are not subject to</span></span><br><span class="line"><span class="comment">  * the synchronization barriers introduced by &#123;<span class="doctag">@link</span> MessageQueue#enqueueSyncBarrier(long)&#125;.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> callback The callback interface in which to handle messages, or null.</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> async If true, the handler calls &#123;<span class="doctag">@link</span> Message#setAsynchronous(boolean)&#125; for</span></span><br><span class="line"><span class="comment">  * each &#123;<span class="doctag">@link</span> Message&#125; that is sent to it or &#123;<span class="doctag">@link</span> Runnable&#125; that is posted to it.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@hide</span></span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Handler</span><span class="params">(<span class="meta">@Nullable</span> Callback callback, <span class="keyword">boolean</span> async)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (FIND_POTENTIAL_LEAKS) &#123;</span><br><span class="line">        <span class="keyword">final</span> Class&lt;? extends Handler&gt; klass = getClass();</span><br><span class="line">        <span class="keyword">if</span> ((klass.isAnonymousClass() || klass.isMemberClass() || klass.isLocalClass()) &amp;&amp;</span><br><span class="line">                (klass.getModifiers() &amp; Modifier.STATIC) == <span class="number">0</span>) &#123;</span><br><span class="line">            Log.w(TAG, <span class="string">&quot;The following Handler class should be static or leaks might occur: &quot;</span> +</span><br><span class="line">                klass.getCanonicalName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mLooper = Looper.myLooper();</span><br><span class="line">    <span class="keyword">if</span> (mLooper == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(</span><br><span class="line">            <span class="string">&quot;Can&#x27;t create handler inside thread &quot;</span> + Thread.currentThread()</span><br><span class="line">                    + <span class="string">&quot; that has not called Looper.prepare()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mQueue = mLooper.mQueue;</span><br><span class="line">    mCallback = callback;</span><br><span class="line">    mAsynchronous = async;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到默认情况下会调用 <code>Looper.myLooper()</code>，再查看一下这个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Return the Looper object associated with the current thread.  Returns</span></span><br><span class="line"><span class="comment">  * null if the calling thread is not associated with a Looper.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="meta">@Nullable</span> <span class="function">Looper <span class="title">myLooper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sThreadLocal.get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法也就是从 <code>ThreadLocal</code> 中获取一个对象，ThreadLocal 的相关内容在系列文章中已有介绍，简单来说，首先需要向当前线程中 <code>set()</code> 一个对象，才能 <code>get()</code> 出来，并且 ThreadLocal 中存放的对象是和线程绑定的，不同线程只能 <code>get()</code> 到该线程自己 <code>set()</code> 进去的对象，再看一下这个 <code>sThreadLocal</code> 在一开始的声明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sThreadLocal.get() will return null unless you&#x27;ve called prepare().</span></span><br><span class="line"><span class="meta">@UnsupportedAppUsage</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;Looper&gt; sThreadLocal = <span class="keyword">new</span> ThreadLocal&lt;Looper&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>说明存取的都是 Looper 对象。Looper 其实有两个 <code>prepare()</code> 方法，一个无参，另一个就是以下这个有一个布尔类型参数的，但无参的 <code>prepare()</code> 最终也是调用的有参这个：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Initialize the current thread as a looper.</span></span><br><span class="line"><span class="comment">  * This gives you a chance to create handlers that then reference</span></span><br><span class="line"><span class="comment">  * this looper, before actually starting the loop. Be sure to call</span></span><br><span class="line"><span class="comment">  * &#123;<span class="doctag">@link</span> #loop()&#125; after calling this method, and end it by calling</span></span><br><span class="line"><span class="comment">  * &#123;<span class="doctag">@link</span> #quit()&#125;.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    prepare(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>Looper.prepare(boolean)</code> 方法中有这么一段：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(<span class="keyword">boolean</span> quitAllowed)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sThreadLocal.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;Only one Looper may be created per thread&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    sThreadLocal.set(<span class="keyword">new</span> Looper(quitAllowed));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里就清楚了，Looper 在调用 <code>prepare()</code> 方法后，会往对应的 ThreadLocal 中存放一个实例化的 Looper 对象，而 <code>Looper.myLooper()</code> 则是从 ThreadLocal 中取出这个对象，因此如果一个 Looper 没有先调用 <code>prepare()</code> 就直接使用会报错。但是为什么不直接通过 <code>new</code> 来生成实例对象呢？因为 Looper 的构造方法是私有的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Looper</span><span class="params">(<span class="keyword">boolean</span> quitAllowed)</span> </span>&#123;</span><br><span class="line">    mQueue = <span class="keyword">new</span> MessageQueue(quitAllowed);</span><br><span class="line">    mThread = Thread.currentThread();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这么设计的好处我个人理解为：① Looper、Handler、Thread 这些类都是由系统进行资源管理的，用户不应具有太大的修改权限，并且 Looper 类是 <code>final</code> 修饰的，也不允许用户继承重写。② Looper 必须和指定的线程绑定，指定调用 <code>prepare()</code> 方法可以强调这一特性。③ Looper 只能和一个线程绑定，使用 ThreadLocal 管理，采用 <code>new</code> 的方式可能会有多线程的问题。</p>
+<hr>
+<h2 id="3-Looper总结"><a href="#3-Looper总结" class="headerlink" title="3. Looper总结"></a>3. Looper总结</h2><p>其实到这里 Looper 的工作原理和流程就已经可以总结了：</p>
+<ol>
+<li>Looper 是一个消息循环。</li>
+<li>Looper 内有成员变量 MessageQueue，并通过它循环取出、派发消息进行事件处理。</li>
+<li>Looper 无法通过构造方法实例化，而是通过 <code>prepare()</code> 方法，并在内部调用了 <code>myLooper()</code> 方法来实例化一个 Looper 对象，且会和线程绑定，通过对应线程的 ThreadLocal 来存取。</li>
+<li>Looper 所在的线程决定了 Handler 处理消息时所在的线程。实例化 Handler 时，可以自行创建某线程的 Looper 实例化对象，并将其与 Handler 绑定，则 Handler 处理的消息即来自于 Looper 所在的线程。</li>
+<li>线程默认是不具有消息循环的，也即默认情况下一个 Thread 是不会维护 Looper 的，通过继承重写 Thread，并在其中调用 <code>Looper.prepare()</code> 来创建消息循环，再通过 <code>Looper.loop()</code> 来开启循环。</li>
+</ol>
+<p>但在实际开发中其实有些比较常见的问题：</p>
+<p>（1）平时用 Handler 处理消息时，并没有调用 <code>Looper.prepare()</code> 或通过其手动创建一个 Looper 对象，但依然可以正常处理消息。这是因为，Android 的主线程即 UI 线程，有一定的特殊性，整个 App 过程中仅允许存在一个 UI 线程，而 App 的主线程对应在 <code>ActivityThread.main()</code> 方法，其也是整个 App 的入口方法，在这个方法里面就生成了 Looper 的实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Looper.prepareMainLooper();</span><br></pre></td></tr></table></figure>
+
+<p>对应 Looper 中的源码为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Initialize the current thread as a looper, marking it as an</span></span><br><span class="line"><span class="comment">  * application&#x27;s main looper. The main looper for your application</span></span><br><span class="line"><span class="comment">  * is created by the Android environment, so you should never need</span></span><br><span class="line"><span class="comment">  * to call this function yourself.  See also: &#123;<span class="doctag">@link</span> #prepare()&#125;</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepareMainLooper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    prepare(<span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">synchronized</span> (Looper.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (sMainLooper != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">&quot;The main Looper has already been prepared.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        sMainLooper = myLooper();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然本质上仍然是通过 <code>prepare(boolean)</code> 方法生成了一个成员变量 <code>sMainLooper</code>，但是加了类锁，并且只允许创建一次，由于 App 运行期间，主线程一直存在，因此主线程的对应的 Looper 实例对象 <code>sMainLooper</code> 在 App 运行期间有且仅有一个，所以在主线程中使用 Handler 无需手动创建 Looper 实例对象以及显式调用 <code>prepare()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 主线程中实例化 Handler</span></span><br><span class="line"><span class="keyword">private</span> Handler mainHandler = <span class="keyword">new</span> Handler(<span class="keyword">new</span> Handler.Callback() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>（2）即使在子线程中，也可以不显式调用 <code>prepare()</code> 方法，这时 Handler 的初始化方式为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Handler mainHandler = <span class="keyword">new</span> Handler(Looper.getMainLooper()) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(<span class="meta">@NonNull</span> Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.handleMessage(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里是 <code>void handleMessage(Message)</code>和（1）中使用匿名 Callback 的 <code>boolean handleMessage(Message)</code> 不同。</p>
+</blockquote>
+<p>这里不需要显式调用 <code>prepare()</code> 的原因是给 Handler 传了一个 <code>Looper.getMainLooper()</code> 的参数，源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Returns the application&#x27;s main looper, which lives in the main thread of the application.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Looper <span class="title">getMainLooper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (Looper.class) &#123;</span><br><span class="line">        <span class="keyword">return</span> sMainLooper;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到实际上就是返回了主线程的 <code>sMainLooper</code>，所以也不需要手动创建 Looper 实例对象。</p>
+<p>（3）利用 <strong>Handler 处理消息所在线程由其实例化时传入的 Looper 对象决定</strong> 这一特性，可以衍生出主线程和子线程之间交互的方式：</p>
+<ol>
+<li>子线程向主线程发送消息：在子线程实例化 Handler 时传入 <code>Looper.getMainLooper()</code> 参数。</li>
+<li>主线程向子线程发送消息：在主线程实例化 Handler 时传入一个在子线程中调用过 <code>prepare()</code> 方法已初始化的 Looper 对象。</li>
+</ol>
+<p>针对以上情形 ②，主线程开启子线程后向下执行，如果主线程发送消息的时间较早，可能子线程还没有完成对 Looper 的实例化，则会导致空指针异常，此时可以将子线程用 <code>HandlerThread</code> 类代替，实例化时传入一个 <code>String</code> 类型的线程标记名，HandlerThread 不能重写 <code>run()</code> 方法，当然也不需要显式调用 <code>prepare()</code> 和 <code>loop()</code>，通过 <code>HandlerThread.getLooper()</code> 即可获取 Looper 实例对象。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+          <div class="reward-container">
+  <div> </div>
+  <button>
+    支持一下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/assets/images/reward.png" alt="LuisLiu WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://luisliu.cn/post/android/android-looper/" title="Android-Looper">https://luisliu.cn/post/android/android-looper/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All posts are written by Luis and licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a>, please get authorized before any references.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag"><i class="fa fa-tag"></i> 源码</a>
+              <a href="/tags/Looper/" rel="tag"><i class="fa fa-tag"></i> Looper</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/android/android-service/" rel="prev" title="Android-Service">
+                  <i class="fa fa-angle-left"></i> Android-Service
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/android/android-messagequeue/" rel="next" title="Android-MessageQueue">
+                  Android-MessageQueue <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>English</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="Select language">
+      
+        <option value="en" data-href="/post/android/android-looper/" selected="">
+          English
+        </option>
+      
+        <option value="zh-CN" data-href="/zh-CN/post/android/android-looper/" selected="">
+          简体中文
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 2018 – 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa-solid fa-at"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">LuisLiu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Symbols: </span>
+    <span title="Symbols">512k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Duration &asymp;</span>
+    <span title="Duration">9:29</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+
+
+
+
+
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 61px;">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollToBottom = document.querySelector('.scrollToBottom');
+        /* 内联写法：
+        $('.scrollToBottom').click(function(){
+            $('html,body').animate({scrollTop:document.body.scrollHeight}, 500);
+        });
+        */
+        scrollToBottom && scrollToBottom.addEventListener('click', () => {
+            window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: document.scrollingElement.scrollHeight
+            });
+        });
+    });
+</script>
+
+<a id='postBottom'></a>
+
+</body>
+</html>
