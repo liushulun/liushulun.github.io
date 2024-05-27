@@ -72,6 +72,74 @@
 
 
 
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    const ORIGINAL_TITLE = document.title;
+    const WELCOME_TITLE = "Welcome Back!";
+    const ANIM_TAB_TITLE_HALF_SPACE_CHAR = "\u2002";
+    const ANIM_TAB_TITLE_FULL_SPACE_CHAR = "\u3000";
+    const ANIM_TAB_TITLE_SHOW_INTERVAL = 50;
+    const ANIM_TAB_TITLE_SHOW_STAY = 500;
+    const timerSet = new Set();
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            clearTimerSet();
+
+            // $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            var faviconLink = document.querySelectorAll('[rel="icon"]');
+            if (faviconLink != null) {
+                faviconLink.href = "/images/favicon-32x32-next.png";
+            }
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = ORIGINAL_TITLE;
+        } else {
+            document.title = "";
+            showTabTitleAnim(WELCOME_TITLE);
+        }
+    });
+
+    function showTabTitleAnim(titleText) {
+        if (titleText == ORIGINAL_TITLE) {
+            clearTimerSet();
+            document.title = ORIGINAL_TITLE;
+            return;
+        }
+        const showingLength = (document.title == null) ? 0 : document.title.length;
+        if (showingLength >= titleText.length) {
+            var timer = setTimeout(function() {
+                clearTimerSet();
+                document.title = ORIGINAL_TITLE;
+            }, ANIM_TAB_TITLE_SHOW_STAY);
+            timerSet.add(timer);
+        } else {
+            const nextChar = titleText[showingLength];
+            if (nextChar.trim().length <= 0) {
+                // document.title 无法以空格结尾（会被自动删除），导致死循环一直追加空格，必须用专门的空白字符替代。
+                document.title += ANIM_TAB_TITLE_HALF_SPACE_CHAR;
+                showTabTitleAnim(titleText);
+                return;
+            }
+            document.title += nextChar;
+            var timer = setTimeout(function() {
+                timerSet.delete(timer);
+                showTabTitleAnim(titleText);
+            }, ANIM_TAB_TITLE_SHOW_INTERVAL);
+            timerSet.add(timer);
+        }
+    }
+
+    function clearTimerSet() {
+        timerSet.forEach(function(value, key, set) {
+            clearTimeout(value);
+        });
+        timerSet.clear();
+    }
+</script>
+
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -98,7 +166,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/05/27 - 09:58:59</p>
+      <p class="site-subtitle" itemprop="description">2024/05/27 - 22:18:57</p>
   </div>
 
   <div class="site-nav-right">
@@ -212,13 +280,13 @@
 
 
 <script>
-    const ANIM_TEXT_SHOW_INTERVAL = 30;
-    const ANIM_TEXT_SHOW_STAY = 5000;
-    const ANIM_TEXT_HIDE_INTERVAL = 15;
-    const ANIM_TEXT_HIDE_STAY = 1000;
-    const ANIM_CURSOR_INTERVAL = 500;
+    const ANIM_SIDEBAR_TEXT_SHOW_INTERVAL = 30;
+    const ANIM_SIDEBAR_TEXT_SHOW_STAY = 5000;
+    const ANIM_SIDEBAR_TEXT_HIDE_INTERVAL = 15;
+    const ANIM_SIDEBAR_TEXT_HIDE_STAY = 1000;
+    const ANIM_SIDEBAR_CURSOR_INTERVAL = 500;
 
-    const ANIM_TEXT = [`Welcome!`,
+    const ANIM_SIDEBAR_TEXT_SET = [`Welcome!`,
                        `Feel free.`,
                        `Keep learning!`,
                        `Good luck!`,
@@ -228,9 +296,9 @@
                        `Comment will be available soon.`,
                        `Can't wait to chat with you!`,
                        ];
-    var currentAnimText = ANIM_TEXT[0];
+    var currentAnimText = ANIM_SIDEBAR_TEXT_SET[0];
 
-    function genRandom(minVal, maxVal) {
+    function genRandomSidebarText(minVal, maxVal) {
         switch (arguments.length) {
             case 1: {
                 return parseInt(Math.random() * minVal, 10); // parseInt 约等于 floor 都是向下取整，第二个参数表示 10 进制
@@ -244,14 +312,14 @@
         }
     }
 
-    function startTextAnim(textNode) {
+    function startSidebarTextAnim(textNode) {
         if (textNode == null) {
             return;
         }
-        showTextAnim(textNode);
+        showSidebarTextAnim(textNode);
     }
 
-    function startCursorAnim(cursorNode) {
+    function startSidebarTextCursorAnim(cursorNode) {
         if (cursorNode == null) {
             return;
         }
@@ -261,11 +329,11 @@
             } else {
                 cursorNode.style.color   = 'transparent';
             }
-            startCursorAnim(cursorNode);
-        }, ANIM_CURSOR_INTERVAL);
+            startSidebarTextCursorAnim(cursorNode);
+        }, ANIM_SIDEBAR_CURSOR_INTERVAL);
     }
 
-    function showTextAnim(textNode) {
+    function showSidebarTextAnim(textNode) {
         if (textNode == null) {
             return;
         }
@@ -274,20 +342,20 @@
             const nextChar = currentAnimText[showingLength];
             textNode.innerHTML += nextChar;
             if (nextChar.trim().length <= 0) {
-                showTextAnim(textNode);
+                showSidebarTextAnim(textNode);
                 return;
             }
             setTimeout(function() {
-                showTextAnim(textNode);
-            }, ANIM_TEXT_SHOW_INTERVAL);
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_INTERVAL);
         } else {
             setTimeout(function() {
-                hideTextAnim(textNode);
-            }, ANIM_TEXT_SHOW_STAY);
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_STAY);
         }
     }
 
-    function hideTextAnim(textNode) {
+    function hideSidebarTextAnim(textNode) {
         if (textNode == null) {
             return;
         }
@@ -295,14 +363,14 @@
         if (showingLength > 0) {
             textNode.innerHTML = textNode.innerHTML.slice(0, -1);
             setTimeout(function() {
-                hideTextAnim(textNode);
-            }, ANIM_TEXT_HIDE_INTERVAL);
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_INTERVAL);
         } else {
             // 所有文字都隐藏后，重新随机选择一个文案。
             // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
             for (var i = 0; i < 3; i++) {
-                let randomTextIndex = genRandom(ANIM_TEXT.length);
-                let randomText = ANIM_TEXT[randomTextIndex];
+                let randomTextIndex = genRandomSidebarText(ANIM_SIDEBAR_TEXT_SET.length);
+                let randomText = ANIM_SIDEBAR_TEXT_SET[randomTextIndex];
                 if (randomText.trim().length <= 0) {
                     continue;
                 }
@@ -312,8 +380,8 @@
                 }
             }
             setTimeout(function() {
-                showTextAnim(textNode);
-            }, ANIM_TEXT_HIDE_STAY);
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_STAY);
         }
     }
 
@@ -371,13 +439,13 @@
         //
         const textDiv = document.createElement('div');
         textDiv.setAttribute('style', "padding:0px; margin:0px;");
-        startTextAnim(textDiv);
+        startSidebarTextAnim(textDiv);
         containerDiv.appendChild(textDiv);
         //
         const cursorDiv = document.createElement('div');
         cursorDiv.setAttribute('style', "padding:0px; margin:0px;");
         cursorDiv.innerHTML = '|';
-        startCursorAnim(cursorDiv);
+        startSidebarTextCursorAnim(cursorDiv);
         containerDiv.appendChild(cursorDiv);
     });
     siteAuthorObserver.observe(document, {
@@ -493,48 +561,6 @@
     <div class="post-body" itemprop="articleBody">
 
 
-
-
-
-
-
-
-<script>
-    <!--动态浏览器标签-->
-    var OriginTitle = document.title;
-    var titleTime;
-    var titleTime2;
-    var titleTime3;
-    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
-    blankTitle = blankTitle + blankTitle + blankTitle;
-    document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-            // $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
-            var faviconLink = document.querySelectorAll('[rel="icon"]');
-            if (faviconLink != null) {
-                faviconLink.href = "/images/favicon-32x32-next.png";
-            }
-            // 失去焦点时不切换标题
-            // document.title = "Waiting...";
-            document.title = OriginTitle;
-            clearTimeout(titleTime);
-            clearTimeout(titleTime2);
-            clearTimeout(titleTime3);
-        }
-        else {
-            document.title = "Welcome";
-            titleTime = setTimeout(function () {
-                document.title = "Back";
-                titleTime2 = setTimeout(function () {
-                    document.title = "Welcome Back !";
-                    titleTime3 = setTimeout(function () {
-                        document.title = OriginTitle;
-                    }, 500);
-                }, 300);
-            }, 300);
-        }
-    });
-</script>
 <span id="more"></span>
 
 <h1 id="Java-Thread"><a href="#Java-Thread" class="headerlink" title="Java-Thread"></a>Java-Thread</h1><h2 id="1-Thread简介"><a href="#1-Thread简介" class="headerlink" title="1. Thread简介"></a>1. Thread简介</h2><h2 id="1-1-Java中的线程"><a href="#1-1-Java中的线程" class="headerlink" title="1.1 Java中的线程"></a>1.1 Java中的线程</h2><h2 id="1-2-Java守护线程"><a href="#1-2-Java守护线程" class="headerlink" title="1.2 Java守护线程"></a>1.2 Java守护线程</h2><p>Java 中的线程有两类：User Thread 和 Daemon Thread，引用 Oracle 对 Thread 的介绍：</p>
@@ -704,7 +730,7 @@
     &copy; 2018 – 
     <span itemprop="copyrightYear">2024</span>
     <span class="with-love">
-      <i class="fa fa-heart"></i>
+      <i class="fa-solid fa-at"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">LuisLiu</span>
   </div>
