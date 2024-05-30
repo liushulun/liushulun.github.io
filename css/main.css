@@ -1499,7 +1499,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #b086ff;
+    background: #e9ffff;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -2311,8 +2311,7 @@ pre code {
   flex-basis: 100%;
   height: 0;
 }
-.post-nav,
-.post-topnav {
+.post-nav {
   border-top: 1px solid #eee;
   display: flex;
   gap: 30px;
@@ -3154,9 +3153,6 @@ header.header {
  * 页面布局
  * <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
  */
-.main-inner .sub-menu {
-  padding: 0;
-}
 .main-inner .pagination .prev,
 .main-inner .pagination .next,
 .main-inner .pagination .page-number {
@@ -3269,13 +3265,6 @@ header.header {
   border-bottom: none;
   cursor: text;
 }
-.post-topnav {
-  border-top: none;
-  border-bottom: 1px solid var(--custom-color-theme);
-  margin-top: 0;
-  margin-bottom: 1em;
-  padding: 0 5px 10px;
-}
 .post-body h1,
 .post-body h2,
 .post-body h3,
@@ -3291,10 +3280,10 @@ header.header {
   content: '§ ';
 }
 .post-body h2 {
-  margin-bottom: 50px;
+  margin-bottom: 2em;
 }
 .post-body h3 {
-  margin-top: 50px;
+  margin-top: 1em;
 }
 .post-toc {
   font-size: 0.8125em;
@@ -3433,9 +3422,6 @@ div.tabs ul.nav-tabs li.tab.active a {
 }
 div.tabs div.tab-content {
   border: 1px solid #404040 !important;
-}
-.vsys {
-  display: none !important;
 }
 /**
  * >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

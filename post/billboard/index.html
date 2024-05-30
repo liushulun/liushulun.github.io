@@ -178,7 +178,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/05/28 - 00:47:39</p>
+      <p class="site-subtitle" itemprop="description">2024/05/30 - 16:13:08</p>
   </div>
 
   <div class="site-nav-right">
@@ -517,6 +517,9 @@
 
 
     <script>
+        // 目前有一键回顶部和一键去底部按钮，暂时不启用文章的顶部导航：
+        // insertHeaderNavigation();
+
         function insertHeaderNavigation() {
             const postHeaderDiv = document.querySelectorAll('.post-header')[0];
             if (postHeaderDiv == null) {
@@ -553,11 +556,11 @@
             headerNavDiv.className = 'post-nav';
             // 反转 style-border 样式：
             headerNavDiv.style.borderTop = "none";
-            headerNavDiv.style.borderBottom = "1px solid #eee";
+            headerNavDiv.style.borderBottom = "1px solid #808080";
             // 反转 style-margin 样式：
-            headerNavDiv.style.marginTop = "0";
+            headerNavDiv.style.marginTop = "-20px";
             // headerNavDiv.style.marginBottom = "1em";
-            headerNavDiv.style.marginBottom = "60px";
+            headerNavDiv.style.marginBottom = "80px";
             // 反转 style-padding 样式：
             headerNavDiv.style.padding = "0 5px 10px";
             postHeaderDiv.insertBefore(headerNavDiv, postHeaderDiv.firstChild);
@@ -601,8 +604,6 @@
                 headerNavRightLink.append(headerNavRightIcon);
             }
         }
-
-        insertHeaderNavigation();
     </script>
 <ul style="text-align:center; display:flex; padding:0px; margin:0px; font-size:1.5em;">
     <li style="display:inline-block; flex:1; list-style:none;"><a href="/about/" style="margin:5px 15px; font-weight:bold; border-bottom:none!important;">Welcome</a></li>
