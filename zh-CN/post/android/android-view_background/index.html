@@ -29,6 +29,7 @@
 <meta property="og:site_name" content="LuisLiu">
 <meta property="og:description" content="（1）。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/android/android-view_background/view_content_exceed_background.png">
 <meta property="article:published_time" content="2021-12-26T09:49:08.000Z">
 <meta property="article:author" content="LuisLiu">
 <meta property="article:tag" content="Android">
@@ -37,6 +38,7 @@
 <meta property="article:tag" content="RoundCorner">
 <meta property="article:tag" content="圆角">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luisliu.cn/zh-CN/post/android/android-view_background/view_content_exceed_background.png">
 
 
 <link rel="canonical" href="https://luisliu.cn/zh-CN/post/android/android-view_background/">
@@ -176,7 +178,7 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2024/05/30 - 16:13:08</p>
+      <p class="site-subtitle" itemprop="description">2024/07/10 - 21:50:34</p>
   </div>
 
   <div class="site-nav-right">
@@ -241,7 +243,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-View-Background"><span class="nav-text">Android-View Background</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-View-Background"><span class="nav-text">Android-View Background</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-View%E7%9A%84%E5%9C%86%E8%A7%92"><span class="nav-text">1. View的圆角</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E9%80%9A%E8%BF%87Background%E5%AE%9E%E7%8E%B0%E5%9C%86%E8%A7%92"><span class="nav-text">1.1 通过Background实现圆角</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E9%80%9A%E8%BF%87Outline%E5%AE%9E%E7%8E%B0%E5%9C%86%E8%A7%92"><span class="nav-text">1.2 通过Outline实现圆角</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -566,7 +568,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>22</span>
+      <span>381</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -680,7 +682,12 @@
     </script>
 <span id="more"></span>
 
-<h1 id="Android-View-Background"><a href="#Android-View-Background" class="headerlink" title="Android-View Background"></a>Android-View Background</h1>
+<h1 id="Android-View-Background"><a href="#Android-View-Background" class="headerlink" title="Android-View Background"></a>Android-View Background</h1><h2 id="1-View的圆角"><a href="#1-View的圆角" class="headerlink" title="1. View的圆角"></a>1. View的圆角</h2><h3 id="1-1-通过Background实现圆角"><a href="#1-1-通过Background实现圆角" class="headerlink" title="1.1 通过Background实现圆角"></a>1.1 通过Background实现圆角</h3><p>实现圆角最常见的方式是通过 Background 设置 <code>radius</code>：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">shape</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">corners</span> <span class="attr">android:radius</span>=<span class="string">&quot;10dp&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">shape</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>该方案可以裁切 Background 的渲染范围，对于 <code>Button</code> 之类内容距离边距有一定距离的 View 该方案最简单，但在 <code>Layout</code>、<code>ImageView</code> 等内容很可能会铺满边距的 View 上，会发现 Foreground（例如子 View、Image 等）不会被裁剪，仍然会渲染在圆角区域：</p>
+<p><img data-src="./view_content_exceed_background.png" alt="Image foreground exceed background" title="@ASSET"></p>
+<h3 id="1-2-通过Outline实现圆角"><a href="#1-2-通过Outline实现圆角" class="headerlink" title="1.2 通过Outline实现圆角"></a>1.2 通过Outline实现圆角</h3>
     </div>
 
     
