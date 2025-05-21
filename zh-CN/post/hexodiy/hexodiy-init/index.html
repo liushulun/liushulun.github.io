@@ -5,26 +5,24 @@
 <meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
-<meta name="generator" content="Hexo 5.4.0">
-
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-  <link rel="mask-icon" href="/images/favicon-logo.svg" color="#222">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/assets/images/favicon-logo.svg" color="#222">
 
 <link rel="stylesheet" href="/css/main.css">
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/orange/pace-theme-flash.css">
-  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.8.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":"none","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
-<meta name="description" content="（1）建立并连接网站仓库；（2）安装必要环境；（3）渲染并发布网站。">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"reverse":true},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":false,"async":true,"transition":{"menu_item":null,"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":null,"sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="（1）建立并连接网站仓库；（2）安装必要环境；（3）渲染并发布网站。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo-初始化静态网站">
 <meta property="og:url" content="https://luisliu.cn/zh-CN/post/hexodiy/hexodiy-init/index.html">
@@ -52,17 +50,114 @@
 
 
 
+
+
+
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    const ORIGINAL_TITLE = document.title;
+    const WELCOME_TITLE = "Welcome Back!";
+    const ANIM_TAB_TITLE_HALF_SPACE_CHAR = "\u2002";
+    const ANIM_TAB_TITLE_FULL_SPACE_CHAR = "\u3000";
+    const ANIM_TAB_TITLE_SHOW_INTERVAL = 50;
+    const ANIM_TAB_TITLE_SHOW_STAY = 500;
+    const timerSet = new Set();
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            clearTimerSet();
+
+            // $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            var faviconLink = document.querySelectorAll('[rel="icon"]');
+            if (faviconLink != null) {
+                faviconLink.href = "/images/favicon-32x32-next.png";
+            }
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = ORIGINAL_TITLE;
+        } else {
+            document.title = "";
+            showTabTitleAnim(WELCOME_TITLE);
+        }
+    });
+
+    function showTabTitleAnim(titleText) {
+        if (titleText == ORIGINAL_TITLE) {
+            clearTimerSet();
+            document.title = ORIGINAL_TITLE;
+            return;
+        }
+        const showingLength = (document.title == null) ? 0 : document.title.length;
+        if (showingLength >= titleText.length) {
+            var timer = setTimeout(function() {
+                clearTimerSet();
+                document.title = ORIGINAL_TITLE;
+            }, ANIM_TAB_TITLE_SHOW_STAY);
+            timerSet.add(timer);
+        } else {
+            const nextChar = titleText[showingLength];
+            if (nextChar.trim().length <= 0) {
+                // document.title 无法以空格结尾（会被自动删除），导致死循环一直追加空格，必须用专门的空白字符替代。
+                document.title += ANIM_TAB_TITLE_HALF_SPACE_CHAR;
+                showTabTitleAnim(titleText);
+                return;
+            }
+            document.title += nextChar;
+            var timer = setTimeout(function() {
+                timerSet.delete(timer);
+                showTabTitleAnim(titleText);
+            }, ANIM_TAB_TITLE_SHOW_INTERVAL);
+            timerSet.add(timer);
+        }
+    }
+
+    function clearTimerSet() {
+        timerSet.forEach(function(value, key, set) {
+            clearTimeout(value);
+        });
+        timerSet.clear();
+    }
+</script>
+
+
+
+
+<script>
+    Pace.options.eventLag = false;
+    document.addEventListener("readystatechange", () => {
+        if (document.readyState === "interactive") {
+            // Do fancy stuff like not pace.js related stuff (animations etc).
+        } else if (document.readyState === "complete") {
+            // Force all animation to finish.
+            Pace.stop();
+            // Hide pace elements.
+            //document
+            //    .querySelector("#pace-content")
+            //    .classList.replace("opacity-0", "opacity-100");
+        }
+    });
+</script>
+
+
+
+
+
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+<body itemscope itemtype="http://schema.org/WebPage">
   <div class="headband"></div>
 
   <main class="main">
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="切换导航栏" role="button">
         <span class="toggle-line"></span>
@@ -78,11 +173,11 @@
       <p class="site-title">LuisLiu</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">2023/01/31 - 14:03:51</p>
+      <p class="site-subtitle" itemprop="description">2025/05/22 - 06:09:21</p>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
         <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
@@ -91,16 +186,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu">
-        
-            
-  <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-comments fa-fw"></i>关于</a></li>
-
-
-      
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">83</span></a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">82</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -134,15 +220,9 @@
   </div>
 
 
-</div>
+</header>
         
   
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-
   <aside class="sidebar">
 
     <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
@@ -158,28 +238,28 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hexo-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99"><span class="nav-text">Hexo-初始化静态网站</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99%E4%BB%93%E5%BA%93"><span class="nav-text">1. 建立静态网站仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%BF%9E%E6%8E%A5SSH"><span class="nav-text">2. 连接SSH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E7%8E%AF%E5%A2%83"><span class="nav-text">3. 安装必要环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%AC%E5%9C%B0%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E9%A1%B5"><span class="nav-text">4. 初始化本地静态博客页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%B8%B8%E7%94%A8Hexo%E5%91%BD%E4%BB%A4"><span class="nav-text">5. 常用Hexo命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-text">6. 部署博客基本功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E4%BF%AE%E6%94%B9%E6%96%87%E7%AB%A0URL%E6%A0%BC%E5%BC%8F"><span class="nav-text">7. 修改文章URL格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E5%A4%9A%E8%AF%AD%E8%A8%80%E6%94%AF%E6%8C%81"><span class="nav-text">8. 多语言支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hexo-%E5%88%9D%E5%A7%8B%E5%8C%96%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99"><span class="nav-text">Hexo-初始化静态网站</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99%E4%BB%93%E5%BA%93"><span class="nav-text">1. 建立静态网站仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-text">2. 远程连接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-SSH%E9%89%B4%E6%9D%83"><span class="nav-text">2.1 SSH鉴权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-SSH%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">2.2 SSH访问服务器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E7%8E%AF%E5%A2%83"><span class="nav-text">3. 安装必要环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%AC%E5%9C%B0%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E9%A1%B5"><span class="nav-text">4. 初始化本地静态博客页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%B8%B8%E7%94%A8Hexo%E5%91%BD%E4%BB%A4"><span class="nav-text">5. 常用Hexo命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-text">6. 部署博客基本功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E4%BF%AE%E6%94%B9%E6%96%87%E7%AB%A0URL%E6%A0%BC%E5%BC%8F"><span class="nav-text">7. 修改文章URL格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E5%A4%9A%E8%AF%AD%E8%A8%80%E6%94%AF%E6%8C%81"><span class="nav-text">8. 多语言支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
         <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="LuisLiu"
-      src="/images/avatar.jpg">
+      src="/assets/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">LuisLiu</p>
   <div class="site-description" itemprop="description">Keep Learning</div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">83</span>
-          <span class="site-state-item-name">日志</span>
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">文章</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -189,46 +269,212 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author site-overview-item animated">
+  <div class="links-of-author animated">
       <span class="links-of-author-item">
-        <a href="/" title="Home → &#x2F;"><i class="fa fa-home fa-fw"></i></a>
+        <a href="/" title="Home → &#x2F;" rel="noopener me"><i class="fa fa-home fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:luis96@foxmail.com" title="E-Mail → mailto:luis96@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+        <a href="mailto:luisio@foxmail.com" title="E-Mail → mailto:luisio@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
       </span>
   </div>
 
 
 
+<script>
+    const ANIM_SIDEBAR_TEXT_SHOW_INTERVAL = 30;
+    const ANIM_SIDEBAR_TEXT_SHOW_STAY = 5000;
+    const ANIM_SIDEBAR_TEXT_HIDE_INTERVAL = 15;
+    const ANIM_SIDEBAR_TEXT_HIDE_STAY = 1000;
+    const ANIM_SIDEBAR_CURSOR_INTERVAL = 500;
+
+    const ANIM_SIDEBAR_TEXT_SET = [`Welcome!`,
+                       `Feel free.`,
+                       `Keep learning!`,
+                       `Good luck!`,
+                       `Nice to meet you.`,
+                       `Does anything interest you?`,
+                       `Let's exchange the friend-link!`,
+                       `Comment will be available soon.`,
+                       `Can't wait to chat with you!`,
+                       ];
+    var currentAnimText = ANIM_SIDEBAR_TEXT_SET[0];
+
+    function genRandomSidebarText(minVal, maxVal) {
+        switch (arguments.length) {
+            case 1: {
+                return parseInt(Math.random() * minVal, 10); // parseInt 约等于 floor 都是向下取整，第二个参数表示 10 进制
+            }
+            case 2: {
+                return parseInt((Math.random() * (maxVal - minVal)) + minVal, 10);
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
+    function startSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        showSidebarTextAnim(textNode);
+    }
+
+    function startSidebarTextCursorAnim(cursorNode) {
+        if (cursorNode == null) {
+            return;
+        }
+        setTimeout(function() {
+            if (cursorNode.style.color == 'transparent') {
+                cursorNode.style.color = '#999999';
+            } else {
+                cursorNode.style.color   = 'transparent';
+            }
+            startSidebarTextCursorAnim(cursorNode);
+        }, ANIM_SIDEBAR_CURSOR_INTERVAL);
+    }
+
+    function showSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength < currentAnimText.length) {
+            const nextChar = currentAnimText[showingLength];
+            textNode.innerHTML += nextChar;
+            if (nextChar.trim().length <= 0) {
+                showSidebarTextAnim(textNode);
+                return;
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_INTERVAL);
+        } else {
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_STAY);
+        }
+    }
+
+    function hideSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength > 0) {
+            textNode.innerHTML = textNode.innerHTML.slice(0, -1);
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_INTERVAL);
+        } else {
+            // 所有文字都隐藏后，重新随机选择一个文案。
+            // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
+            for (var i = 0; i < 3; i++) {
+                let randomTextIndex = genRandomSidebarText(ANIM_SIDEBAR_TEXT_SET.length);
+                let randomText = ANIM_SIDEBAR_TEXT_SET[randomTextIndex];
+                if (randomText.trim().length <= 0) {
+                    continue;
+                }
+                if (currentAnimText !== randomText) {
+                    currentAnimText = randomText;
+                    break;
+                }
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_STAY);
+        }
+    }
+
+
+    // 创建 Observer，用于监听指定节点及其子节点的所有变化。
+    const siteAuthorObserver = new MutationObserver(function() {
+        // 找到所有符合 SiteAuthor（包含头像、名称、描述）特征的节点（<div class="site-author">）：
+        const allFoundParents = document.getElementsByClassName('site-author');
+        if (allFoundParents.length <= 0) {
+            // Do nothing, keep observing.
+            return;
+        }
+
+        // 确保找到的 SiteAuthor 是 Sidebar 内的元素：
+        var parentNode = null;
+        for (var i = 0; i < allFoundParents.length; i++) {
+            const eachNode = allFoundParents[i];
+            if (eachNode.parentNode != null && eachNode.parentNode.classList.contains('site-overview-wrap') && eachNode.parentNode.classList.contains('sidebar-panel')) {
+                parentNode = eachNode;
+                break;
+            }
+        }
+        if (parentNode == null) {
+            return;
+        }
+
+        siteAuthorObserver.disconnect();
+
+        // 遍历 SiteAuthor 的子元素，找到 SiteDescription 元素：
+        var anchorNode = null;
+        for (var i = 0; i < parentNode.children.length; i++) {
+            const eachNode = parentNode.children[i];
+            if (eachNode.classList.contains('site-description')) {
+                anchorNode = eachNode;
+                break;
+            }
+        }
+        if (anchorNode == null) {
+            return;
+        }
+
+        // 清空 SiteDescription 元素：
+        while (anchorNode.children.length > 0) {
+            anchorNode.children[0].remove();
+        }
+        anchorNode.innerHTML = null;
+        anchorNode.innerText = null;
+
+        //
+        const containerDiv = document.createElement('div');
+        containerDiv.setAttribute('id', "containerDiv");
+        containerDiv.setAttribute('style', "padding:5px 0px; margin:0px; text-align:center; display:flex; justify-content:center; line-height:1; font-size:1.0em!important; min-height:1.0em!important;");
+        //parent.insertBefore(containerDiv, parent.firstChild);
+        anchorNode.insertBefore(containerDiv, anchorNode.firstChild);
+        //
+        const textDiv = document.createElement('div');
+        textDiv.setAttribute('style', "padding:0px; margin:0px;");
+        startSidebarTextAnim(textDiv);
+        containerDiv.appendChild(textDiv);
+        //
+        const cursorDiv = document.createElement('div');
+        cursorDiv.setAttribute('style', "padding:0px; margin:0px;");
+        cursorDiv.innerHTML = '|';
+        startSidebarTextCursorAnim(cursorDiv);
+        containerDiv.appendChild(cursorDiv);
+    });
+    siteAuthorObserver.observe(document, {
+        childList: true,
+        subtree: true
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 所有 DOM(Document Object Model) 加载完成后，不论 siteAuthorObserver 是否监听到，都需要取消监听。
+        siteAuthorObserver.disconnect();
+    });
+</script>
 
         </div>
       </div>
     </div>
-  </aside>
-  <div class="sidebar-dimmer"></div>
-
-
-    </header>
 
     
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
+  </aside>
 
-  <a href="https://github.com/liushulun" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
+    </div>
 
     <div class="main-inner post posts-expand">
 
@@ -244,13 +490,18 @@
     <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/hexodiy/hexodiy-init/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="image" content="/assets/images/avatar.jpg">
       <meta itemprop="name" content="LuisLiu">
-      <meta itemprop="description" content="Keep Learning">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hexo-初始化静态网站 | LuisLiu">
+      <meta itemprop="description" content="（1）建立并连接网站仓库；（2）安装必要环境；（3）渲染并发布网站。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -280,63 +531,34 @@
   
 
 
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="far fa-tags"></i>
+    </span>
+    <span class="post-meta-item-text">Tags:</span>
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/Hexo/" itemprop="url" rel="tag"><span itemprop="name">Hexo</span></a>
+      </span>
+        ，
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/" itemprop="url" rel="tag"><span itemprop="name">自定义</span></a>
+      </span>
+  </span>
 
-
-
-
-<!-- 注释开始 #############################################
-
-  <script>
-    function post_nav(post) {
-      const theme = hexo.theme.config;
-      if (theme.post_navigation === false || (!post.prev && !post.next)) return '';
-      const prev = theme.post_navigation === 'right' ? post.prev : post.next;
-      const next = theme.post_navigation === 'right' ? post.next : post.prev;
-      const left = prev ? `
-        <a href="${this.url_for(prev.path)}" rel="prev" title="${prev.title}">
-          <i class="fa fa-chevron-left"></i> ${prev.title}
-        </a>` : '';
-      const right = next ? `
-        <a href="${this.url_for(next.path)}" rel="next" title="${next.title}">
-          ${next.title} <i class="fa fa-chevron-right"></i>
-        </a>` : '';
-      return `
-        <div class="post-nav">
-          <div class="post-nav-item">${left}</div>
-          <div class="post-nav-item">${right}</div>
-        </div>`;
-    }
-  </script>
-  
-  <div style="position: absolute; top: -20px;">post_nav(post)</div>
-
-############################################# 注释结束 -->
-
-
-<!-- 注释开始 #############################################
-  
-  <div style="position: fixed; width: 100%;">
-    
-      <div class="post-tags">
-          <a href="/tags/Hexo/" rel="tag"><i class="fa fa-tag"></i> Hexo</a>
-          <a href="/tags/%E8%87%AA%E5%AE%9A%E4%B9%89/" rel="tag"><i class="fa fa-tag"></i> 自定义</a>
-      </div>
-  </div>
-############################################# 注释结束 -->
 
     <span class="post-meta-item" title="本文字数">
       <span class="post-meta-item-icon">
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.3k</span>
+      <span>5.1k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>6 分钟</span>
     </span>
 </div>
 
@@ -348,7 +570,100 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <span id="more"></span>
+
+
+
+
+    <script>
+        // 目前有一键回顶部和一键去底部按钮，暂时不启用文章的顶部导航：
+        // insertHeaderNavigation();
+
+        function insertHeaderNavigation() {
+            const postHeaderDiv = document.querySelectorAll('.post-header')[0];
+            if (postHeaderDiv == null) {
+                return;
+            }
+            const isNavigationEnabled = "right";
+            if (!isNavigationEnabled) {
+                return;
+            }
+
+            // 不知道为什么，直接获取 post.next 会导致 post.njk 渲染失败，但是又能直接读属性。。。
+            
+            
+            const isNextPostAtRight = ("right" === 'right');
+            var leftPostTitle, leftPostPath, rightPostTitle, rightPostPath;
+            if (isNextPostAtRight) {
+                leftPostTitle = "Hexo-自定义样式";
+                leftPostPath = "post/hexodiy/hexodiy-style/";
+                rightPostTitle = "Billboard";
+                rightPostPath = "post/billboard/";
+            } else {
+                leftPostTitle = "Billboard";
+                leftPostPath = "post/billboard/";
+                rightPostTitle = "Hexo-自定义样式";
+                rightPostPath = "post/hexodiy/hexodiy-style/";
+            }
+            const leftPostRelatedUrl = "/" + leftPostPath;
+            const rightPostRelatedUrl = "/" + rightPostPath;
+            if ((leftPostPath == null || leftPostPath.length <= 0) && (rightPostPath == null || rightPostPath.length <= 0)) {
+                return;
+            }
+
+            var headerNavDiv = document.createElement('div');
+            headerNavDiv.className = 'post-nav';
+            // 反转 style-border 样式：
+            headerNavDiv.style.borderTop = "none";
+            headerNavDiv.style.borderBottom = "1px solid #808080";
+            // 反转 style-margin 样式：
+            headerNavDiv.style.marginTop = "-20px";
+            // headerNavDiv.style.marginBottom = "1em";
+            headerNavDiv.style.marginBottom = "80px";
+            // 反转 style-padding 样式：
+            headerNavDiv.style.padding = "0 5px 10px";
+            postHeaderDiv.insertBefore(headerNavDiv, postHeaderDiv.firstChild);
+
+            if (leftPostPath != null && leftPostPath.length > 0) {
+                var headerNavLeftDiv = document.createElement('div');
+                headerNavLeftDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavLeftDiv);
+
+                var headerNavLeftLink = document.createElement('a');
+                headerNavLeftLink.title = leftPostTitle;
+                headerNavLeftLink.href = leftPostRelatedUrl;
+                headerNavLeftLink.rel = "prev";
+                headerNavLeftLink.style.textAlign = "left";
+                headerNavLeftDiv.append(headerNavLeftLink);
+
+                var headerNavLeftIcon = document.createElement('i');
+                headerNavLeftIcon.className = 'fa fa-angle-left';
+                headerNavLeftLink.append(headerNavLeftIcon);
+
+                var headerNavLeftTitleNode = document.createTextNode(leftPostTitle);
+                headerNavLeftLink.append(headerNavLeftTitleNode);
+            }
+            if (rightPostPath != null && rightPostPath.length > 0) {
+                var headerNavRightDiv = document.createElement('div');
+                headerNavRightDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavRightDiv);
+
+                var headerNavRightLink = document.createElement('a');
+                headerNavRightLink.title = rightPostTitle;
+                headerNavRightLink.href = rightPostRelatedUrl;
+                headerNavRightLink.rel = "next";
+                headerNavRightLink.style.textAlign = "right";
+                headerNavRightDiv.append(headerNavRightLink);
+
+                var headerNavRightTitleNode = document.createTextNode(rightPostTitle);
+                headerNavRightLink.append(headerNavRightTitleNode);
+
+                var headerNavRightIcon = document.createElement('i');
+                headerNavRightIcon.className = 'fa fa-angle-right';
+                headerNavRightLink.append(headerNavRightIcon);
+            }
+        }
+    </script>
+<span id="more"></span>
 
 <h1 id="Hexo-初始化静态网站"><a href="#Hexo-初始化静态网站" class="headerlink" title="Hexo-初始化静态网站"></a>Hexo-初始化静态网站</h1><h2 id="1-建立静态网站仓库"><a href="#1-建立静态网站仓库" class="headerlink" title="1. 建立静态网站仓库"></a>1. 建立静态网站仓库</h2><p>首先在 GitHub 上用账号名新建一个仓库，名称为 <code>[username].github.io</code>，要注意是用户名而不是昵称。创建好了之后就已经可以通过 <code>[username].github.io</code> 访问。需要注意的是，这个仓库仅用来存储最终部署后的文件，而非平时写的文章。</p>
 <blockquote>
@@ -356,13 +671,13 @@
 </blockquote>
 <p>实际上 GitHub 限制的是每个账号只能拥有一个 <strong>账号 Page</strong>（<code>[username].github.io</code>），但一个账号可以拥有多个 <strong>项目 Page</strong>，不过开启项目 Page 的前提是必须先开启账号 Page。</p>
 <hr>
-<h2 id="2-连接SSH"><a href="#2-连接SSH" class="headerlink" title="2. 连接SSH"></a>2. 连接SSH</h2><p>自 2021/07/31 开始，GitHub 将逐步弃用 HTTP + 密码鉴权，全面转向 SSH / GPG 鉴权。</p>
+<h2 id="2-远程连接"><a href="#2-远程连接" class="headerlink" title="2. 远程连接"></a>2. 远程连接</h2><h3 id="2-1-SSH鉴权"><a href="#2-1-SSH鉴权" class="headerlink" title="2.1 SSH鉴权"></a>2.1 SSH鉴权</h3><p>自 2021/07/31 开始，GitHub 将逐步弃用 HTTP + 密码鉴权，全面转向 SSH / GPG 鉴权。</p>
 <ul>
 <li>GPG 面向密钥持有者，需要自行维护一个仅可下发一次的随机、无规则的密钥，为了避免被盗用通常存放在设备的环境变量中，比较适合构建机、跳板机等。</li>
 <li>SSH 则面向信任设备，只要在设备生成本地 SSH，并将公钥绑定在目标平台，即可在通信时自动鉴权。</li>
 </ul>
 <p>SSH 和 GPG 各有优劣，以 SSH 为例。</p>
-<ol>
+<ul>
 <li>查看本地是否存在目录 <code>~/.ssh</code>，若存在则可跳过该步骤。<ul>
 <li>执行命令生成密钥：<code>ssh-keygen -t rsa -C &quot;[comments]&quot;</code>，其中 <code>[comments]</code> 只是一段注释说明，通常会用邮箱。</li>
 <li>回车执行后根据提示输入 SSH 密钥的密码，可以不加密。</li>
@@ -371,10 +686,35 @@
 </ul>
 </li>
 <li>在 <code>GitHub -&gt; Settings -&gt; SSH and GPG keys</code> 中点击 <code>New SSH key</code> 新建一个部署密钥，把公钥的内容复制到 Key栏并保存，Title 可随意输入。</li>
-<li>本地终端验证密钥，执行命令：<code>shh -T git@github.com</code>，若显示 <code>Hi XXX! You&#39;ve successfully authenticated...</code> 则连接成功。</li>
-</ol>
+<li>本地终端验证密钥，执行命令：<code>ssh -T git@github.com</code>，若显示 <code>Hi XXX! You&#39;ve successfully authenticated...</code> 则连接成功。</li>
+</ul>
 <p>在 Hexo 站点配置文件中指定 Push 仓库使用 SSH 鉴权方式：</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">    <span class="comment">## HTTP 鉴权已弃用</span></span><br><span class="line">    <span class="comment"># repository: https://github.com/[username]/[username].github.io.git</span></span><br><span class="line">    <span class="comment">## SSH 鉴权</span></span><br><span class="line">    <span class="attr">repository:</span> <span class="string">git@github.com:[username]/[username].github.io.git</span></span><br><span class="line">    <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-SSH访问服务器"><a href="#2-2-SSH访问服务器" class="headerlink" title="2.2 SSH访问服务器"></a>2.2 SSH访问服务器</h3><p>SSH 访问的基本命令：<code>ssh [username]@[hostname]</code>。通常 Linux 都会包含一个 root 用户，但是主流云服务平台基本都禁用了远程以 root 身份登录，如果云服务平台没有默认创建一个非 root 用户，就需要先在云服务控制台自带的终端上登录服务器并新增一个非 root 用户，之后才能通过本地或其他工具远程登录。</p>
+<blockquote>
+<p>常见的远程连接工具：</p>
+<p>（1）Mac 下有：</p>
+<ul>
+<li>原生 Terminal.app</li>
+<li><a target="_blank" rel="noopener" href="https://www.ssh.com/ssh/cyberduck" title="@LINK">CyberDuck</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.openssh.com/portable.html" title="@LINK">OpenSSH</a></li>
+</ul>
+<p>（2）Win 下有：</p>
+<ul>
+<li>原生 CMD 或 PowerShell</li>
+<li><a target="_blank" rel="noopener" href="https://www.netsarang.com/zh/xshell/" title="@LINK">XShell</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ssh.com/ssh/winscp/" title="@LINK">WinSCP</a></li>
+</ul>
+<p>（3）跨平台的有：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.vandyke.com/products/securecrt/" title="@LINK">SecureCRT</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.chiark.greenend.org.uk/~sgtatham/putty/" title="@LINK">PuTTY</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.ssh.com/products/tectia-ssh/" title="@LINK">Tectia</a></li>
+</ul>
+</blockquote>
+<p>当通过远程连接至服务器时，如果要在本地与服务器之间传输文件，可以使用 <code>scp</code> 命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 本地文件复制到服务器：</span></span><br><span class="line">scp [本地文件路径] [服务器登录用户名]@[服务器地址]:[服务器文件存储路径]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 例如将本地用户目录下的 test.txt 复制到服务器 root 用户目录下并重命名为 db.txt：</span></span><br><span class="line">scp /Users/user/test.txt root@127.0.0.1:/root/db.txt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 若需要复制的是文件夹，则将命令 scp 改为 scp -r：</span></span><br><span class="line">scp -r /Users/user/test root@127.0.0.1:/root/db</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 服务器复制到本地：</span></span><br><span class="line">scp [服务器登录用户名]@[服务器地址]:[服务器文件存储路径] [本地文件路径]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 例如将服务器 root 用户目录下的 db.txt复制到本地用户目录下并重命名为 test.txt ：</span></span><br><span class="line">scp root@127.0.0.1:/root/db.txt /Users/user/test.txt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 若需要复制的是文件夹，则将命令 scp 改为 scp -r：</span></span><br><span class="line">scp -r root@127.0.0.1:/root/db /Users/user/test</span><br></pre></td></tr></table></figure>
 
 <hr>
 <h2 id="3-安装必要环境"><a href="#3-安装必要环境" class="headerlink" title="3. 安装必要环境"></a>3. 安装必要环境</h2><p>通常，基于 Hexo 驱动的静态博客，只需要这三个环境就够了：<code>Git</code>、<code>Hexo</code>、<code>Node.JS</code>，其中 Node.JS 主要是使用其内含的包管理器 <code>npm</code>。</p>
@@ -491,147 +831,14 @@
 
     <footer class="post-footer">
 
-
-<!-- 注释开始 ########################################
-
-<script>
-    (function(){
-        var bp = document.createElement('script');
-        var curProtocol = window.location.protocol.split(':')[0];
-        if (curProtocol === 'https'){
-            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-        }
-        else{
-            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-        }
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(bp, s);
-    })();
-</script>
-######################################## 注释结束 -->
-
-
-
-
-
-
-<script>
-    <!--动态浏览器标签-->
-    var OriginTitle = document.title;
-    var titleTime;
-    var titleTime2;
-    var titleTime3;
-    var blankTitle = "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000"
-    blankTitle = blankTitle + blankTitle + blankTitle;
-    document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-            $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
-            // 失去焦点时不切换标题
-            // document.title = "Waiting...";
-            document.title = OriginTitle;
-            clearTimeout(titleTime);
-            clearTimeout(titleTime2);
-            clearTimeout(titleTime3);
-        }
-        else {
-            document.title = "Welcome";
-            titleTime = setTimeout(function () {
-                document.title = "Back";
-                titleTime2 = setTimeout(function () {
-                    document.title = "Welcome Back !";
-                    titleTime3 = setTimeout(function () {
-                        document.title = OriginTitle;
-                    }, 500);
-                }, 300);
-            }, 300);
-        }
-    });
-</script>
-
-
-
-<!-- 注释开始 ########################################
-
-
-
-    
-    
-    <style type="text/css">
-        .postEndContainer {
-            margin-top: 50px;
-            margin-bottom: 10px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-        .postEndLabel {
-            width: 300px;
-            max-width: 100%;
-            margin: 0 auto;
-            margin-bottom: 10px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            text-align: center;
-        }
-        .postEndText {
-            animation: slideHorizontal 4.0s ease infinite;
-        }
-        .toAbout {
-            color: var(--custom-color-theme);
-            background: var(--custom-color-background-light);
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            border-radius: var(--custom-radius-main);
-            border-bottom: none;
-        }
-        .toAbout:hover {
-            background: var(--custom-color-theme);
-            color: #FFFFFF;
-            cursor: pointer;
-            border-bottom: none;
-        }
-
-        
-        @keyframes slideHorizontal {
-            0% {
-                transform: rotateX(0deg);
-            }
-            25% {
-                transform: rotateX(360deg);
-            }
-            50% {
-                transform: rotateX(720deg);
-            }
-            100% {
-                transform: rotateX(720deg);
-            }
-        }
-    </style>
-
-    <div class="postEndContainer">
-        
-            
-            <div class="postEndLabel" style="border-radius: 10px; font-size: 18px; color: #EB6D39;">
-                <div class="postEndText">全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub"></i>&ensp;&ensp;感 谢 阅 读</div>
-            </div>
-        
-
-        
-        <img src="/images/reward.png" style="width: 300px; max-width: 100%;">
-    </div>
-
-
-######################################## 注释结束 -->
-
           <div class="reward-container">
-  <div></div>
+  <div>reward.comment</div>
   <button>
-    全 文 结 束&ensp;&ensp;<i class="fab fa-leanpub" ></i>&ensp;&ensp;支 持 一 下
+    支持一下
   </button>
   <div class="post-reward">
       <div>
-        <img src="/images/reward.png" alt="LuisLiu 微信">
+        <img src="/assets/images/reward.png" alt="LuisLiu 微信">
         <span>微信</span>
       </div>
 
@@ -650,7 +857,7 @@
       <a href="https://luisliu.cn/post/hexodiy/hexodiy-init/" title="Hexo-初始化静态网站">https://luisliu.cn/post/hexodiy/hexodiy-init/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+      <strong>版权声明： </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
   </li>
 </ul>
 </div>
@@ -665,12 +872,12 @@
           <div class="post-nav">
             <div class="post-nav-item">
                 <a href="/post/hexodiy/hexodiy-style/" rel="prev" title="Hexo-自定义样式">
-                  <i class="fa fa-chevron-left"></i> Hexo-自定义样式
+                  <i class="fa fa-angle-left"></i> Hexo-自定义样式
                 </a>
             </div>
             <div class="post-nav-item">
                 <a href="/post/billboard/" rel="next" title="Billboard">
-                  Billboard <i class="fa fa-chevron-right"></i>
+                  Billboard <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
@@ -707,29 +914,28 @@
     </select>
   </div>
 
-
-<div class="copyright">
-  &copy; 2018 – 
-  <span itemprop="copyrightYear">2023</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">LiuShulun</span>
-</div>
+  <div class="copyright">
+    &copy; 2018 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-at"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">LuisLiu</span>
+  </div>
 <div class="wordcount">
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-      <span>站点总字数：</span>
-    <span title="站点总字数">485k</span>
+      <span>全站总字数：</span>
+    <span title="全站总字数">517k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-      <span>站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:59</span>
+      <span>全站总阅读时长 &asymp;</span>
+    <span title="全站总阅读时长">9:35</span>
   </span>
 </div>
 
@@ -738,15 +944,34 @@
   </footer>
 
   
-  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="GitHub主页" aria-label="GitHub主页" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
 
   
-<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
 <script src="/js/third-party/search/local-search.js"></script>
+
 
 
 
@@ -754,14 +979,15 @@
 
   <script src="/js/third-party/pace.js"></script>
 
-  
-
-
-
 
   
 
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
 <script src="/js/third-party/math/mathjax.js"></script>
 
 
@@ -777,19 +1003,35 @@
         border-bottom: none;
     }
 </style>
-<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 150px;" onClick="window.open('#postBottom','_self')">
-    <span class="fa fa-arrow-down"> Down</span>
-</div>
 
+
+
+
+
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 61px;">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    
+</div>
 <script>
-    $(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollToBottom = document.querySelector('.scrollToBottom');
+        /* 内联写法：
         $('.scrollToBottom').click(function(){
-            
-            $('html,body').animate({scrollTop:$('.bottom').offset().top}, 800);
+            $('html,body').animate({scrollTop:document.body.scrollHeight}, 500);
         });
-    })
+        */
+        scrollToBottom && scrollToBottom.addEventListener('click', () => {
+            window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: document.scrollingElement.scrollHeight
+            });
+        });
+    });
 </script>
 
 <a id='postBottom'></a>
+
 </body>
 </html>

@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/assets/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"reverse":true},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":false,"async":true,"transition":{"menu_item":null,"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":null,"sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="（1）实现任意 Cell 宽度下的 UIScrollView 的翻页（Paging）效果；（2）优化翻页动画，使其更加自然和跟手。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS-UIScrollView翻页效果">
+<meta property="og:url" content="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:description" content="（1）实现任意 Cell 宽度下的 UIScrollView 的翻页（Paging）效果；（2）优化翻页动画，使其更加自然和跟手。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/uiscrollview_paging_scroll_over.gif">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/uiscrollview_paging_expand_bounds.png">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/uiscrollview_paging_online_solution_scrolling.gif">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/uiscrollview_paging_online_solution_bug.gif">
+<meta property="og:image" content="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/uiscrollview_paging_optimization.gif">
+<meta property="article:published_time" content="2023-04-17T21:27:02.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="UIScrollView">
+<meta property="article:tag" content="Paging">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/uiscrollview_paging_scroll_over.gif">
+
+
+<link rel="canonical" href="https://luisliu.cn/zh-CN/post/ios/ios-uiscrollview_paging/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luisliu.cn/post/ios/ios-uiscrollview_paging/","path":"zh-CN/post/ios/ios-uiscrollview_paging/","title":"iOS-UIScrollView翻页效果"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>iOS-UIScrollView翻页效果 | LuisLiu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    const ORIGINAL_TITLE = document.title;
+    const WELCOME_TITLE = "Welcome Back!";
+    const ANIM_TAB_TITLE_HALF_SPACE_CHAR = "\u2002";
+    const ANIM_TAB_TITLE_FULL_SPACE_CHAR = "\u3000";
+    const ANIM_TAB_TITLE_SHOW_INTERVAL = 50;
+    const ANIM_TAB_TITLE_SHOW_STAY = 500;
+    const timerSet = new Set();
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            clearTimerSet();
+
+            // $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            var faviconLink = document.querySelectorAll('[rel="icon"]');
+            if (faviconLink != null) {
+                faviconLink.href = "/images/favicon-32x32-next.png";
+            }
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = ORIGINAL_TITLE;
+        } else {
+            document.title = "";
+            showTabTitleAnim(WELCOME_TITLE);
+        }
+    });
+
+    function showTabTitleAnim(titleText) {
+        if (titleText == ORIGINAL_TITLE) {
+            clearTimerSet();
+            document.title = ORIGINAL_TITLE;
+            return;
+        }
+        const showingLength = (document.title == null) ? 0 : document.title.length;
+        if (showingLength >= titleText.length) {
+            var timer = setTimeout(function() {
+                clearTimerSet();
+                document.title = ORIGINAL_TITLE;
+            }, ANIM_TAB_TITLE_SHOW_STAY);
+            timerSet.add(timer);
+        } else {
+            const nextChar = titleText[showingLength];
+            if (nextChar.trim().length <= 0) {
+                // document.title 无法以空格结尾（会被自动删除），导致死循环一直追加空格，必须用专门的空白字符替代。
+                document.title += ANIM_TAB_TITLE_HALF_SPACE_CHAR;
+                showTabTitleAnim(titleText);
+                return;
+            }
+            document.title += nextChar;
+            var timer = setTimeout(function() {
+                timerSet.delete(timer);
+                showTabTitleAnim(titleText);
+            }, ANIM_TAB_TITLE_SHOW_INTERVAL);
+            timerSet.add(timer);
+        }
+    }
+
+    function clearTimerSet() {
+        timerSet.forEach(function(value, key, set) {
+            clearTimeout(value);
+        });
+        timerSet.clear();
+    }
+</script>
+
+
+
+
+<script>
+    Pace.options.eventLag = false;
+    document.addEventListener("readystatechange", () => {
+        if (document.readyState === "interactive") {
+            // Do fancy stuff like not pace.js related stuff (animations etc).
+        } else if (document.readyState === "complete") {
+            // Force all animation to finish.
+            Pace.stop();
+            // Hide pace elements.
+            //document
+            //    .querySelector("#pace-content")
+            //    .classList.replace("opacity-0", "opacity-100");
+        }
+    });
+</script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2025/05/22 - 06:09:21</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">82</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS-UIScrollView%E7%BF%BB%E9%A1%B5%E6%95%88%E6%9E%9C"><span class="nav-text">iOS-UIScrollView翻页效果</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Cell%E4%B8%8EUIScrollView%E7%AD%89%E5%AE%BD"><span class="nav-text">1. Cell与UIScrollView等宽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Cell%E4%B8%8EUIScrollView%E4%B8%8D%E7%AD%89%E5%AE%BD"><span class="nav-text">2. Cell与UIScrollView不等宽</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%90%86%E8%A7%A3%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-text">3. 理解实现原理</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/assets/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;" rel="noopener me"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luisio@foxmail.com" title="E-Mail → mailto:luisio@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+<script>
+    const ANIM_SIDEBAR_TEXT_SHOW_INTERVAL = 30;
+    const ANIM_SIDEBAR_TEXT_SHOW_STAY = 5000;
+    const ANIM_SIDEBAR_TEXT_HIDE_INTERVAL = 15;
+    const ANIM_SIDEBAR_TEXT_HIDE_STAY = 1000;
+    const ANIM_SIDEBAR_CURSOR_INTERVAL = 500;
+
+    const ANIM_SIDEBAR_TEXT_SET = [`Welcome!`,
+                       `Feel free.`,
+                       `Keep learning!`,
+                       `Good luck!`,
+                       `Nice to meet you.`,
+                       `Does anything interest you?`,
+                       `Let's exchange the friend-link!`,
+                       `Comment will be available soon.`,
+                       `Can't wait to chat with you!`,
+                       ];
+    var currentAnimText = ANIM_SIDEBAR_TEXT_SET[0];
+
+    function genRandomSidebarText(minVal, maxVal) {
+        switch (arguments.length) {
+            case 1: {
+                return parseInt(Math.random() * minVal, 10); // parseInt 约等于 floor 都是向下取整，第二个参数表示 10 进制
+            }
+            case 2: {
+                return parseInt((Math.random() * (maxVal - minVal)) + minVal, 10);
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
+    function startSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        showSidebarTextAnim(textNode);
+    }
+
+    function startSidebarTextCursorAnim(cursorNode) {
+        if (cursorNode == null) {
+            return;
+        }
+        setTimeout(function() {
+            if (cursorNode.style.color == 'transparent') {
+                cursorNode.style.color = '#999999';
+            } else {
+                cursorNode.style.color   = 'transparent';
+            }
+            startSidebarTextCursorAnim(cursorNode);
+        }, ANIM_SIDEBAR_CURSOR_INTERVAL);
+    }
+
+    function showSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength < currentAnimText.length) {
+            const nextChar = currentAnimText[showingLength];
+            textNode.innerHTML += nextChar;
+            if (nextChar.trim().length <= 0) {
+                showSidebarTextAnim(textNode);
+                return;
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_INTERVAL);
+        } else {
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_STAY);
+        }
+    }
+
+    function hideSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength > 0) {
+            textNode.innerHTML = textNode.innerHTML.slice(0, -1);
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_INTERVAL);
+        } else {
+            // 所有文字都隐藏后，重新随机选择一个文案。
+            // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
+            for (var i = 0; i < 3; i++) {
+                let randomTextIndex = genRandomSidebarText(ANIM_SIDEBAR_TEXT_SET.length);
+                let randomText = ANIM_SIDEBAR_TEXT_SET[randomTextIndex];
+                if (randomText.trim().length <= 0) {
+                    continue;
+                }
+                if (currentAnimText !== randomText) {
+                    currentAnimText = randomText;
+                    break;
+                }
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_STAY);
+        }
+    }
+
+
+    // 创建 Observer，用于监听指定节点及其子节点的所有变化。
+    const siteAuthorObserver = new MutationObserver(function() {
+        // 找到所有符合 SiteAuthor（包含头像、名称、描述）特征的节点（<div class="site-author">）：
+        const allFoundParents = document.getElementsByClassName('site-author');
+        if (allFoundParents.length <= 0) {
+            // Do nothing, keep observing.
+            return;
+        }
+
+        // 确保找到的 SiteAuthor 是 Sidebar 内的元素：
+        var parentNode = null;
+        for (var i = 0; i < allFoundParents.length; i++) {
+            const eachNode = allFoundParents[i];
+            if (eachNode.parentNode != null && eachNode.parentNode.classList.contains('site-overview-wrap') && eachNode.parentNode.classList.contains('sidebar-panel')) {
+                parentNode = eachNode;
+                break;
+            }
+        }
+        if (parentNode == null) {
+            return;
+        }
+
+        siteAuthorObserver.disconnect();
+
+        // 遍历 SiteAuthor 的子元素，找到 SiteDescription 元素：
+        var anchorNode = null;
+        for (var i = 0; i < parentNode.children.length; i++) {
+            const eachNode = parentNode.children[i];
+            if (eachNode.classList.contains('site-description')) {
+                anchorNode = eachNode;
+                break;
+            }
+        }
+        if (anchorNode == null) {
+            return;
+        }
+
+        // 清空 SiteDescription 元素：
+        while (anchorNode.children.length > 0) {
+            anchorNode.children[0].remove();
+        }
+        anchorNode.innerHTML = null;
+        anchorNode.innerText = null;
+
+        //
+        const containerDiv = document.createElement('div');
+        containerDiv.setAttribute('id', "containerDiv");
+        containerDiv.setAttribute('style', "padding:5px 0px; margin:0px; text-align:center; display:flex; justify-content:center; line-height:1; font-size:1.0em!important; min-height:1.0em!important;");
+        //parent.insertBefore(containerDiv, parent.firstChild);
+        anchorNode.insertBefore(containerDiv, anchorNode.firstChild);
+        //
+        const textDiv = document.createElement('div');
+        textDiv.setAttribute('style', "padding:0px; margin:0px;");
+        startSidebarTextAnim(textDiv);
+        containerDiv.appendChild(textDiv);
+        //
+        const cursorDiv = document.createElement('div');
+        cursorDiv.setAttribute('style', "padding:0px; margin:0px;");
+        cursorDiv.innerHTML = '|';
+        startSidebarTextCursorAnim(cursorDiv);
+        containerDiv.appendChild(cursorDiv);
+    });
+    siteAuthorObserver.observe(document, {
+        childList: true,
+        subtree: true
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 所有 DOM(Document Object Model) 加载完成后，不论 siteAuthorObserver 是否监听到，都需要取消监听。
+        siteAuthorObserver.disconnect();
+    });
+</script>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/ios/ios-uiscrollview_paging/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="iOS-UIScrollView翻页效果 | LuisLiu">
+      <meta itemprop="description" content="（1）实现任意 Cell 宽度下的 UIScrollView 的翻页（Paging）效果；（2）优化翻页动画，使其更加自然和跟手。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          iOS-UIScrollView翻页效果
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-04-18 05:27:02" itemprop="dateCreated datePublished" datetime="2023-04-18T05:27:02+08:00">2023-04-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a>
+        </span>
+    </span>
+
+  
+
+
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="far fa-tags"></i>
+    </span>
+    <span class="post-meta-item-text">Tags:</span>
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/iOS/" itemprop="url" rel="tag"><span itemprop="name">iOS</span></a>
+      </span>
+        ，
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/UIScrollView/" itemprop="url" rel="tag"><span itemprop="name">UIScrollView</span></a>
+      </span>
+        ，
+      <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+        <a href="/tags/Paging/" itemprop="url" rel="tag"><span itemprop="name">Paging</span></a>
+      </span>
+  </span>
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">（1）实现任意 Cell 宽度下的 UIScrollView 的翻页（Paging）效果；（2）优化翻页动画，使其更加自然和跟手。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+
+
+
+    <script>
+        // 目前有一键回顶部和一键去底部按钮，暂时不启用文章的顶部导航：
+        // insertHeaderNavigation();
+
+        function insertHeaderNavigation() {
+            const postHeaderDiv = document.querySelectorAll('.post-header')[0];
+            if (postHeaderDiv == null) {
+                return;
+            }
+            const isNavigationEnabled = "right";
+            if (!isNavigationEnabled) {
+                return;
+            }
+
+            // 不知道为什么，直接获取 post.next 会导致 post.njk 渲染失败，但是又能直接读属性。。。
+            
+            
+            const isNextPostAtRight = ("right" === 'right');
+            var leftPostTitle, leftPostPath, rightPostTitle, rightPostPath;
+            if (isNextPostAtRight) {
+                leftPostTitle = "";
+                leftPostPath = "";
+                rightPostTitle = "iOS-CGAffineTransform";
+                rightPostPath = "post/ios/ios-transform/";
+            } else {
+                leftPostTitle = "iOS-CGAffineTransform";
+                leftPostPath = "post/ios/ios-transform/";
+                rightPostTitle = "";
+                rightPostPath = "";
+            }
+            const leftPostRelatedUrl = "/" + leftPostPath;
+            const rightPostRelatedUrl = "/" + rightPostPath;
+            if ((leftPostPath == null || leftPostPath.length <= 0) && (rightPostPath == null || rightPostPath.length <= 0)) {
+                return;
+            }
+
+            var headerNavDiv = document.createElement('div');
+            headerNavDiv.className = 'post-nav';
+            // 反转 style-border 样式：
+            headerNavDiv.style.borderTop = "none";
+            headerNavDiv.style.borderBottom = "1px solid #808080";
+            // 反转 style-margin 样式：
+            headerNavDiv.style.marginTop = "-20px";
+            // headerNavDiv.style.marginBottom = "1em";
+            headerNavDiv.style.marginBottom = "80px";
+            // 反转 style-padding 样式：
+            headerNavDiv.style.padding = "0 5px 10px";
+            postHeaderDiv.insertBefore(headerNavDiv, postHeaderDiv.firstChild);
+
+            if (leftPostPath != null && leftPostPath.length > 0) {
+                var headerNavLeftDiv = document.createElement('div');
+                headerNavLeftDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavLeftDiv);
+
+                var headerNavLeftLink = document.createElement('a');
+                headerNavLeftLink.title = leftPostTitle;
+                headerNavLeftLink.href = leftPostRelatedUrl;
+                headerNavLeftLink.rel = "prev";
+                headerNavLeftLink.style.textAlign = "left";
+                headerNavLeftDiv.append(headerNavLeftLink);
+
+                var headerNavLeftIcon = document.createElement('i');
+                headerNavLeftIcon.className = 'fa fa-angle-left';
+                headerNavLeftLink.append(headerNavLeftIcon);
+
+                var headerNavLeftTitleNode = document.createTextNode(leftPostTitle);
+                headerNavLeftLink.append(headerNavLeftTitleNode);
+            }
+            if (rightPostPath != null && rightPostPath.length > 0) {
+                var headerNavRightDiv = document.createElement('div');
+                headerNavRightDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavRightDiv);
+
+                var headerNavRightLink = document.createElement('a');
+                headerNavRightLink.title = rightPostTitle;
+                headerNavRightLink.href = rightPostRelatedUrl;
+                headerNavRightLink.rel = "next";
+                headerNavRightLink.style.textAlign = "right";
+                headerNavRightDiv.append(headerNavRightLink);
+
+                var headerNavRightTitleNode = document.createTextNode(rightPostTitle);
+                headerNavRightLink.append(headerNavRightTitleNode);
+
+                var headerNavRightIcon = document.createElement('i');
+                headerNavRightIcon.className = 'fa fa-angle-right';
+                headerNavRightLink.append(headerNavRightIcon);
+            }
+        }
+    </script>
+<span id="more"></span>
+
+<h1 id="iOS-UIScrollView翻页效果"><a href="#iOS-UIScrollView翻页效果" class="headerlink" title="iOS-UIScrollView翻页效果"></a>iOS-UIScrollView翻页效果</h1><h2 id="1-Cell与UIScrollView等宽"><a href="#1-Cell与UIScrollView等宽" class="headerlink" title="1. Cell与UIScrollView等宽"></a>1. Cell与UIScrollView等宽</h2><p>如果 UIScrollView 中每一个 Cell 的宽度被设计为与 UIScrollView 等宽，那只需要一行代码就能实现：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrollView.pagingEnabled = <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法非常适合用在多 Tab 的页面切换之类的场景。</p>
+<hr>
+<h2 id="2-Cell与UIScrollView不等宽"><a href="#2-Cell与UIScrollView不等宽" class="headerlink" title="2. Cell与UIScrollView不等宽"></a>2. Cell与UIScrollView不等宽</h2><p>但是实际项目中经常会有 Cell 的宽度与 UIScrollView 不等宽的设计，如果仍旧按上面的方法实现，会发现每一页滑动后停留的位置并不在正中央：</p>
+<p><img data-src="./uiscrollview_paging_scroll_over.gif" alt="默认 Paging 实现为滚动 UIScrollView 宽度"></p>
+<p>这是因为 ScrollView 默认的 Paging 实现为每次滚动一屏（即 ScrollView 自身宽度）的距离。</p>
+<p>（1）有个比较 hack 的方式：超出边界绘制。</p>
+<p>通常对于多个 Cell 的内容列表，设计上除了当前 Cell 之外还会稍微露出一小部份上一个/下一个 Cell 来提示用户，因此通常 UIScrollView 的宽度是大于单个 Cell 的：</p>
+<ul>
+<li>如果 Cell 与 UIScrollView 等宽，虽然能满足 Paging 的实现，但是就只能显示一个 Cell；</li>
+<li>如果 UIScrollView 的宽度大于 Cell，虽然能满足设计上显示超出一个 Cell 的要求，但又不能实现 Paging 效果；</li>
+</ul>
+<p>为了同时满足以上两条，可以允许 UIScrollView 的 subViews 超出边界绘制：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">collectionView.pagingEnabled = <span class="literal">YES</span>;</span><br><span class="line">collectionView.clipsToBounds = <span class="literal">NO</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="./uiscrollview_paging_expand_bounds.png" alt="Cell 与 UIScrollView 不等宽"></p>
+<p>如图所示，实际上只有红框内才是 UIScrollView，两边的 Cell 是超出 UIScrollView 边界绘制的。当然这样虽然能达成目的，但不够优雅，其最大的弊端是必须确保 UIScrollView 同一时间最多只能完整显示一个 Cell，这在 iPad 上（尤其是 iPad 横屏时）的适配表现就很糟糕，相当于强行把手机版 UI 放大显示。</p>
+<p>（2）作为合格的谷歌搜索工程师，肯定还能抄到这样的作业：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引用来源：https://www.cnblogs.com/silence-cnblogs/p/6529728.html</span></span><br><span class="line"></span><br><span class="line">func scrollViewWillEndDragging(_ scrollView: <span class="built_in">UIScrollView</span>, withVelocity velocity: <span class="built_in">CGPoint</span>, targetContentOffset: UnsafeMutablePointer&lt;<span class="built_in">CGPoint</span>&gt;) &#123;</span><br><span class="line">    <span class="comment">// Destination x</span></span><br><span class="line">    let x = targetContentOffset.pointee.x</span><br><span class="line">    <span class="comment">// Page width equals to cell width</span></span><br><span class="line">    let pageWidth = cellWidth</span><br><span class="line">    <span class="comment">// Check which way to move</span></span><br><span class="line">    let movedX = x - pageWidth * <span class="built_in">CGFloat</span>(selectedIndex)</span><br><span class="line">    <span class="keyword">if</span> movedX &lt; -pageWidth * <span class="number">0.5</span> &#123;</span><br><span class="line">        <span class="comment">// Move left</span></span><br><span class="line">        selectedIndex -= <span class="number">1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> movedX &gt; pageWidth * <span class="number">0.5</span> &#123;</span><br><span class="line">        <span class="comment">// Move right</span></span><br><span class="line">        selectedIndex += <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> abs(velocity.x) &gt;= <span class="number">2</span> &#123;</span><br><span class="line">        targetContentOffset.pointee.x = pageWidth * <span class="built_in">CGFloat</span>(selectedIndex)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// If velocity is too slow, stop and move with default velocity</span></span><br><span class="line">        targetContentOffset.pointee.x = scrollView.contentOffset.x</span><br><span class="line">        scrollView.setContentOffset(</span><br><span class="line">            <span class="built_in">CGPoint</span>(</span><br><span class="line">                x: pageWidth * <span class="built_in">CGFloat</span>(selectedIndex),</span><br><span class="line">                y: scrollView.contentOffset.y</span><br><span class="line">            ),</span><br><span class="line">            animated: <span class="literal">true</span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>乍一试这个方案可以满足要求：</p>
+<p><img data-src="./uiscrollview_paging_online_solution_scrolling.gif" alt="网上方案的滑动效果"></p>
+<p>但如果对这个列表做一些比较极端和边界的操作就会发现有 Bug，复现方式：缓慢拖动一个 View 到超过中线的位置后松手：</p>
+<p><img data-src="./uiscrollview_paging_online_solution_bug.gif" alt="网上方案的 Bug"></p>
+<hr>
+<h2 id="3-理解实现原理"><a href="#3-理解实现原理" class="headerlink" title="3. 理解实现原理"></a>3. 理解实现原理</h2><p>既然抄不到合格的作业，那就研究下如何自己实现吧。首先可以确定的是，要实现滑动过程的自定义定位，一定和这个方法有关：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)scrollViewWillEndDragging:(<span class="built_in">UIScrollView</span> *)scrollView</span><br><span class="line">                     withVelocity:(<span class="built_in">CGPoint</span>)velocity <span class="comment">// 滑动的速度</span></span><br><span class="line">              targetContentOffset:(<span class="keyword">inout</span> <span class="built_in">CGPoint</span> *)targetContentOffset; <span class="comment">// UIScrollView 目标的停止位置坐标</span></span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>targetContentOffset</code> 直接决定了列表滑动结束后需要停在哪里，因此通过一些逻辑判断，计算出用户操作的预期是停在哪个 Cell，就手动定位到对应位置即可。整个计算思路如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 判断当前是往哪个方向滚动；</span><br><span class="line">2. 判断对应方向还有没有可以展示的 Cell；</span><br><span class="line">3. 判断对应的目标 Cell 在第几位；</span><br><span class="line">4. 计算滚动多远距离才能让目标 Cell 显示在居中位置，并手动让 ScrollView 滚动到目标位置；</span><br></pre></td></tr></table></figure>
+
+<p>步骤还是很简单的，并且该方案是通过自定义 UIScrollView 实现，理论上对 UITableView、UICollectionView 等任何基于 UIScrollView 的列表都可用。不过由于 UICollectionView 相比之下多了一些 Section 之类的概念所以需要多考虑一些影响，以 UICollectionView 为例，其他列表 UI 根据以下逻辑调整即可：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 部份宏定义可以根据命名理解其作用。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @Note</span></span><br><span class="line"><span class="comment"> * 计算松手后的瞬间哪个 Cell 最接近正中间，将其作为需要自动校正前的 Cell，</span></span><br><span class="line"><span class="comment"> * 因此这个计算逻辑必须放在松手后（即该回调方法）再判断，而不是 Scroll 刚开始的时候，</span></span><br><span class="line"><span class="comment"> * 因为从动画执行到真正改变 offset 需要一段时间，立即获取 contentOffset 仍可能是滑动前的。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">- (<span class="keyword">void</span>)scrollViewWillEndDragging:(<span class="built_in">UIScrollView</span> *)scrollView</span><br><span class="line">                     withVelocity:(<span class="built_in">CGPoint</span>)velocity</span><br><span class="line">              targetContentOffset:(<span class="keyword">inout</span> <span class="built_in">CGPoint</span> *)targetContentOffset &#123;</span><br><span class="line">    <span class="keyword">if</span> (scrollView != <span class="keyword">self</span>.collectionView) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// @Note 1. 计算当前中心位置的点属于第几个 Item。</span></span><br><span class="line">    <span class="comment">///</span></span><br><span class="line">    <span class="comment">///          contentOffset 表示的是列表头部（而不是列表中心）距离内容起点的距离，</span></span><br><span class="line">    <span class="comment">///          对于横向列表则是列表最左侧距离起点的距离，</span></span><br><span class="line">    <span class="comment">///          所以列表中心的实际偏移 midpointOffset = 左侧 (contentOffset) + 列表宽度的一半 (UIScrollView.width / 2)。</span></span><br><span class="line">    <span class="keyword">float</span> contentOffset = <span class="keyword">self</span>.collectionView.contentOffset.x;</span><br><span class="line">    <span class="keyword">float</span> scrollViewCenterX = <span class="keyword">self</span>.collectionView.width / <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 可以画个图或者体验一下这里的功能，思考下 pagingWidth 与 cellWidth 与 collectionViewWidth 之间的关系。</span></span><br><span class="line">    <span class="keyword">float</span> pagingWidth = [<span class="keyword">self</span> _getPagingWidth];</span><br><span class="line">    <span class="keyword">float</span> cellWidth = [<span class="keyword">self</span> _getCellWidth];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pagingWidth &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        _centerItemRow = <span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">float</span> midpointOffset = contentOffset + scrollViewCenterX;</span><br><span class="line">        _centerItemRow = floor(midpointOffset / pagingWidth);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// @Note 2. 根据滑动速度 velocity 计算用户的拖动行为目的是滑至哪一个 Cell。</span></span><br><span class="line">    <span class="comment">///          因为要实现的是 Paging 效果，所以只需要判断 velocity 值的正负即可。</span></span><br><span class="line">    <span class="keyword">float</span> allContentWidth = <span class="keyword">self</span>.collectionView.contentSize.width;</span><br><span class="line">    <span class="built_in">NSInteger</span> newItemRow = _centerItemRow;</span><br><span class="line">    <span class="keyword">if</span> (velocity.x == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 速度为 0，说明没有发生滚动，不需要处理。</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        newItemRow = velocity.x &gt; <span class="number">0</span> ? newItemRow + <span class="number">1</span> : newItemRow - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (newItemRow &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            newItemRow = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (newItemRow &gt; allContentWidth / pagingWidth) &#123;</span><br><span class="line">            newItemRow = ceil(allContentWidth / pagingWidth) - <span class="number">1.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 速度不为 0，这里就找到了目标需要显示在中间的 Cell 的 index。</span></span><br><span class="line">        _centerItemRow = newItemRow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// @Note 3. 将 CollectionView 手动位移到对应的页面。</span></span><br><span class="line">    <span class="comment">///</span></span><br><span class="line">    <span class="comment">///          列表居中位置 scrollViewCenterX = UIScrollView.width / 2；</span></span><br><span class="line">    <span class="comment">///          相邻分页需要滑动的距离为 pagingWidth = Item_n.centerX - Item_(n-1).centerX。</span></span><br><span class="line">    <span class="comment">///</span></span><br><span class="line">    <span class="comment">///          当 UIScrollView 的宽度远超单个 Cell 的宽度（例如 iPad）时，</span></span><br><span class="line">    <span class="comment">///          第一个 Item_0 会显示在列表头部而不是一开始就居中，</span></span><br><span class="line">    <span class="comment">///          此时 contentOffset = 0 但 Item_0.centerX &gt; 0，</span></span><br><span class="line">    <span class="comment">///          所以从 Item_0 滑动至 Item_1 不一定需要 pagingWidth 那么多，</span></span><br><span class="line">    <span class="comment">///          相差的 Diff = scrollViewCenterX - Item_0.centerX（即想让 Item_0 居中的距离），</span></span><br><span class="line">    <span class="comment">///          也等于 Item_0.left 滑动至 scrollViewCenterX 再减自己一半宽度。</span></span><br><span class="line">    <span class="comment">///</span></span><br><span class="line">    <span class="comment">///          如果 UIScrollView 还有 insetPadding 则 Diff 还要减去对应的间隔，</span></span><br><span class="line">    <span class="comment">///          因此最终 Diff = scrollViewCenterX - Item_0.centerX - insetPadding</span></span><br><span class="line">    <span class="keyword">float</span> insetPadding = SECTION_SPACING_HORIZONTAL;</span><br><span class="line">    <span class="keyword">float</span> firstPageOffset = scrollViewCenterX - cellWidth / <span class="number">2</span> - insetPadding;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最终计算出来需要让 ScrollView 滚动结束时停留在哪个位置：</span></span><br><span class="line">    targetContentOffset-&gt;x = (newItemRow * pagingWidth) - firstPageOffset;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看下成果，不仅滑动丝滑、定位精准、支持慢速逐个滚动与快速多个滚动、还没有抄作业的 Bug：</p>
+<p><img data-src="./uiscrollview_paging_optimization.gif" alt="优化方案"></p>
+<p>当然，这里的示例是没有根据不同滚动速度调整切页的速度，但要加上也很简单，只需要根据产品/设计的要求对不同档位的 velocity 做判断、或是算个 log 函数来调整一次切换几个 row 即可。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+          <div class="reward-container">
+  <div>reward.comment</div>
+  <button>
+    支持一下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/assets/images/reward.png" alt="LuisLiu 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luisliu.cn/post/ios/ios-uiscrollview_paging/" title="iOS-UIScrollView翻页效果">https://luisliu.cn/post/ios/ios-uiscrollview_paging/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"><i class="fa fa-tag"></i> iOS</a>
+              <a href="/tags/UIScrollView/" rel="tag"><i class="fa fa-tag"></i> UIScrollView</a>
+              <a href="/tags/Paging/" rel="tag"><i class="fa fa-tag"></i> Paging</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/ios/ios-transform/" rel="next" title="iOS-CGAffineTransform">
+                  iOS-CGAffineTransform <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="en" data-href="/post/ios/ios-uiscrollview_paging/" selected="">
+          English
+        </option>
+      
+        <option value="zh-CN" data-href="/zh-CN/post/ios/ios-uiscrollview_paging/" selected="">
+          简体中文
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 2018 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-at"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">LuisLiu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>全站总字数：</span>
+    <span title="全站总字数">517k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>全站总阅读时长 &asymp;</span>
+    <span title="全站总阅读时长">9:35</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="GitHub主页" aria-label="GitHub主页" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+
+
+
+
+
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 61px;">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollToBottom = document.querySelector('.scrollToBottom');
+        /* 内联写法：
+        $('.scrollToBottom').click(function(){
+            $('html,body').animate({scrollTop:document.body.scrollHeight}, 500);
+        });
+        */
+        scrollToBottom && scrollToBottom.addEventListener('click', () => {
+            window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: document.scrollingElement.scrollHeight
+            });
+        });
+    });
+</script>
+
+<a id='postBottom'></a>
+
+</body>
+</html>

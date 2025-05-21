@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/assets/images/favicon-logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/orange/pace-theme-flash.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"luisliu.cn","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12,"reverse":true},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":false,"async":true,"transition":{"menu_item":null,"post_block":"fadeInDown","post_header":null,"post_body":null,"coll_header":null,"sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Essays">
+<meta property="og:url" content="https://luisliu.cn/zh-CN/post/others/others-essays/index.html">
+<meta property="og:site_name" content="LuisLiu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-09-02T16:00:00.000Z">
+<meta property="article:author" content="LuisLiu">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Kotlin">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="OC">
+<meta property="article:tag" content="MachineLearning">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://luisliu.cn/zh-CN/post/others/others-essays/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://luisliu.cn/post/others/others-essays/","path":"zh-CN/post/others/others-essays/","title":"Essays"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Essays | LuisLiu</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    <!--动态浏览器标签-->
+    const ORIGINAL_TITLE = document.title;
+    const WELCOME_TITLE = "Welcome Back!";
+    const ANIM_TAB_TITLE_HALF_SPACE_CHAR = "\u2002";
+    const ANIM_TAB_TITLE_FULL_SPACE_CHAR = "\u3000";
+    const ANIM_TAB_TITLE_SHOW_INTERVAL = 50;
+    const ANIM_TAB_TITLE_SHOW_STAY = 500;
+    const timerSet = new Set();
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            clearTimerSet();
+
+            // $('[rel="icon"]').attr('href', "/images/favicon-32x32-next.png");
+            var faviconLink = document.querySelectorAll('[rel="icon"]');
+            if (faviconLink != null) {
+                faviconLink.href = "/images/favicon-32x32-next.png";
+            }
+            // 失去焦点时不切换标题
+            // document.title = "Waiting...";
+            document.title = ORIGINAL_TITLE;
+        } else {
+            document.title = "";
+            showTabTitleAnim(WELCOME_TITLE);
+        }
+    });
+
+    function showTabTitleAnim(titleText) {
+        if (titleText == ORIGINAL_TITLE) {
+            clearTimerSet();
+            document.title = ORIGINAL_TITLE;
+            return;
+        }
+        const showingLength = (document.title == null) ? 0 : document.title.length;
+        if (showingLength >= titleText.length) {
+            var timer = setTimeout(function() {
+                clearTimerSet();
+                document.title = ORIGINAL_TITLE;
+            }, ANIM_TAB_TITLE_SHOW_STAY);
+            timerSet.add(timer);
+        } else {
+            const nextChar = titleText[showingLength];
+            if (nextChar.trim().length <= 0) {
+                // document.title 无法以空格结尾（会被自动删除），导致死循环一直追加空格，必须用专门的空白字符替代。
+                document.title += ANIM_TAB_TITLE_HALF_SPACE_CHAR;
+                showTabTitleAnim(titleText);
+                return;
+            }
+            document.title += nextChar;
+            var timer = setTimeout(function() {
+                timerSet.delete(timer);
+                showTabTitleAnim(titleText);
+            }, ANIM_TAB_TITLE_SHOW_INTERVAL);
+            timerSet.add(timer);
+        }
+    }
+
+    function clearTimerSet() {
+        timerSet.forEach(function(value, key, set) {
+            clearTimeout(value);
+        });
+        timerSet.clear();
+    }
+</script>
+
+
+
+
+<script>
+    Pace.options.eventLag = false;
+    document.addEventListener("readystatechange", () => {
+        if (document.readyState === "interactive") {
+            // Do fancy stuff like not pace.js related stuff (animations etc).
+        } else if (document.readyState === "complete") {
+            // Force all animation to finish.
+            Pace.stop();
+            // Hide pace elements.
+            //document
+            //    .querySelector("#pace-content")
+            //    .classList.replace("opacity-0", "opacity-100");
+        }
+    });
+</script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LuisLiu</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">2025/05/22 - 06:09:21</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-th-large fa-fw"></i>关于</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">82</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">14</span></a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">153</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LuisLiu"
+      src="/assets/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">LuisLiu</p>
+  <div class="site-description" itemprop="description">Keep Learning</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">153</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="/" title="Home → &#x2F;" rel="noopener me"><i class="fa fa-home fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/liushulun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;liushulun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://sighttp.qq.com/authd?IDKEY=50d1f9647e1441567ff941b646b66c8053449b2557ca041d" title="Chats → http:&#x2F;&#x2F;sighttp.qq.com&#x2F;authd?IDKEY&#x3D;50d1f9647e1441567ff941b646b66c8053449b2557ca041d" rel="noopener me" target="_blank"><i class="fab fa-qq fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:luisio@foxmail.com" title="E-Mail → mailto:luisio@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+<script>
+    const ANIM_SIDEBAR_TEXT_SHOW_INTERVAL = 30;
+    const ANIM_SIDEBAR_TEXT_SHOW_STAY = 5000;
+    const ANIM_SIDEBAR_TEXT_HIDE_INTERVAL = 15;
+    const ANIM_SIDEBAR_TEXT_HIDE_STAY = 1000;
+    const ANIM_SIDEBAR_CURSOR_INTERVAL = 500;
+
+    const ANIM_SIDEBAR_TEXT_SET = [`Welcome!`,
+                       `Feel free.`,
+                       `Keep learning!`,
+                       `Good luck!`,
+                       `Nice to meet you.`,
+                       `Does anything interest you?`,
+                       `Let's exchange the friend-link!`,
+                       `Comment will be available soon.`,
+                       `Can't wait to chat with you!`,
+                       ];
+    var currentAnimText = ANIM_SIDEBAR_TEXT_SET[0];
+
+    function genRandomSidebarText(minVal, maxVal) {
+        switch (arguments.length) {
+            case 1: {
+                return parseInt(Math.random() * minVal, 10); // parseInt 约等于 floor 都是向下取整，第二个参数表示 10 进制
+            }
+            case 2: {
+                return parseInt((Math.random() * (maxVal - minVal)) + minVal, 10);
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
+    function startSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        showSidebarTextAnim(textNode);
+    }
+
+    function startSidebarTextCursorAnim(cursorNode) {
+        if (cursorNode == null) {
+            return;
+        }
+        setTimeout(function() {
+            if (cursorNode.style.color == 'transparent') {
+                cursorNode.style.color = '#999999';
+            } else {
+                cursorNode.style.color   = 'transparent';
+            }
+            startSidebarTextCursorAnim(cursorNode);
+        }, ANIM_SIDEBAR_CURSOR_INTERVAL);
+    }
+
+    function showSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength < currentAnimText.length) {
+            const nextChar = currentAnimText[showingLength];
+            textNode.innerHTML += nextChar;
+            if (nextChar.trim().length <= 0) {
+                showSidebarTextAnim(textNode);
+                return;
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_INTERVAL);
+        } else {
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_SHOW_STAY);
+        }
+    }
+
+    function hideSidebarTextAnim(textNode) {
+        if (textNode == null) {
+            return;
+        }
+        const showingLength = (textNode.innerHTML == null) ? 0 : textNode.innerHTML.length;
+        if (showingLength > 0) {
+            textNode.innerHTML = textNode.innerHTML.slice(0, -1);
+            setTimeout(function() {
+                hideSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_INTERVAL);
+        } else {
+            // 所有文字都隐藏后，重新随机选择一个文案。
+            // 随机选择时，如果新随机到的文案与上一次的相同，则重新随机一次，最多重试 3 次。
+            for (var i = 0; i < 3; i++) {
+                let randomTextIndex = genRandomSidebarText(ANIM_SIDEBAR_TEXT_SET.length);
+                let randomText = ANIM_SIDEBAR_TEXT_SET[randomTextIndex];
+                if (randomText.trim().length <= 0) {
+                    continue;
+                }
+                if (currentAnimText !== randomText) {
+                    currentAnimText = randomText;
+                    break;
+                }
+            }
+            setTimeout(function() {
+                showSidebarTextAnim(textNode);
+            }, ANIM_SIDEBAR_TEXT_HIDE_STAY);
+        }
+    }
+
+
+    // 创建 Observer，用于监听指定节点及其子节点的所有变化。
+    const siteAuthorObserver = new MutationObserver(function() {
+        // 找到所有符合 SiteAuthor（包含头像、名称、描述）特征的节点（<div class="site-author">）：
+        const allFoundParents = document.getElementsByClassName('site-author');
+        if (allFoundParents.length <= 0) {
+            // Do nothing, keep observing.
+            return;
+        }
+
+        // 确保找到的 SiteAuthor 是 Sidebar 内的元素：
+        var parentNode = null;
+        for (var i = 0; i < allFoundParents.length; i++) {
+            const eachNode = allFoundParents[i];
+            if (eachNode.parentNode != null && eachNode.parentNode.classList.contains('site-overview-wrap') && eachNode.parentNode.classList.contains('sidebar-panel')) {
+                parentNode = eachNode;
+                break;
+            }
+        }
+        if (parentNode == null) {
+            return;
+        }
+
+        siteAuthorObserver.disconnect();
+
+        // 遍历 SiteAuthor 的子元素，找到 SiteDescription 元素：
+        var anchorNode = null;
+        for (var i = 0; i < parentNode.children.length; i++) {
+            const eachNode = parentNode.children[i];
+            if (eachNode.classList.contains('site-description')) {
+                anchorNode = eachNode;
+                break;
+            }
+        }
+        if (anchorNode == null) {
+            return;
+        }
+
+        // 清空 SiteDescription 元素：
+        while (anchorNode.children.length > 0) {
+            anchorNode.children[0].remove();
+        }
+        anchorNode.innerHTML = null;
+        anchorNode.innerText = null;
+
+        //
+        const containerDiv = document.createElement('div');
+        containerDiv.setAttribute('id', "containerDiv");
+        containerDiv.setAttribute('style', "padding:5px 0px; margin:0px; text-align:center; display:flex; justify-content:center; line-height:1; font-size:1.0em!important; min-height:1.0em!important;");
+        //parent.insertBefore(containerDiv, parent.firstChild);
+        anchorNode.insertBefore(containerDiv, anchorNode.firstChild);
+        //
+        const textDiv = document.createElement('div');
+        textDiv.setAttribute('style', "padding:0px; margin:0px;");
+        startSidebarTextAnim(textDiv);
+        containerDiv.appendChild(textDiv);
+        //
+        const cursorDiv = document.createElement('div');
+        cursorDiv.setAttribute('style', "padding:0px; margin:0px;");
+        cursorDiv.innerHTML = '|';
+        startSidebarTextCursorAnim(cursorDiv);
+        containerDiv.appendChild(cursorDiv);
+    });
+    siteAuthorObserver.observe(document, {
+        childList: true,
+        subtree: true
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 所有 DOM(Document Object Model) 加载完成后，不论 siteAuthorObserver 是否监听到，都需要取消监听。
+        siteAuthorObserver.disconnect();
+    });
+</script>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://luisliu.cn/post/others/others-essays/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/avatar.jpg">
+      <meta itemprop="name" content="LuisLiu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LuisLiu">
+      <meta itemprop="description" content="Keep Learning">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Essays | LuisLiu">
+      <meta itemprop="description" content=" ">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Essays
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-09-03 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-03T00:00:00+08:00">2018-09-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Others/" itemprop="url" rel="index"><span itemprop="name">Others</span></a>
+        </span>
+    </span>
+
+  
+
+
+
+
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>647</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description"> </div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+
+
+
+    <script>
+        // 目前有一键回顶部和一键去底部按钮，暂时不启用文章的顶部导航：
+        // insertHeaderNavigation();
+
+        function insertHeaderNavigation() {
+            const postHeaderDiv = document.querySelectorAll('.post-header')[0];
+            if (postHeaderDiv == null) {
+                return;
+            }
+            const isNavigationEnabled = "right";
+            if (!isNavigationEnabled) {
+                return;
+            }
+
+            // 不知道为什么，直接获取 post.next 会导致 post.njk 渲染失败，但是又能直接读属性。。。
+            
+            
+            const isNextPostAtRight = ("right" === 'right');
+            var leftPostTitle, leftPostPath, rightPostTitle, rightPostPath;
+            if (isNextPostAtRight) {
+                leftPostTitle = "客户端开发工程师技能表";
+                leftPostPath = "post/note/note-work_skill/";
+                rightPostTitle = "Interviews";
+                rightPostPath = "post/others/others-interviews/";
+            } else {
+                leftPostTitle = "Interviews";
+                leftPostPath = "post/others/others-interviews/";
+                rightPostTitle = "客户端开发工程师技能表";
+                rightPostPath = "post/note/note-work_skill/";
+            }
+            const leftPostRelatedUrl = "/" + leftPostPath;
+            const rightPostRelatedUrl = "/" + rightPostPath;
+            if ((leftPostPath == null || leftPostPath.length <= 0) && (rightPostPath == null || rightPostPath.length <= 0)) {
+                return;
+            }
+
+            var headerNavDiv = document.createElement('div');
+            headerNavDiv.className = 'post-nav';
+            // 反转 style-border 样式：
+            headerNavDiv.style.borderTop = "none";
+            headerNavDiv.style.borderBottom = "1px solid #808080";
+            // 反转 style-margin 样式：
+            headerNavDiv.style.marginTop = "-20px";
+            // headerNavDiv.style.marginBottom = "1em";
+            headerNavDiv.style.marginBottom = "80px";
+            // 反转 style-padding 样式：
+            headerNavDiv.style.padding = "0 5px 10px";
+            postHeaderDiv.insertBefore(headerNavDiv, postHeaderDiv.firstChild);
+
+            if (leftPostPath != null && leftPostPath.length > 0) {
+                var headerNavLeftDiv = document.createElement('div');
+                headerNavLeftDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavLeftDiv);
+
+                var headerNavLeftLink = document.createElement('a');
+                headerNavLeftLink.title = leftPostTitle;
+                headerNavLeftLink.href = leftPostRelatedUrl;
+                headerNavLeftLink.rel = "prev";
+                headerNavLeftLink.style.textAlign = "left";
+                headerNavLeftDiv.append(headerNavLeftLink);
+
+                var headerNavLeftIcon = document.createElement('i');
+                headerNavLeftIcon.className = 'fa fa-angle-left';
+                headerNavLeftLink.append(headerNavLeftIcon);
+
+                var headerNavLeftTitleNode = document.createTextNode(leftPostTitle);
+                headerNavLeftLink.append(headerNavLeftTitleNode);
+            }
+            if (rightPostPath != null && rightPostPath.length > 0) {
+                var headerNavRightDiv = document.createElement('div');
+                headerNavRightDiv.className = 'post-nav-item';
+                headerNavDiv.append(headerNavRightDiv);
+
+                var headerNavRightLink = document.createElement('a');
+                headerNavRightLink.title = rightPostTitle;
+                headerNavRightLink.href = rightPostRelatedUrl;
+                headerNavRightLink.rel = "next";
+                headerNavRightLink.style.textAlign = "right";
+                headerNavRightDiv.append(headerNavRightLink);
+
+                var headerNavRightTitleNode = document.createTextNode(rightPostTitle);
+                headerNavRightLink.append(headerNavRightTitleNode);
+
+                var headerNavRightIcon = document.createElement('i');
+                headerNavRightIcon.className = 'fa fa-angle-right';
+                headerNavRightLink.append(headerNavRightIcon);
+            }
+        }
+    </script>
+<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Wrong password!" data-whm="Error content caused by wrong password!">
+  <script id="hbeData" type="hbeData" data-hmacdigest="ce3d6b955b73960dc125a66cce4115a8c0a286dbeed5a2908241408fc067a0f3">102adc1b71919baace65490f901705cde73439c07b3b46deb1e5c72bb3ea6681479fa8a28abe11089384ad17b395e01544ac79a500428cd255581934151bee79eaea5581c433ae2b63112093e4240d193fb7ec5f5c7645c1165dc923ac6bc29bdd78e20bef62ac0611413234791b5b3dab4ca41d2a92d396c01edeb6196e93dae873a59c2cbf92ec68cddd9a983b2a8e256b8038f3512c6af94b50ce864dd0a88821d6738a2767bb128efc8bba6994aa481dc2fb2a63d92e015602fa342503fe9d5c53833fecb5f01178b3cc0d4ddecc52897768055939cdfa5ea31e2cf66972a2ccfd2ea7f9810426fc2aeb48d6b45cb703c942692b555cd0d9a143f27684c701f5c15df0661771f1b8f4d982a2e9c24ed2ecf411a7028b1102873b1c0a433dea0ecbfe8c64bcc9eda28c08301dfdb6228c36f7dc6667ebb1b979d474e15ddea159211a79d3f779f2202a4e3922843ef86381953a6732351b544e60c67f07ce153b475aed60b86d0bfd032805b54e79c16554308440220bcf18b18918dac8f33396450ef759076594cd943c5f6a9669e5c245407a3200215bee29e67c9a9257a894d135b76c4e179be24f128121d5c44a4a2623a6db2d406152bb9823791fcf0bf365c132c7f4de205192444cc61a49f5e6c49a56cf836bce5b6bf4ab55855655407084b3d99f337243a5e41b8fc2df442b12a65e38c3de6df29e319804c696e4391196415c759bd73b3b8b0fdb29a9417bd02aba9988925d6add05ac441f306aa5de958b2729208fd2f861cd1282627155321de345425655610f88cd7d90dc930ac41c8b4a5f34b244db8dd494dd026a45a3325eab95a244f22ea9a947eaf186eb72771fcc64181e9f057cf46afde73bb46438584e2b8d5a9306e918c16c42c0a83ce20a5ccdbe0028a915331f22d73d6198ffc59179abb32602c6fee5fca03211342a5a2f0d8ea4ecfa33b540f96b8d2f0616170f103b8a1dad76786af0190d466e7a4d996473ffe5e869b51bd73177758ebaddd049237b0f1906aeeb841cd515a48d1637148c204e2e6ae37c76c91510b24607b5b8dcbe8ab2a74f992daa307d22fc28b7e01ceb811ca9e85ea629b920a99eb8c1e1fb7e0a50a41dc3befdc026f027c2da443f6ce840e96947b982cf9b7dc956f0c3db539c5cfe6fffc5c6b820f0b9585dbe535e63eed19c5d78a62fb4da9c07bbd0aa0b96e69199a217a1c835a157759a20e8308e05262468d25a8c4404091f042599e93e1c6cca2c93f140bcbcd4f9f6a0a5f673aa8fee18d5b4017bf445f5ad6b0f6bce02191e29254a04d55e2e18e769d0ad562c5d3d0862b5736a6d9a880ac008ba744891cad1c234e87ffba2c4b68391b0732f75dabaf7dea97eeb0c2efdea24de9c133d518914688850279b0e2e33457241dafa26e25b088097d50b25b4030ae802a40a69183d9c0485bec00a0f77e946ae6d955acec1809e2d6b405b21d5ec8daf12c28d6a2eda256109d4ede0ed4770f3f2e4f6cc3a3955b5ecade6547bdd0478474f888ff6479a543cce7eb2cc7148dcbd2e2adaae17920130820868869e58ad2e660d75e1b4096c01577ee48f50d21f28e87760b5d91b19a4b9bff69d1d65f802699792ac37f98e726921306f0ee818b16a8c3dce133c5f2052630a15a93565b25ef9ab08cddb6b32585fcb2d1279cdd3523fdd13f6976f6322e1cb96113d84f0a1901d5a186447c7afa46656da8a1eaba6ec1b6ce28704c8faad9d6a7f38497cad75f2f98611ce31b0e11ec9a191af3dc1e543857163264345cf08f0334c005e12b1b1cbd169e04638c78c21dcb17164261a92cb4f5b586deb949a2dffd77e87145554c0e8c7d66d6bb304185fa8e19d833cb30ba5b6d01c0dcdb872275dda36a839c14ddae5d7338edc7f1c79332851c156efdddb585174c81fc9eca596c61421e708eb80f18cf94e09d41a73b6ce783ac0d4a8b3b2f42163d5411503f6f92d1e6d21317cff75a192e00d6196ef7f216b4e1f22c38d93fc83b4c6e7f41e16db7618e17dc8ff4bb7f8d5952cc9002812650ea4557f42b8ebadd5d1c461371550f42bdbae8d58e1d04fb404c5fbe189521e834776e0317a924891856317fbf4f5bd0c9c4afd4b115d6cf191647efa203e5e8cae017e8de8cb4258fbe808f31136ac66008e33eb949c492044e45df02a30c41baf4c15f7b637af927d6b2e229c545c77c5eab1a0c11b5aedd8976000049b53f6ca45958cd77123a8caeb46ae8f23c137fbbef3b1ccb156d8dc9e0f8008e917d66407e9a221575de22083a4da666b032ba62b588f35d96f198851aec1d25f5939d2d218c63b69257334e371522a759d8a53c45e0c0c11ef8473f4b8fcd7c6e98c28771d0ea71039217f3e94d4127896581c090fe40d75bdff5e2dc3939a4acfabcfd8f84be3fbd3305b96bfe6773afe356c819c4f57c1f6b0dae7bed1ae8fbbd7ee9af90af1c973f17533094ff20a27620747da2437b2ab1dc871c0d3392c23eaf9d9bca689907b14463114b33b3af006b5772834cc405650b4e0361755baf877621ef515fc1ea246f2fbf3192e57f1d52672b6176cbbb81c635de9d0eabee499746ae83e2f3ff30482a412650d5018f6b98e92a3a66d1faf9be0de96320447a4951b391f7a1162f8c00c60a00769559e34460917d4c2af447834802c374a11b27d918725026311b705948e55a631e670a32b41b5784a826c2e93ba50c3b0a9c1b5cdfe8885cf009cd15440b86038ca460d0d200306e5db15c74d1498a68b8c10bd89e9909a3acdff5050b97287f517d61fadb0ce309e1d5f3d6d1294c956182303b3cdc4b056bd76089a2f4b6cc52081edbbb363473b8f251a02ba87d9c696a9882a1c3cd58e3d6b8111f6cdf438e0372677b13bf72759126187f24884c3b99322d037f103da7aabcbb5a745b329448e66f7e2a24056e40df3e9b85b23db41333e767ddac1151bfae3eed8ba10b2ff0976ee75e6c2754651340384cef995dad02faee2a47ec3284a288030f69950c20d3a32892709f8f010e1dac8db885886cfc40b77538584201b69362e9b02ddf02b6f9a40671203577ac29ea80b97f2e8d5df4983a3abbc3c456f2aae92cc08899e57b6c4f90bd5d72c92903ffcb9998f7300f0dc2fd5979ea41e9db7c286dce14793852b141bfd05923e700e19005e6f851e67eccac2d7698cc04ce52bf60c2b5d1ce0c147a825b73784f03d2a6a54ed51a218d8c4f36cb342c1ad6e3f4df5e5a4353052</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Enter the password to read:</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+          <div class="reward-container">
+  <div>reward.comment</div>
+  <button>
+    支持一下
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/assets/images/reward.png" alt="LuisLiu 微信">
+        <span>微信</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>LuisLiu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://luisliu.cn/post/others/others-essays/" title="Essays">https://luisliu.cn/post/others/others-essays/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>所有文章均由 Luis 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议，引用前请务必联系授权。
+  </li>
+</ul>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/post/note/note-work_skill/" rel="prev" title="客户端开发工程师技能表">
+                  <i class="fa fa-angle-left"></i> 客户端开发工程师技能表
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/post/others/others-interviews/" rel="next" title="Interviews">
+                  Interviews <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="" aria-label="选择语言">
+      
+        <option value="en" data-href="/post/others/others-essays/" selected="">
+          English
+        </option>
+      
+        <option value="zh-CN" data-href="/zh-CN/post/others/others-essays/" selected="">
+          简体中文
+        </option>
+      
+    </select>
+  </div>
+
+  <div class="copyright">
+    &copy; 2018 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa-solid fa-at"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">LuisLiu</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>全站总字数：</span>
+    <span title="全站总字数">517k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>全站总阅读时长 &asymp;</span>
+    <span title="全站总阅读时长">9:35</span>
+  </span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/liushulun" class="github-corner" title="GitHub主页" aria-label="GitHub主页" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+
+<style type="text/css">
+    .toBottom {
+        color: #EEEEEE;
+        border-bottom: none;
+    }
+    .toBottom:hover {
+        color: #EB6D39;
+        border-bottom: none;
+    }
+</style>
+
+
+
+
+
+<div class="scrollToBottom back-to-top back-to-top-on" role="button" style="bottom: 61px;">
+    <i class="fa fa-arrow-down fa-lg"></i>
+    
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollToBottom = document.querySelector('.scrollToBottom');
+        /* 内联写法：
+        $('.scrollToBottom').click(function(){
+            $('html,body').animate({scrollTop:document.body.scrollHeight}, 500);
+        });
+        */
+        scrollToBottom && scrollToBottom.addEventListener('click', () => {
+            window.anime({
+            targets  : document.scrollingElement,
+            duration : 500,
+            easing   : 'linear',
+            scrollTop: document.scrollingElement.scrollHeight
+            });
+        });
+    });
+</script>
+
+<a id='postBottom'></a>
+
+</body>
+</html>
